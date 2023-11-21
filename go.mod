@@ -1,6 +1,6 @@
 module github.ibm.com/wdp-gov/data-product-go-sdk
 
-go 1.20
+go 1.19
 
 require (
 	github.com/IBM/go-sdk-core/v5 v5.13.4
