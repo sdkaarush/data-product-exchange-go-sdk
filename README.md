@@ -34,7 +34,7 @@ The IBM Cloud MySDK Go SDK allows developers to programmatically interact with t
 
 Service Name | Package name 
 --- | --- 
-[DPH Service](https://cloud.ibm.com/apidocs) | dataproducthubapiservicev1
+[DPH Service](https://cloud.ibm.com/apidocs) | dataproductexchangeapiservicev1
 
 
 ## Prerequisites

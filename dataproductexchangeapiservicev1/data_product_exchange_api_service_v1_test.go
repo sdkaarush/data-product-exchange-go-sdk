@@ -31,7 +31,7 @@ import (
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 	. "github.com/onsi/gomega/gstruct"
-	"github.ibm.com/wdp-gov/data-product-go-sdk/dataproductexchangeapiservicev1"
+	"github.com/IBM/data-product-exchange-go-sdk/dataproductexchangeapiservicev1"
 )
 
 var _ = Describe(`DataProductExchangeApiServiceV1`, func() {
