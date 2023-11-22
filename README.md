@@ -55,19 +55,19 @@ Here is an example:
 
 ```go
 import (
-	"github.com/IBM/data-product-exchange-go-sdk/dataproducthubapiservicev1"
+	"github.com/IBM/data-product-exchange-go-sdk/dataproductexchangeapiservicev1"
 )
 ```
 Next, run `go build` or `go mod tidy` to download and install the new dependencies and update your application's
 `go.mod` file.  
 
-In the example above, the `dataproducthubapiservicev1` part of the import path is the package name
+In the example above, the `dataproductexchangeapiservicev1` part of the import path is the package name
 associated with the DPH service..
 
 ### `go get` command  
 Alternatively, you can use the `go get` command to download and install the appropriate packages needed by your application:
 ```
-go get -u github.com/IBM/data-product-exchange-go-sdk/dataproducthubapiservicev1
+go get -u github.com/IBM/data-product-exchange-go-sdk/dataproductexchangeapiservicev1
 ```
 
 ## Using the SDK
