@@ -1,4 +1,4 @@
-# DPH Go SDK Version 0.0.2
+# DPH Go SDK Version 0.0.3
 Go client library to interact with the various [DPH Service APIs]
 
 ## Table of Contents
@@ -46,7 +46,7 @@ Service Name | Package name
 * Go version 1.18 or above.
 
 ## Installation
-The current version of this SDK: 0.0.2
+The current version of this SDK: 0.0.3
 
 ### Go modules  
 If your application uses Go modules for dependency management (recommended), just add an import for the service 
