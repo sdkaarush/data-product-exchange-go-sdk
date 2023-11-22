@@ -34,7 +34,7 @@ The IBM Cloud MySDK Go SDK allows developers to programmatically interact with t
 
 Service Name | Package name 
 --- | --- 
-[DPH Service](https://cloud.ibm.com/apidocs) | dataproducthubapiservicev1
+[DPH Service](https://cloud.ibm.com/apidocs) | dataproductexchangeapiservicev1
 
 
 ## Prerequisites
@@ -55,7 +55,7 @@ Here is an example:
 
 ```go
 import (
-	"github.ibm.com/wdp-gov/data-product-go-sdk/dataproducthubapiservicev1"
+	"github.com/IBM/data-product-exchange-go-sdk/dataproducthubapiservicev1"
 )
 ```
 Next, run `go build` or `go mod tidy` to download and install the new dependencies and update your application's
@@ -67,7 +67,7 @@ associated with the DPH service..
 ### `go get` command  
 Alternatively, you can use the `go get` command to download and install the appropriate packages needed by your application:
 ```
-go get -u github.ibm.com/wdp-gov/data-product-go-sdk/dataproducthubapiservicev1
+go get -u github.com/IBM/data-product-exchange-go-sdk/dataproducthubapiservicev1
 ```
 
 ## Using the SDK

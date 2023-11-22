@@ -1,4 +1,4 @@
-module github.ibm.com/wdp-gov/data-product-go-sdk
+module github.com/IBM/data-product-exchange-go-sdk
 
 go 1.19
 

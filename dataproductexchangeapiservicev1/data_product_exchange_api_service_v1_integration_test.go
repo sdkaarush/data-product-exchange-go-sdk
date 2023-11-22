@@ -27,7 +27,7 @@ import (
 	"github.com/IBM/go-sdk-core/v5/core"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
-	"github.ibm.com/wdp-gov/data-product-go-sdk/dataproductexchangeapiservicev1"
+	"github.com/IBM/data-product-exchange-go-sdk/dataproductexchangeapiservicev1"
 )
 
 /**

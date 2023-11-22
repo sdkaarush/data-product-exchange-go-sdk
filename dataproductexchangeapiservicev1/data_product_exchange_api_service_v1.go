@@ -31,7 +31,7 @@ import (
 
 	"github.com/IBM/go-sdk-core/v5/core"
 	"github.com/go-openapi/strfmt"
-	common "github.ibm.com/wdp-gov/data-product-go-sdk/common"
+	common "github.com/IBM/data-product-exchange-go-sdk/common"
 )
 
 // DataProductExchangeApiServiceV1 : Data Product Exchange API Service
