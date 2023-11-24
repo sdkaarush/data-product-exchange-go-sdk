@@ -1,5 +1,5 @@
-# DPH Go SDK Version 0.0.3
-Go client library to interact with the various [DPH Service APIs]
+# DPX Go SDK Version 0.0.3
+Go client library to interact with the various [DPX Service APIs]
 
 ## Table of Contents
 <!--
@@ -34,7 +34,7 @@ The IBM Cloud MySDK Go SDK allows developers to programmatically interact with t
 
 Service Name | Package name 
 --- | --- 
-[DPH Service](https://cloud.ibm.com/apidocs) | dataproductexchangeapiservicev1
+[DPX Service](https://cloud.ibm.com/apidocs) | dataproductexchangeapiservicev1
 
 
 ## Prerequisites
@@ -61,8 +61,8 @@ import (
 Next, run `go build` or `go mod tidy` to download and install the new dependencies and update your application's
 `go.mod` file.  
 
-In the example above, the `dataproducthubapiservicev1` part of the import path is the package name
-associated with the DPH service..
+In the example above, the `dataproductexchangeapiservicev1` part of the import path is the package name
+associated with the DPX service..
 
 ### `go get` command  
 Alternatively, you can use the `go get` command to download and install the appropriate packages needed by your application:
