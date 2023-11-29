@@ -34,7 +34,7 @@ The IBM Cloud MySDK Go SDK allows developers to programmatically interact with t
 
 Service Name | Package name 
 --- | --- 
-[Data Product Exchange Services](https://test.cloud.ibm.com/apidocs/watson-data-api) | dataproductexchangeapiservicev1
+[Data Product Exchange Services](https://test.cloud.ibm.com/apidocs/dataproducts) | dataproductexchangeapiservicev1
 
 
 ## Prerequisites

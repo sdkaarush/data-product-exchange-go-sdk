@@ -144,13 +144,16 @@ var _ = Describe(`DataProductExchangeApiServiceV1 Examples Tests`, func() {
 			// begin-create_data_product_version
 
 			containerReferenceModel := &dataproductexchangeapiservicev1.ContainerReference{
-				ID: core.StringPtr("d29c42eb-7100-4b7a-8257-c196dbcca1cd"),
+				ID: core.StringPtr(createDataProductVersionByCatalogIdLink),
+				Type: core.StringPtr("catalog"),
+			}			
+			
+			createDataProductVersionOptions := &dataproductexchangeapiservicev1.CreateDataProductVersionOptions{
+				Container: containerReferenceModel,
+				Name: core.StringPtr("My New Data Product"),
+				Description: core.StringPtr("testString"),
+				Type: []string{"data"},
 			}
-
-			createDataProductVersionOptions := dataProductExchangeApiServiceService.NewCreateDataProductVersionOptions(
-				containerReferenceModel,
-			)
-			createDataProductVersionOptions.SetName("My New Data Product")
 
 			dataProductVersion, response, err := dataProductExchangeApiServiceService.CreateDataProductVersion(createDataProductVersionOptions)
 			if err != nil {
