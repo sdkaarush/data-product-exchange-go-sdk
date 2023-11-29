@@ -1,5 +1,5 @@
-# DPX Go SDK Version 0.0.3
-Go client library to interact with the various [DPX Service APIs]
+# Data Product Exchange Go SDK Version 0.0.3
+Go client library to interact with the various [Data Product Exchange Service APIs]
 
 ## Table of Contents
 <!--
@@ -34,7 +34,7 @@ The IBM Cloud MySDK Go SDK allows developers to programmatically interact with t
 
 Service Name | Package name 
 --- | --- 
-[DPX Service](https://test.cloud.ibm.com/apidocs/watson-data-api) | dataproductexchangeapiservicev1
+[Data Product Exchange Services](https://test.cloud.ibm.com/apidocs/watson-data-api) | dataproductexchangeapiservicev1
 
 
 ## Prerequisites
