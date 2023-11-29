@@ -139,53 +139,13 @@ var _ = Describe(`DataProductExchangeApiServiceV1 Integration Tests`, func() {
 				ID: core.StringPtr(createDataProductVersionByCatalogIdLink),
 				Type: core.StringPtr("catalog"),
 			}
-
-			// dataProductIdentityModel := &dataproductexchangeapiservicev1.DataProductIdentity{
-			// 	ID: core.StringPtr("b38df608-d34b-4d58-8136-ed25e6c6684e"),
-			// }
-
-			// useCaseModel := &dataproductexchangeapiservicev1.UseCase{
-			// 	ID: core.StringPtr("testString"),
-			// 	Name: core.StringPtr("testString"),
-			// 	Container: containerReferenceModel,
-			// }
-
-			// domainModel := &dataproductexchangeapiservicev1.Domain{
-			// 	ID: core.StringPtr("testString"),
-			// 	Name: core.StringPtr("testString"),
-			// 	Container: containerReferenceModel,
-			// }
-
-			// assetPartReferenceModel := &dataproductexchangeapiservicev1.AssetPartReference{
-			// 	ID: core.StringPtr("2b0bf220-079c-11ee-be56-0242ac120002"),
-			// 	Container: containerReferenceModel,
-			// 	Type: core.StringPtr("data_asset"),
-			// }
-
-			// deliveryMethodModel := &dataproductexchangeapiservicev1.DeliveryMethod{
-			// 	ID: core.StringPtr("09cf5fcc-cb9d-4995-a8e4-16517b25229f"),
-			// 	Container: containerReferenceModel,
-			// }
-
-			// dataProductPartModel := &dataproductexchangeapiservicev1.DataProductPart{
-			// 	Asset: assetPartReferenceModel,
-			// 	Revision: core.Int64Ptr(int64(1)),
-			// 	UpdatedAt: CreateMockDateTime("2023-07-01T22:22:34.876Z"),
-			// 	DeliveryMethods: []dataproductexchangeapiservicev1.DeliveryMethod{*deliveryMethodModel},
-			// }
+		 
 
 			createDataProductVersionOptions := &dataproductexchangeapiservicev1.CreateDataProductVersionOptions{
 				Container: containerReferenceModel,
-				// Version: core.StringPtr("testString"),
-				// State: core.StringPtr("draft"),
-				// DataProduct: dataProductIdentityModel,
 				Name: core.StringPtr("My New Data Product"),
 				Description: core.StringPtr("testString"),
-				// Tags: []string{"testString"},
-				// UseCases: []dataproductexchangeapiservicev1.UseCase{*useCaseModel},
-				// Domain: domainModel,
 				Type: []string{"data"},
-				// PartsOut: []dataproductexchangeapiservicev1.DataProductPart{*dataProductPartModel},
 			}
 
 			dataProductVersion, response, err := dataProductExchangeApiServiceService.CreateDataProductVersion(createDataProductVersionOptions)
@@ -307,11 +267,6 @@ var _ = Describe(`DataProductExchangeApiServiceV1 Integration Tests`, func() {
 		It(`ListDataProductVersions(listDataProductVersionsOptions *ListDataProductVersionsOptions) with pagination`, func(){
 			listDataProductVersionsOptions := &dataproductexchangeapiservicev1.ListDataProductVersionsOptions{
 				AssetContainerID: &getListOfDataProductByCatalogIdLink,
-				// DataProduct: core.StringPtr("testString"),
-				// State: core.StringPtr("draft"),
-				// Version: core.StringPtr("testString"),
-				// Limit: core.Int64Ptr(int64(10)),
-				// Start: core.StringPtr("testString"),
 			}
 
 			listDataProductVersionsOptions.Start = nil
@@ -337,9 +292,6 @@ var _ = Describe(`DataProductExchangeApiServiceV1 Integration Tests`, func() {
 		It(`ListDataProductVersions(listDataProductVersionsOptions *ListDataProductVersionsOptions) using DataProductVersionsPager`, func(){
 			listDataProductVersionsOptions := &dataproductexchangeapiservicev1.ListDataProductVersionsOptions{
 				AssetContainerID: &getListOfDataProductByCatalogIdLink,
-				// DataProduct: core.StringPtr("testString"),
-				// State: core.StringPtr("draft"),
-				// Version: core.StringPtr("testString"),
 				Limit: core.Int64Ptr(int64(10)),
 			}
 
@@ -394,7 +346,7 @@ var _ = Describe(`DataProductExchangeApiServiceV1 Integration Tests`, func() {
 			jsonPatchOperationModel := &dataproductexchangeapiservicev1.JSONPatchOperation{
 				Op: core.StringPtr("replace"),
 				Path: core.StringPtr("/description"),
-				// From: core.StringPtr("testString"),
+
 				Value: core.StringPtr("This is the updated golang description"),
 			}
 
