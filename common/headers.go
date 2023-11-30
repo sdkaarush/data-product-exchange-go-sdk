@@ -22,7 +22,7 @@ import (
 )
 
 const (
-	sdkName = "dph-go-sdk"
+	sdkName = "data-product-exchange-go-sdk"
 	headerNameUserAgent = "User-Agent"
 )
 
