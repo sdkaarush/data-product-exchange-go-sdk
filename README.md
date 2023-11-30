@@ -85,7 +85,7 @@ If you encounter an issue with the project, you are welcome to submit a
 Before that, please search for similar issues. It's possible that someone has already reported the problem.
 
 ## Open source @ IBM
-Find more open source projects on the [IBM Github Page](http://ibm.github.io/)
+Find more open source projects on the [IBM Github Page](http://ibm.github.io/).
 
 ## Contributing
 See [CONTRIBUTING](CONTRIBUTING.md).
