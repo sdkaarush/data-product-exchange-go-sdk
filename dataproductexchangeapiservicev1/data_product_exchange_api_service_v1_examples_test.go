@@ -151,7 +151,7 @@ var _ = Describe(`DataProductExchangeApiServiceV1 Examples Tests`, func() {
 			createDataProductVersionOptions := &dataproductexchangeapiservicev1.CreateDataProductVersionOptions{
 				Container: containerReferenceModel,
 				Name: core.StringPtr("My New Data Product"),
-				Description: core.StringPtr("testString"),
+				Description: core.StringPtr("dataproduct"),
 				Type: []string{"data"},
 			}
 
