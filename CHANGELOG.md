@@ -1,3 +1,10 @@
+## [0.0.4](https://github.com/IBM/data-product-exchange-go-sdk/compare/v0.0.3...v0.0.4) (2023-11-30)
+
+
+### Bug Fixes
+
+* adding comits for build ([#6](https://github.com/IBM/data-product-exchange-go-sdk/issues/6)) ([8fa5579](https://github.com/IBM/data-product-exchange-go-sdk/commit/8fa55790c749ba43b2eede4856b7d8dc04cdad81))
+
 ## [0.0.3](https://github.com/IBM/data-product-exchange-go-sdk/compare/v0.0.2...v0.0.3) (2023-11-22)
 
 
