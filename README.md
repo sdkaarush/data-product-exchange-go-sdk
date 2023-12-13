@@ -55,13 +55,13 @@ Here is an example:
 
 ```go
 import (
-	"github.com/IBM/data-product-exchange-go-sdk/dataproductexchangeapiservicev1"
+	"github.com/IBM/data-product-exchange-go-sdk/dpxv1"
 )
 ```
 Next, run `go build` or `go mod tidy` to download and install the new dependencies and update your application's
 `go.mod` file.  
 
-In the example above, the `dataproductexchangeapiservicev1` part of the import path is the package name
+In the example above, the `dpxv1` part of the import path is the package name
 associated with the DPX service..
 
 ### `go get` command  

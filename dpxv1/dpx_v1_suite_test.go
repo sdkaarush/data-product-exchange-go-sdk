@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package dataproductexchangeapiservicev1_test
+package dpxv1_test
 
 import (
 	"testing"
@@ -23,7 +23,7 @@ import (
 	. "github.com/onsi/gomega"
 )
 
-func TestDataProductExchangeApiServiceV1(t *testing.T) {
+func TestDpxV1(t *testing.T) {
 	RegisterFailHandler(Fail)
-	RunSpecs(t, "DataProductExchangeApiServiceV1 Suite")
+	RunSpecs(t, "DpxV1 Suite")
 }

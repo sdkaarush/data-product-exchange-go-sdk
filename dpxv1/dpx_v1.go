@@ -15,11 +15,11 @@
  */
 
 /*
- * IBM OpenAPI SDK Code Generator Version: 3.79.0-2eb6af3d-20230905-174838
+ * IBM OpenAPI SDK Code Generator Version: 3.83.0-adaf0721-20231212-210453
  */
 
-// Package dataproductexchangeapiservicev1 : Operations and models for the DataProductExchangeApiServiceV1 service
-package dataproductexchangeapiservicev1
+// Package dpxv1 : Operations and models for the DpxV1 service
+package dpxv1
 
 import (
 	"context"
@@ -29,30 +29,30 @@ import (
 	"reflect"
 	"time"
 
+	common "github.com/IBM/data-product-exchange-go-sdk/common"
 	"github.com/IBM/go-sdk-core/v5/core"
 	"github.com/go-openapi/strfmt"
-	common "github.com/IBM/data-product-exchange-go-sdk/common"
 )
 
-// DataProductExchangeApiServiceV1 : Data Product Exchange API Service
+// DpxV1 : Data Product Exchange API Service
 //
 // API Version: 1.0.0
-type DataProductExchangeApiServiceV1 struct {
+type DpxV1 struct {
 	Service *core.BaseService
 }
 
 // DefaultServiceName is the default key used to find external configuration information.
-const DefaultServiceName = "data_product_exchange_api_service"
+const DefaultServiceName = "dpx"
 
-// DataProductExchangeApiServiceV1Options : Service options
-type DataProductExchangeApiServiceV1Options struct {
+// DpxV1Options : Service options
+type DpxV1Options struct {
 	ServiceName   string
 	URL           string
 	Authenticator core.Authenticator
 }
 
-// NewDataProductExchangeApiServiceV1UsingExternalConfig : constructs an instance of DataProductExchangeApiServiceV1 with passed in options and external configuration.
-func NewDataProductExchangeApiServiceV1UsingExternalConfig(options *DataProductExchangeApiServiceV1Options) (dataProductExchangeApiService *DataProductExchangeApiServiceV1, err error) {
+// NewDpxV1UsingExternalConfig : constructs an instance of DpxV1 with passed in options and external configuration.
+func NewDpxV1UsingExternalConfig(options *DpxV1Options) (dpx *DpxV1, err error) {
 	if options.ServiceName == "" {
 		options.ServiceName = DefaultServiceName
 	}
@@ -64,24 +64,24 @@ func NewDataProductExchangeApiServiceV1UsingExternalConfig(options *DataProductE
 		}
 	}
 
-	dataProductExchangeApiService, err = NewDataProductExchangeApiServiceV1(options)
+	dpx, err = NewDpxV1(options)
 	if err != nil {
 		return
 	}
 
-	err = dataProductExchangeApiService.Service.ConfigureService(options.ServiceName)
+	err = dpx.Service.ConfigureService(options.ServiceName)
 	if err != nil {
 		return
 	}
 
 	if options.URL != "" {
-		err = dataProductExchangeApiService.Service.SetServiceURL(options.URL)
+		err = dpx.Service.SetServiceURL(options.URL)
 	}
 	return
 }
 
-// NewDataProductExchangeApiServiceV1 : constructs an instance of DataProductExchangeApiServiceV1 with passed in options.
-func NewDataProductExchangeApiServiceV1(options *DataProductExchangeApiServiceV1Options) (service *DataProductExchangeApiServiceV1, err error) {
+// NewDpxV1 : constructs an instance of DpxV1 with passed in options.
+func NewDpxV1(options *DpxV1Options) (service *DpxV1, err error) {
 	serviceOptions := &core.ServiceOptions{
 		Authenticator: options.Authenticator,
 	}
@@ -98,7 +98,7 @@ func NewDataProductExchangeApiServiceV1(options *DataProductExchangeApiServiceV1
 		}
 	}
 
-	service = &DataProductExchangeApiServiceV1{
+	service = &DpxV1{
 		Service: baseService,
 	}
 
@@ -110,50 +110,50 @@ func GetServiceURLForRegion(region string) (string, error) {
 	return "", fmt.Errorf("service does not support regional URLs")
 }
 
-// Clone makes a copy of "dataProductExchangeApiService" suitable for processing requests.
-func (dataProductExchangeApiService *DataProductExchangeApiServiceV1) Clone() *DataProductExchangeApiServiceV1 {
-	if core.IsNil(dataProductExchangeApiService) {
+// Clone makes a copy of "dpx" suitable for processing requests.
+func (dpx *DpxV1) Clone() *DpxV1 {
+	if core.IsNil(dpx) {
 		return nil
 	}
-	clone := *dataProductExchangeApiService
-	clone.Service = dataProductExchangeApiService.Service.Clone()
+	clone := *dpx
+	clone.Service = dpx.Service.Clone()
 	return &clone
 }
 
 // SetServiceURL sets the service URL
-func (dataProductExchangeApiService *DataProductExchangeApiServiceV1) SetServiceURL(url string) error {
-	return dataProductExchangeApiService.Service.SetServiceURL(url)
+func (dpx *DpxV1) SetServiceURL(url string) error {
+	return dpx.Service.SetServiceURL(url)
 }
 
 // GetServiceURL returns the service URL
-func (dataProductExchangeApiService *DataProductExchangeApiServiceV1) GetServiceURL() string {
-	return dataProductExchangeApiService.Service.GetServiceURL()
+func (dpx *DpxV1) GetServiceURL() string {
+	return dpx.Service.GetServiceURL()
 }
 
 // SetDefaultHeaders sets HTTP headers to be sent in every request
-func (dataProductExchangeApiService *DataProductExchangeApiServiceV1) SetDefaultHeaders(headers http.Header) {
-	dataProductExchangeApiService.Service.SetDefaultHeaders(headers)
+func (dpx *DpxV1) SetDefaultHeaders(headers http.Header) {
+	dpx.Service.SetDefaultHeaders(headers)
 }
 
 // SetEnableGzipCompression sets the service's EnableGzipCompression field
-func (dataProductExchangeApiService *DataProductExchangeApiServiceV1) SetEnableGzipCompression(enableGzip bool) {
-	dataProductExchangeApiService.Service.SetEnableGzipCompression(enableGzip)
+func (dpx *DpxV1) SetEnableGzipCompression(enableGzip bool) {
+	dpx.Service.SetEnableGzipCompression(enableGzip)
 }
 
 // GetEnableGzipCompression returns the service's EnableGzipCompression field
-func (dataProductExchangeApiService *DataProductExchangeApiServiceV1) GetEnableGzipCompression() bool {
-	return dataProductExchangeApiService.Service.GetEnableGzipCompression()
+func (dpx *DpxV1) GetEnableGzipCompression() bool {
+	return dpx.Service.GetEnableGzipCompression()
 }
 
 // EnableRetries enables automatic retries for requests invoked for this service instance.
 // If either parameter is specified as 0, then a default value is used instead.
-func (dataProductExchangeApiService *DataProductExchangeApiServiceV1) EnableRetries(maxRetries int, maxRetryInterval time.Duration) {
-	dataProductExchangeApiService.Service.EnableRetries(maxRetries, maxRetryInterval)
+func (dpx *DpxV1) EnableRetries(maxRetries int, maxRetryInterval time.Duration) {
+	dpx.Service.EnableRetries(maxRetries, maxRetryInterval)
 }
 
 // DisableRetries disables automatic retries for requests invoked for this service instance.
-func (dataProductExchangeApiService *DataProductExchangeApiServiceV1) DisableRetries() {
-	dataProductExchangeApiService.Service.DisableRetries()
+func (dpx *DpxV1) DisableRetries() {
+	dpx.Service.DisableRetries()
 }
 
 // GetInitializeStatus : Get the status of resources initialization in data product exchange
@@ -163,12 +163,12 @@ func (dataProductExchangeApiService *DataProductExchangeApiServiceV1) DisableRet
 // initialization.If the initialization failed, the "errors" and the "trace" fields will contain the error(s)
 // encountered during the initialization and the id to trace the error(s).<br/>If the data product catalog doesn't
 // exist, a HTTP 404 response will be returned.
-func (dataProductExchangeApiService *DataProductExchangeApiServiceV1) GetInitializeStatus(getInitializeStatusOptions *GetInitializeStatusOptions) (result *InitializeResource, response *core.DetailedResponse, err error) {
-	return dataProductExchangeApiService.GetInitializeStatusWithContext(context.Background(), getInitializeStatusOptions)
+func (dpx *DpxV1) GetInitializeStatus(getInitializeStatusOptions *GetInitializeStatusOptions) (result *InitializeResource, response *core.DetailedResponse, err error) {
+	return dpx.GetInitializeStatusWithContext(context.Background(), getInitializeStatusOptions)
 }
 
 // GetInitializeStatusWithContext is an alternate form of the GetInitializeStatus method which supports a Context parameter
-func (dataProductExchangeApiService *DataProductExchangeApiServiceV1) GetInitializeStatusWithContext(ctx context.Context, getInitializeStatusOptions *GetInitializeStatusOptions) (result *InitializeResource, response *core.DetailedResponse, err error) {
+func (dpx *DpxV1) GetInitializeStatusWithContext(ctx context.Context, getInitializeStatusOptions *GetInitializeStatusOptions) (result *InitializeResource, response *core.DetailedResponse, err error) {
 	err = core.ValidateStruct(getInitializeStatusOptions, "getInitializeStatusOptions")
 	if err != nil {
 		return
@@ -176,8 +176,8 @@ func (dataProductExchangeApiService *DataProductExchangeApiServiceV1) GetInitial
 
 	builder := core.NewRequestBuilder(core.GET)
 	builder = builder.WithContext(ctx)
-	builder.EnableGzipCompression = dataProductExchangeApiService.GetEnableGzipCompression()
-	_, err = builder.ResolveRequestURL(dataProductExchangeApiService.Service.Options.URL, `/data_product_exchange/v1/configuration/initialize/status`, nil)
+	builder.EnableGzipCompression = dpx.GetEnableGzipCompression()
+	_, err = builder.ResolveRequestURL(dpx.Service.Options.URL, `/data_product_exchange/v1/configuration/initialize/status`, nil)
 	if err != nil {
 		return
 	}
@@ -186,7 +186,7 @@ func (dataProductExchangeApiService *DataProductExchangeApiServiceV1) GetInitial
 		builder.AddHeader(headerName, headerValue)
 	}
 
-	sdkHeaders := common.GetSdkHeaders("data_product_exchange_api_service", "V1", "GetInitializeStatus")
+	sdkHeaders := common.GetSdkHeaders("dpx", "V1", "GetInitializeStatus")
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
@@ -202,7 +202,7 @@ func (dataProductExchangeApiService *DataProductExchangeApiServiceV1) GetInitial
 	}
 
 	var rawResponse map[string]json.RawMessage
-	response, err = dataProductExchangeApiService.Service.Request(request, &rawResponse)
+	response, err = dpx.Service.Request(request, &rawResponse)
 	if err != nil {
 		return
 	}
@@ -226,16 +226,16 @@ func (dataProductExchangeApiService *DataProductExchangeApiServiceV1) GetInitial
 // resources will be automatically initialized. E.g., initializing `data_product_samples` will also initialize
 // `domains_multi_industry` and `delivery_methods` even if they are not specified in the request because it depends on
 // them.<br/><br/>If initializing the data product exchange for the first time, do not specify a container. The default
-// data product catalog will be created.<br/>For first time initialization, it is recommended that `delivery_methods`
-// and at least one domain taxonomy is included in the initialize operation.<br/><br/>If the data product exchange has
-// already been initialized, you may call this API again to initialize new resources, such as new delivery methods.In
-// this case, specify the default data product catalog container information.
-func (dataProductExchangeApiService *DataProductExchangeApiServiceV1) Initialize(initializeOptions *InitializeOptions) (result *InitializeResource, response *core.DetailedResponse, err error) {
-	return dataProductExchangeApiService.InitializeWithContext(context.Background(), initializeOptions)
+// data product catalog will be created.<br/>For first time initialization, it is recommended that at least
+// `delivery_methods` and `domains_multi_industry` is included in the initialize operation.<br/><br/>If the data product
+// exchange has already been initialized, you may call this API again to initialize new resources, such as new delivery
+// methods.In this case, specify the default data product catalog container information.
+func (dpx *DpxV1) Initialize(initializeOptions *InitializeOptions) (result *InitializeResource, response *core.DetailedResponse, err error) {
+	return dpx.InitializeWithContext(context.Background(), initializeOptions)
 }
 
 // InitializeWithContext is an alternate form of the Initialize method which supports a Context parameter
-func (dataProductExchangeApiService *DataProductExchangeApiServiceV1) InitializeWithContext(ctx context.Context, initializeOptions *InitializeOptions) (result *InitializeResource, response *core.DetailedResponse, err error) {
+func (dpx *DpxV1) InitializeWithContext(ctx context.Context, initializeOptions *InitializeOptions) (result *InitializeResource, response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(initializeOptions, "initializeOptions cannot be nil")
 	if err != nil {
 		return
@@ -247,8 +247,8 @@ func (dataProductExchangeApiService *DataProductExchangeApiServiceV1) Initialize
 
 	builder := core.NewRequestBuilder(core.POST)
 	builder = builder.WithContext(ctx)
-	builder.EnableGzipCompression = dataProductExchangeApiService.GetEnableGzipCompression()
-	_, err = builder.ResolveRequestURL(dataProductExchangeApiService.Service.Options.URL, `/data_product_exchange/v1/configuration/initialize`, nil)
+	builder.EnableGzipCompression = dpx.GetEnableGzipCompression()
+	_, err = builder.ResolveRequestURL(dpx.Service.Options.URL, `/data_product_exchange/v1/configuration/initialize`, nil)
 	if err != nil {
 		return
 	}
@@ -257,7 +257,7 @@ func (dataProductExchangeApiService *DataProductExchangeApiServiceV1) Initialize
 		builder.AddHeader(headerName, headerValue)
 	}
 
-	sdkHeaders := common.GetSdkHeaders("data_product_exchange_api_service", "V1", "Initialize")
+	sdkHeaders := common.GetSdkHeaders("dpx", "V1", "Initialize")
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
@@ -267,6 +267,12 @@ func (dataProductExchangeApiService *DataProductExchangeApiServiceV1) Initialize
 	body := make(map[string]interface{})
 	if initializeOptions.Container != nil {
 		body["container"] = initializeOptions.Container
+	}
+	if initializeOptions.Force != nil {
+		body["force"] = initializeOptions.Force
+	}
+	if initializeOptions.Reinitialize != nil {
+		body["reinitialize"] = initializeOptions.Reinitialize
 	}
 	if initializeOptions.Include != nil {
 		body["include"] = initializeOptions.Include
@@ -282,7 +288,7 @@ func (dataProductExchangeApiService *DataProductExchangeApiServiceV1) Initialize
 	}
 
 	var rawResponse map[string]json.RawMessage
-	response, err = dataProductExchangeApiService.Service.Request(request, &rawResponse)
+	response, err = dpx.Service.Request(request, &rawResponse)
 	if err != nil {
 		return
 	}
@@ -299,12 +305,12 @@ func (dataProductExchangeApiService *DataProductExchangeApiServiceV1) Initialize
 
 // GetDataProduct : Retrieve a data product identified by id
 // Retrieve a data product identified by id.
-func (dataProductExchangeApiService *DataProductExchangeApiServiceV1) GetDataProduct(getDataProductOptions *GetDataProductOptions) (result *DataProduct, response *core.DetailedResponse, err error) {
-	return dataProductExchangeApiService.GetDataProductWithContext(context.Background(), getDataProductOptions)
+func (dpx *DpxV1) GetDataProduct(getDataProductOptions *GetDataProductOptions) (result *DataProduct, response *core.DetailedResponse, err error) {
+	return dpx.GetDataProductWithContext(context.Background(), getDataProductOptions)
 }
 
 // GetDataProductWithContext is an alternate form of the GetDataProduct method which supports a Context parameter
-func (dataProductExchangeApiService *DataProductExchangeApiServiceV1) GetDataProductWithContext(ctx context.Context, getDataProductOptions *GetDataProductOptions) (result *DataProduct, response *core.DetailedResponse, err error) {
+func (dpx *DpxV1) GetDataProductWithContext(ctx context.Context, getDataProductOptions *GetDataProductOptions) (result *DataProduct, response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(getDataProductOptions, "getDataProductOptions cannot be nil")
 	if err != nil {
 		return
@@ -320,8 +326,8 @@ func (dataProductExchangeApiService *DataProductExchangeApiServiceV1) GetDataPro
 
 	builder := core.NewRequestBuilder(core.GET)
 	builder = builder.WithContext(ctx)
-	builder.EnableGzipCompression = dataProductExchangeApiService.GetEnableGzipCompression()
-	_, err = builder.ResolveRequestURL(dataProductExchangeApiService.Service.Options.URL, `/data_product_exchange/v1/data_products/{id}`, pathParamsMap)
+	builder.EnableGzipCompression = dpx.GetEnableGzipCompression()
+	_, err = builder.ResolveRequestURL(dpx.Service.Options.URL, `/data_product_exchange/v1/data_products/{id}`, pathParamsMap)
 	if err != nil {
 		return
 	}
@@ -330,7 +336,7 @@ func (dataProductExchangeApiService *DataProductExchangeApiServiceV1) GetDataPro
 		builder.AddHeader(headerName, headerValue)
 	}
 
-	sdkHeaders := common.GetSdkHeaders("data_product_exchange_api_service", "V1", "GetDataProduct")
+	sdkHeaders := common.GetSdkHeaders("dpx", "V1", "GetDataProduct")
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
@@ -342,7 +348,7 @@ func (dataProductExchangeApiService *DataProductExchangeApiServiceV1) GetDataPro
 	}
 
 	var rawResponse map[string]json.RawMessage
-	response, err = dataProductExchangeApiService.Service.Request(request, &rawResponse)
+	response, err = dpx.Service.Request(request, &rawResponse)
 	if err != nil {
 		return
 	}
@@ -359,12 +365,12 @@ func (dataProductExchangeApiService *DataProductExchangeApiServiceV1) GetDataPro
 
 // ListDataProducts : Retrieve a list of data products
 // Retrieve a list of data products.
-func (dataProductExchangeApiService *DataProductExchangeApiServiceV1) ListDataProducts(listDataProductsOptions *ListDataProductsOptions) (result *DataProductCollection, response *core.DetailedResponse, err error) {
-	return dataProductExchangeApiService.ListDataProductsWithContext(context.Background(), listDataProductsOptions)
+func (dpx *DpxV1) ListDataProducts(listDataProductsOptions *ListDataProductsOptions) (result *DataProductCollection, response *core.DetailedResponse, err error) {
+	return dpx.ListDataProductsWithContext(context.Background(), listDataProductsOptions)
 }
 
 // ListDataProductsWithContext is an alternate form of the ListDataProducts method which supports a Context parameter
-func (dataProductExchangeApiService *DataProductExchangeApiServiceV1) ListDataProductsWithContext(ctx context.Context, listDataProductsOptions *ListDataProductsOptions) (result *DataProductCollection, response *core.DetailedResponse, err error) {
+func (dpx *DpxV1) ListDataProductsWithContext(ctx context.Context, listDataProductsOptions *ListDataProductsOptions) (result *DataProductCollection, response *core.DetailedResponse, err error) {
 	err = core.ValidateStruct(listDataProductsOptions, "listDataProductsOptions")
 	if err != nil {
 		return
@@ -372,8 +378,8 @@ func (dataProductExchangeApiService *DataProductExchangeApiServiceV1) ListDataPr
 
 	builder := core.NewRequestBuilder(core.GET)
 	builder = builder.WithContext(ctx)
-	builder.EnableGzipCompression = dataProductExchangeApiService.GetEnableGzipCompression()
-	_, err = builder.ResolveRequestURL(dataProductExchangeApiService.Service.Options.URL, `/data_product_exchange/v1/data_products`, nil)
+	builder.EnableGzipCompression = dpx.GetEnableGzipCompression()
+	_, err = builder.ResolveRequestURL(dpx.Service.Options.URL, `/data_product_exchange/v1/data_products`, nil)
 	if err != nil {
 		return
 	}
@@ -382,7 +388,7 @@ func (dataProductExchangeApiService *DataProductExchangeApiServiceV1) ListDataPr
 		builder.AddHeader(headerName, headerValue)
 	}
 
-	sdkHeaders := common.GetSdkHeaders("data_product_exchange_api_service", "V1", "ListDataProducts")
+	sdkHeaders := common.GetSdkHeaders("dpx", "V1", "ListDataProducts")
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
@@ -401,7 +407,7 @@ func (dataProductExchangeApiService *DataProductExchangeApiServiceV1) ListDataPr
 	}
 
 	var rawResponse map[string]json.RawMessage
-	response, err = dataProductExchangeApiService.Service.Request(request, &rawResponse)
+	response, err = dpx.Service.Request(request, &rawResponse)
 	if err != nil {
 		return
 	}
@@ -418,12 +424,12 @@ func (dataProductExchangeApiService *DataProductExchangeApiServiceV1) ListDataPr
 
 // ListDataProductVersions : Retrieve a list of data product versions
 // Retrieve a list of data product versions.
-func (dataProductExchangeApiService *DataProductExchangeApiServiceV1) ListDataProductVersions(listDataProductVersionsOptions *ListDataProductVersionsOptions) (result *DataProductVersionCollection, response *core.DetailedResponse, err error) {
-	return dataProductExchangeApiService.ListDataProductVersionsWithContext(context.Background(), listDataProductVersionsOptions)
+func (dpx *DpxV1) ListDataProductVersions(listDataProductVersionsOptions *ListDataProductVersionsOptions) (result *DataProductVersionCollection, response *core.DetailedResponse, err error) {
+	return dpx.ListDataProductVersionsWithContext(context.Background(), listDataProductVersionsOptions)
 }
 
 // ListDataProductVersionsWithContext is an alternate form of the ListDataProductVersions method which supports a Context parameter
-func (dataProductExchangeApiService *DataProductExchangeApiServiceV1) ListDataProductVersionsWithContext(ctx context.Context, listDataProductVersionsOptions *ListDataProductVersionsOptions) (result *DataProductVersionCollection, response *core.DetailedResponse, err error) {
+func (dpx *DpxV1) ListDataProductVersionsWithContext(ctx context.Context, listDataProductVersionsOptions *ListDataProductVersionsOptions) (result *DataProductVersionCollection, response *core.DetailedResponse, err error) {
 	err = core.ValidateStruct(listDataProductVersionsOptions, "listDataProductVersionsOptions")
 	if err != nil {
 		return
@@ -431,8 +437,8 @@ func (dataProductExchangeApiService *DataProductExchangeApiServiceV1) ListDataPr
 
 	builder := core.NewRequestBuilder(core.GET)
 	builder = builder.WithContext(ctx)
-	builder.EnableGzipCompression = dataProductExchangeApiService.GetEnableGzipCompression()
-	_, err = builder.ResolveRequestURL(dataProductExchangeApiService.Service.Options.URL, `/data_product_exchange/v1/data_product_versions`, nil)
+	builder.EnableGzipCompression = dpx.GetEnableGzipCompression()
+	_, err = builder.ResolveRequestURL(dpx.Service.Options.URL, `/data_product_exchange/v1/data_product_versions`, nil)
 	if err != nil {
 		return
 	}
@@ -441,7 +447,7 @@ func (dataProductExchangeApiService *DataProductExchangeApiServiceV1) ListDataPr
 		builder.AddHeader(headerName, headerValue)
 	}
 
-	sdkHeaders := common.GetSdkHeaders("data_product_exchange_api_service", "V1", "ListDataProductVersions")
+	sdkHeaders := common.GetSdkHeaders("dpx", "V1", "ListDataProductVersions")
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
@@ -472,7 +478,7 @@ func (dataProductExchangeApiService *DataProductExchangeApiServiceV1) ListDataPr
 	}
 
 	var rawResponse map[string]json.RawMessage
-	response, err = dataProductExchangeApiService.Service.Request(request, &rawResponse)
+	response, err = dpx.Service.Request(request, &rawResponse)
 	if err != nil {
 		return
 	}
@@ -495,12 +501,12 @@ func (dataProductExchangeApiService *DataProductExchangeApiServiceV1) ListDataPr
 // container<br/>- data_product<br/>- version<br/><br/>The `domain` is required if state of data product is available.
 // If no additional properties are specified, the values will be copied from the most recently available version of the
 // data product.
-func (dataProductExchangeApiService *DataProductExchangeApiServiceV1) CreateDataProductVersion(createDataProductVersionOptions *CreateDataProductVersionOptions) (result *DataProductVersion, response *core.DetailedResponse, err error) {
-	return dataProductExchangeApiService.CreateDataProductVersionWithContext(context.Background(), createDataProductVersionOptions)
+func (dpx *DpxV1) CreateDataProductVersion(createDataProductVersionOptions *CreateDataProductVersionOptions) (result *DataProductVersion, response *core.DetailedResponse, err error) {
+	return dpx.CreateDataProductVersionWithContext(context.Background(), createDataProductVersionOptions)
 }
 
 // CreateDataProductVersionWithContext is an alternate form of the CreateDataProductVersion method which supports a Context parameter
-func (dataProductExchangeApiService *DataProductExchangeApiServiceV1) CreateDataProductVersionWithContext(ctx context.Context, createDataProductVersionOptions *CreateDataProductVersionOptions) (result *DataProductVersion, response *core.DetailedResponse, err error) {
+func (dpx *DpxV1) CreateDataProductVersionWithContext(ctx context.Context, createDataProductVersionOptions *CreateDataProductVersionOptions) (result *DataProductVersion, response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(createDataProductVersionOptions, "createDataProductVersionOptions cannot be nil")
 	if err != nil {
 		return
@@ -512,8 +518,8 @@ func (dataProductExchangeApiService *DataProductExchangeApiServiceV1) CreateData
 
 	builder := core.NewRequestBuilder(core.POST)
 	builder = builder.WithContext(ctx)
-	builder.EnableGzipCompression = dataProductExchangeApiService.GetEnableGzipCompression()
-	_, err = builder.ResolveRequestURL(dataProductExchangeApiService.Service.Options.URL, `/data_product_exchange/v1/data_product_versions`, nil)
+	builder.EnableGzipCompression = dpx.GetEnableGzipCompression()
+	_, err = builder.ResolveRequestURL(dpx.Service.Options.URL, `/data_product_exchange/v1/data_product_versions`, nil)
 	if err != nil {
 		return
 	}
@@ -522,7 +528,7 @@ func (dataProductExchangeApiService *DataProductExchangeApiServiceV1) CreateData
 		builder.AddHeader(headerName, headerValue)
 	}
 
-	sdkHeaders := common.GetSdkHeaders("data_product_exchange_api_service", "V1", "CreateDataProductVersion")
+	sdkHeaders := common.GetSdkHeaders("dpx", "V1", "CreateDataProductVersion")
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
@@ -563,6 +569,9 @@ func (dataProductExchangeApiService *DataProductExchangeApiServiceV1) CreateData
 	if createDataProductVersionOptions.PartsOut != nil {
 		body["parts_out"] = createDataProductVersionOptions.PartsOut
 	}
+	if createDataProductVersionOptions.ContractTerms != nil {
+		body["contract_terms"] = createDataProductVersionOptions.ContractTerms
+	}
 	_, err = builder.SetBodyContentJSON(body)
 	if err != nil {
 		return
@@ -574,7 +583,7 @@ func (dataProductExchangeApiService *DataProductExchangeApiServiceV1) CreateData
 	}
 
 	var rawResponse map[string]json.RawMessage
-	response, err = dataProductExchangeApiService.Service.Request(request, &rawResponse)
+	response, err = dpx.Service.Request(request, &rawResponse)
 	if err != nil {
 		return
 	}
@@ -591,12 +600,12 @@ func (dataProductExchangeApiService *DataProductExchangeApiServiceV1) CreateData
 
 // GetDataProductVersion : Retrieve a data product version identified by ID
 // Retrieve a data product version identified by a valid ID.
-func (dataProductExchangeApiService *DataProductExchangeApiServiceV1) GetDataProductVersion(getDataProductVersionOptions *GetDataProductVersionOptions) (result *DataProductVersion, response *core.DetailedResponse, err error) {
-	return dataProductExchangeApiService.GetDataProductVersionWithContext(context.Background(), getDataProductVersionOptions)
+func (dpx *DpxV1) GetDataProductVersion(getDataProductVersionOptions *GetDataProductVersionOptions) (result *DataProductVersion, response *core.DetailedResponse, err error) {
+	return dpx.GetDataProductVersionWithContext(context.Background(), getDataProductVersionOptions)
 }
 
 // GetDataProductVersionWithContext is an alternate form of the GetDataProductVersion method which supports a Context parameter
-func (dataProductExchangeApiService *DataProductExchangeApiServiceV1) GetDataProductVersionWithContext(ctx context.Context, getDataProductVersionOptions *GetDataProductVersionOptions) (result *DataProductVersion, response *core.DetailedResponse, err error) {
+func (dpx *DpxV1) GetDataProductVersionWithContext(ctx context.Context, getDataProductVersionOptions *GetDataProductVersionOptions) (result *DataProductVersion, response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(getDataProductVersionOptions, "getDataProductVersionOptions cannot be nil")
 	if err != nil {
 		return
@@ -612,8 +621,8 @@ func (dataProductExchangeApiService *DataProductExchangeApiServiceV1) GetDataPro
 
 	builder := core.NewRequestBuilder(core.GET)
 	builder = builder.WithContext(ctx)
-	builder.EnableGzipCompression = dataProductExchangeApiService.GetEnableGzipCompression()
-	_, err = builder.ResolveRequestURL(dataProductExchangeApiService.Service.Options.URL, `/data_product_exchange/v1/data_product_versions/{id}`, pathParamsMap)
+	builder.EnableGzipCompression = dpx.GetEnableGzipCompression()
+	_, err = builder.ResolveRequestURL(dpx.Service.Options.URL, `/data_product_exchange/v1/data_product_versions/{id}`, pathParamsMap)
 	if err != nil {
 		return
 	}
@@ -622,7 +631,7 @@ func (dataProductExchangeApiService *DataProductExchangeApiServiceV1) GetDataPro
 		builder.AddHeader(headerName, headerValue)
 	}
 
-	sdkHeaders := common.GetSdkHeaders("data_product_exchange_api_service", "V1", "GetDataProductVersion")
+	sdkHeaders := common.GetSdkHeaders("dpx", "V1", "GetDataProductVersion")
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
@@ -634,7 +643,7 @@ func (dataProductExchangeApiService *DataProductExchangeApiServiceV1) GetDataPro
 	}
 
 	var rawResponse map[string]json.RawMessage
-	response, err = dataProductExchangeApiService.Service.Request(request, &rawResponse)
+	response, err = dpx.Service.Request(request, &rawResponse)
 	if err != nil {
 		return
 	}
@@ -653,12 +662,12 @@ func (dataProductExchangeApiService *DataProductExchangeApiServiceV1) GetDataPro
 // Delete a data product version identified by a valid ID. Delete can be performed only on data product versions in
 // **draft** state. To retire a data product version which has already been published, use `PATCH
 // /data_product_exchange/v1/data_product_versions` to change the data product version state to **retired**.
-func (dataProductExchangeApiService *DataProductExchangeApiServiceV1) DeleteDataProductVersion(deleteDataProductVersionOptions *DeleteDataProductVersionOptions) (response *core.DetailedResponse, err error) {
-	return dataProductExchangeApiService.DeleteDataProductVersionWithContext(context.Background(), deleteDataProductVersionOptions)
+func (dpx *DpxV1) DeleteDataProductVersion(deleteDataProductVersionOptions *DeleteDataProductVersionOptions) (response *core.DetailedResponse, err error) {
+	return dpx.DeleteDataProductVersionWithContext(context.Background(), deleteDataProductVersionOptions)
 }
 
 // DeleteDataProductVersionWithContext is an alternate form of the DeleteDataProductVersion method which supports a Context parameter
-func (dataProductExchangeApiService *DataProductExchangeApiServiceV1) DeleteDataProductVersionWithContext(ctx context.Context, deleteDataProductVersionOptions *DeleteDataProductVersionOptions) (response *core.DetailedResponse, err error) {
+func (dpx *DpxV1) DeleteDataProductVersionWithContext(ctx context.Context, deleteDataProductVersionOptions *DeleteDataProductVersionOptions) (response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(deleteDataProductVersionOptions, "deleteDataProductVersionOptions cannot be nil")
 	if err != nil {
 		return
@@ -674,8 +683,8 @@ func (dataProductExchangeApiService *DataProductExchangeApiServiceV1) DeleteData
 
 	builder := core.NewRequestBuilder(core.DELETE)
 	builder = builder.WithContext(ctx)
-	builder.EnableGzipCompression = dataProductExchangeApiService.GetEnableGzipCompression()
-	_, err = builder.ResolveRequestURL(dataProductExchangeApiService.Service.Options.URL, `/data_product_exchange/v1/data_product_versions/{id}`, pathParamsMap)
+	builder.EnableGzipCompression = dpx.GetEnableGzipCompression()
+	_, err = builder.ResolveRequestURL(dpx.Service.Options.URL, `/data_product_exchange/v1/data_product_versions/{id}`, pathParamsMap)
 	if err != nil {
 		return
 	}
@@ -684,7 +693,7 @@ func (dataProductExchangeApiService *DataProductExchangeApiServiceV1) DeleteData
 		builder.AddHeader(headerName, headerValue)
 	}
 
-	sdkHeaders := common.GetSdkHeaders("data_product_exchange_api_service", "V1", "DeleteDataProductVersion")
+	sdkHeaders := common.GetSdkHeaders("dpx", "V1", "DeleteDataProductVersion")
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
@@ -694,7 +703,7 @@ func (dataProductExchangeApiService *DataProductExchangeApiServiceV1) DeleteData
 		return
 	}
 
-	response, err = dataProductExchangeApiService.Service.Request(request, nil)
+	response, err = dpx.Service.Request(request, nil)
 
 	return
 }
@@ -702,14 +711,14 @@ func (dataProductExchangeApiService *DataProductExchangeApiServiceV1) DeleteData
 // UpdateDataProductVersion : Update the data product version identified by ID
 // Use this API to update the properties of a data product version identified by a valid ID.<br/><br/>Specify patch
 // operations using http://jsonpatch.com/ syntax.<br/><br/>Supported patch operations include:<br/><br/>- Update the
-// properties of a data product<br/><br/>- Add/Remove parts from a data product<br/><br/>- Add/Remove use cases from a
-// data product<br/><br/>- Update the data product state<br/><br/>.
-func (dataProductExchangeApiService *DataProductExchangeApiServiceV1) UpdateDataProductVersion(updateDataProductVersionOptions *UpdateDataProductVersionOptions) (result *DataProductVersion, response *core.DetailedResponse, err error) {
-	return dataProductExchangeApiService.UpdateDataProductVersionWithContext(context.Background(), updateDataProductVersionOptions)
+// properties of a data product<br/><br/>- Add/Remove parts from a data product (up to 20 parts)<br/><br/>- Add/Remove
+// use cases from a data product<br/><br/>- Update the data product state<br/><br/>.
+func (dpx *DpxV1) UpdateDataProductVersion(updateDataProductVersionOptions *UpdateDataProductVersionOptions) (result *DataProductVersion, response *core.DetailedResponse, err error) {
+	return dpx.UpdateDataProductVersionWithContext(context.Background(), updateDataProductVersionOptions)
 }
 
 // UpdateDataProductVersionWithContext is an alternate form of the UpdateDataProductVersion method which supports a Context parameter
-func (dataProductExchangeApiService *DataProductExchangeApiServiceV1) UpdateDataProductVersionWithContext(ctx context.Context, updateDataProductVersionOptions *UpdateDataProductVersionOptions) (result *DataProductVersion, response *core.DetailedResponse, err error) {
+func (dpx *DpxV1) UpdateDataProductVersionWithContext(ctx context.Context, updateDataProductVersionOptions *UpdateDataProductVersionOptions) (result *DataProductVersion, response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(updateDataProductVersionOptions, "updateDataProductVersionOptions cannot be nil")
 	if err != nil {
 		return
@@ -725,8 +734,8 @@ func (dataProductExchangeApiService *DataProductExchangeApiServiceV1) UpdateData
 
 	builder := core.NewRequestBuilder(core.PATCH)
 	builder = builder.WithContext(ctx)
-	builder.EnableGzipCompression = dataProductExchangeApiService.GetEnableGzipCompression()
-	_, err = builder.ResolveRequestURL(dataProductExchangeApiService.Service.Options.URL, `/data_product_exchange/v1/data_product_versions/{id}`, pathParamsMap)
+	builder.EnableGzipCompression = dpx.GetEnableGzipCompression()
+	_, err = builder.ResolveRequestURL(dpx.Service.Options.URL, `/data_product_exchange/v1/data_product_versions/{id}`, pathParamsMap)
 	if err != nil {
 		return
 	}
@@ -735,7 +744,7 @@ func (dataProductExchangeApiService *DataProductExchangeApiServiceV1) UpdateData
 		builder.AddHeader(headerName, headerValue)
 	}
 
-	sdkHeaders := common.GetSdkHeaders("data_product_exchange_api_service", "V1", "UpdateDataProductVersion")
+	sdkHeaders := common.GetSdkHeaders("dpx", "V1", "UpdateDataProductVersion")
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
@@ -753,7 +762,7 @@ func (dataProductExchangeApiService *DataProductExchangeApiServiceV1) UpdateData
 	}
 
 	var rawResponse map[string]json.RawMessage
-	response, err = dataProductExchangeApiService.Service.Request(request, &rawResponse)
+	response, err = dpx.Service.Request(request, &rawResponse)
 	if err != nil {
 		return
 	}
@@ -768,40 +777,122 @@ func (dataProductExchangeApiService *DataProductExchangeApiServiceV1) UpdateData
 	return
 }
 
-// DeliverDataProductVersion : Deliver a data product identified by id
-// Deliver a data product version identified by id.
-func (dataProductExchangeApiService *DataProductExchangeApiServiceV1) DeliverDataProductVersion(deliverDataProductVersionOptions *DeliverDataProductVersionOptions) (result *DeliveryResource, response *core.DetailedResponse, err error) {
-	return dataProductExchangeApiService.DeliverDataProductVersionWithContext(context.Background(), deliverDataProductVersionOptions)
+// CompleteContractTermsDocument : Complete a contract document upload
+// After uploading a file to the provided signed URL this endpoint is called to mark upload as complete, and make it
+// available to download.
+// - Once complete has been called on a document - returned URL will be using "url" field, which will contain a signed
+// URL which can be used to download the document.
+// - Calling complete on referential documents will result in an error.
+// - Calling complete on attachment documents for which file has not been uploaded will result in an error.
+//
+// Contract terms documents can only be completed if the data product version which the contract terms are associated
+// with is in a DRAFT state.
+func (dpx *DpxV1) CompleteContractTermsDocument(completeContractTermsDocumentOptions *CompleteContractTermsDocumentOptions) (result *ContractTermsDocument, response *core.DetailedResponse, err error) {
+	return dpx.CompleteContractTermsDocumentWithContext(context.Background(), completeContractTermsDocumentOptions)
 }
 
-// DeliverDataProductVersionWithContext is an alternate form of the DeliverDataProductVersion method which supports a Context parameter
-func (dataProductExchangeApiService *DataProductExchangeApiServiceV1) DeliverDataProductVersionWithContext(ctx context.Context, deliverDataProductVersionOptions *DeliverDataProductVersionOptions) (result *DeliveryResource, response *core.DetailedResponse, err error) {
-	err = core.ValidateNotNil(deliverDataProductVersionOptions, "deliverDataProductVersionOptions cannot be nil")
+// CompleteContractTermsDocumentWithContext is an alternate form of the CompleteContractTermsDocument method which supports a Context parameter
+func (dpx *DpxV1) CompleteContractTermsDocumentWithContext(ctx context.Context, completeContractTermsDocumentOptions *CompleteContractTermsDocumentOptions) (result *ContractTermsDocument, response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(completeContractTermsDocumentOptions, "completeContractTermsDocumentOptions cannot be nil")
 	if err != nil {
 		return
 	}
-	err = core.ValidateStruct(deliverDataProductVersionOptions, "deliverDataProductVersionOptions")
+	err = core.ValidateStruct(completeContractTermsDocumentOptions, "completeContractTermsDocumentOptions")
 	if err != nil {
 		return
 	}
 
 	pathParamsMap := map[string]string{
-		"id": *deliverDataProductVersionOptions.ID,
+		"data_product_version_id": *completeContractTermsDocumentOptions.DataProductVersionID,
+		"contract_terms_id": *completeContractTermsDocumentOptions.ContractTermsID,
+		"document_id": *completeContractTermsDocumentOptions.DocumentID,
 	}
 
 	builder := core.NewRequestBuilder(core.POST)
 	builder = builder.WithContext(ctx)
-	builder.EnableGzipCompression = dataProductExchangeApiService.GetEnableGzipCompression()
-	_, err = builder.ResolveRequestURL(dataProductExchangeApiService.Service.Options.URL, `/data_product_exchange/v1/data_product_versions/{id}/deliver`, pathParamsMap)
+	builder.EnableGzipCompression = dpx.GetEnableGzipCompression()
+	_, err = builder.ResolveRequestURL(dpx.Service.Options.URL, `/data_product_exchange/v1/data_product_versions/{data_product_version_id}/contract_terms/{contract_terms_id}/documents/{document_id}/complete`, pathParamsMap)
 	if err != nil {
 		return
 	}
 
-	for headerName, headerValue := range deliverDataProductVersionOptions.Headers {
+	for headerName, headerValue := range completeContractTermsDocumentOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
 
-	sdkHeaders := common.GetSdkHeaders("data_product_exchange_api_service", "V1", "DeliverDataProductVersion")
+	sdkHeaders := common.GetSdkHeaders("dpx", "V1", "CompleteContractTermsDocument")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+	builder.AddHeader("Accept", "application/json")
+
+	request, err := builder.Build()
+	if err != nil {
+		return
+	}
+
+	var rawResponse map[string]json.RawMessage
+	response, err = dpx.Service.Request(request, &rawResponse)
+	if err != nil {
+		return
+	}
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalContractTermsDocument)
+		if err != nil {
+			return
+		}
+		response.Result = result
+	}
+
+	return
+}
+
+// CreateContractTermsDocument : Upload a contract document to the Data Product Version contract terms
+// Upload a contract document to the Data Product Version identified by id.
+//
+// - If request object contains "url" parameter, a referential document will be created which will simply store provided
+// url.
+// - If request object does not contain "url" parameter, an attachment document will be created, and an "upload_url"
+// parameter containing signed url will be returned. Client can upload the document using provided "upload_url". Once
+// upload has been compeleted, "complete_contract_terms_document" for the given document needs to be called to mark
+// attachment as completed. After completion of the attachment "get_contract_terms_document" for the given document will
+// return signed "url" parameter that can be used to download perviously uploaded document.
+//
+// Contract terms documents can only be updated if the data product version which the contract terms are associated with
+// is in a DRAFT state.
+func (dpx *DpxV1) CreateContractTermsDocument(createContractTermsDocumentOptions *CreateContractTermsDocumentOptions) (result *ContractTermsDocument, response *core.DetailedResponse, err error) {
+	return dpx.CreateContractTermsDocumentWithContext(context.Background(), createContractTermsDocumentOptions)
+}
+
+// CreateContractTermsDocumentWithContext is an alternate form of the CreateContractTermsDocument method which supports a Context parameter
+func (dpx *DpxV1) CreateContractTermsDocumentWithContext(ctx context.Context, createContractTermsDocumentOptions *CreateContractTermsDocumentOptions) (result *ContractTermsDocument, response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(createContractTermsDocumentOptions, "createContractTermsDocumentOptions cannot be nil")
+	if err != nil {
+		return
+	}
+	err = core.ValidateStruct(createContractTermsDocumentOptions, "createContractTermsDocumentOptions")
+	if err != nil {
+		return
+	}
+
+	pathParamsMap := map[string]string{
+		"data_product_version_id": *createContractTermsDocumentOptions.DataProductVersionID,
+		"contract_terms_id": *createContractTermsDocumentOptions.ContractTermsID,
+	}
+
+	builder := core.NewRequestBuilder(core.POST)
+	builder = builder.WithContext(ctx)
+	builder.EnableGzipCompression = dpx.GetEnableGzipCompression()
+	_, err = builder.ResolveRequestURL(dpx.Service.Options.URL, `/data_product_exchange/v1/data_product_versions/{data_product_version_id}/contract_terms/{contract_terms_id}/documents`, pathParamsMap)
+	if err != nil {
+		return
+	}
+
+	for headerName, headerValue := range createContractTermsDocumentOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+
+	sdkHeaders := common.GetSdkHeaders("dpx", "V1", "CreateContractTermsDocument")
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
@@ -809,8 +900,20 @@ func (dataProductExchangeApiService *DataProductExchangeApiServiceV1) DeliverDat
 	builder.AddHeader("Content-Type", "application/json")
 
 	body := make(map[string]interface{})
-	if deliverDataProductVersionOptions.Order != nil {
-		body["order"] = deliverDataProductVersionOptions.Order
+	if createContractTermsDocumentOptions.Type != nil {
+		body["type"] = createContractTermsDocumentOptions.Type
+	}
+	if createContractTermsDocumentOptions.Name != nil {
+		body["name"] = createContractTermsDocumentOptions.Name
+	}
+	if createContractTermsDocumentOptions.ID != nil {
+		body["id"] = createContractTermsDocumentOptions.ID
+	}
+	if createContractTermsDocumentOptions.URL != nil {
+		body["url"] = createContractTermsDocumentOptions.URL
+	}
+	if createContractTermsDocumentOptions.Attachment != nil {
+		body["attachment"] = createContractTermsDocumentOptions.Attachment
 	}
 	_, err = builder.SetBodyContentJSON(body)
 	if err != nil {
@@ -823,12 +926,205 @@ func (dataProductExchangeApiService *DataProductExchangeApiServiceV1) DeliverDat
 	}
 
 	var rawResponse map[string]json.RawMessage
-	response, err = dataProductExchangeApiService.Service.Request(request, &rawResponse)
+	response, err = dpx.Service.Request(request, &rawResponse)
 	if err != nil {
 		return
 	}
 	if rawResponse != nil {
-		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalDeliveryResource)
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalContractTermsDocument)
+		if err != nil {
+			return
+		}
+		response.Result = result
+	}
+
+	return
+}
+
+// GetContractTermsDocument : Get a contract document
+// If document has an attachment that has been completed, - response will contain `url` which can be used to download
+// the attachment. If document does not have an attachment, - the response will contain `url` which was submitted at
+// document creation. If document has an attachment that has not been completed, - an error will be returned, prompting
+// client to upload the document file and complete it, prior to retrieving it.
+func (dpx *DpxV1) GetContractTermsDocument(getContractTermsDocumentOptions *GetContractTermsDocumentOptions) (result *ContractTermsDocument, response *core.DetailedResponse, err error) {
+	return dpx.GetContractTermsDocumentWithContext(context.Background(), getContractTermsDocumentOptions)
+}
+
+// GetContractTermsDocumentWithContext is an alternate form of the GetContractTermsDocument method which supports a Context parameter
+func (dpx *DpxV1) GetContractTermsDocumentWithContext(ctx context.Context, getContractTermsDocumentOptions *GetContractTermsDocumentOptions) (result *ContractTermsDocument, response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(getContractTermsDocumentOptions, "getContractTermsDocumentOptions cannot be nil")
+	if err != nil {
+		return
+	}
+	err = core.ValidateStruct(getContractTermsDocumentOptions, "getContractTermsDocumentOptions")
+	if err != nil {
+		return
+	}
+
+	pathParamsMap := map[string]string{
+		"data_product_version_id": *getContractTermsDocumentOptions.DataProductVersionID,
+		"contract_terms_id": *getContractTermsDocumentOptions.ContractTermsID,
+		"document_id": *getContractTermsDocumentOptions.DocumentID,
+	}
+
+	builder := core.NewRequestBuilder(core.GET)
+	builder = builder.WithContext(ctx)
+	builder.EnableGzipCompression = dpx.GetEnableGzipCompression()
+	_, err = builder.ResolveRequestURL(dpx.Service.Options.URL, `/data_product_exchange/v1/data_product_versions/{data_product_version_id}/contract_terms/{contract_terms_id}/documents/{document_id}`, pathParamsMap)
+	if err != nil {
+		return
+	}
+
+	for headerName, headerValue := range getContractTermsDocumentOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+
+	sdkHeaders := common.GetSdkHeaders("dpx", "V1", "GetContractTermsDocument")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+	builder.AddHeader("Accept", "application/json")
+
+	request, err := builder.Build()
+	if err != nil {
+		return
+	}
+
+	var rawResponse map[string]json.RawMessage
+	response, err = dpx.Service.Request(request, &rawResponse)
+	if err != nil {
+		return
+	}
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalContractTermsDocument)
+		if err != nil {
+			return
+		}
+		response.Result = result
+	}
+
+	return
+}
+
+// DeleteContractTermsDocument : Delete a contract document
+// Delete an existing contract document.
+//
+// Contract terms documents can only be deleted if the data product version which the contract terms is associated with
+// is in a DRAFT state.
+func (dpx *DpxV1) DeleteContractTermsDocument(deleteContractTermsDocumentOptions *DeleteContractTermsDocumentOptions) (response *core.DetailedResponse, err error) {
+	return dpx.DeleteContractTermsDocumentWithContext(context.Background(), deleteContractTermsDocumentOptions)
+}
+
+// DeleteContractTermsDocumentWithContext is an alternate form of the DeleteContractTermsDocument method which supports a Context parameter
+func (dpx *DpxV1) DeleteContractTermsDocumentWithContext(ctx context.Context, deleteContractTermsDocumentOptions *DeleteContractTermsDocumentOptions) (response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(deleteContractTermsDocumentOptions, "deleteContractTermsDocumentOptions cannot be nil")
+	if err != nil {
+		return
+	}
+	err = core.ValidateStruct(deleteContractTermsDocumentOptions, "deleteContractTermsDocumentOptions")
+	if err != nil {
+		return
+	}
+
+	pathParamsMap := map[string]string{
+		"data_product_version_id": *deleteContractTermsDocumentOptions.DataProductVersionID,
+		"contract_terms_id": *deleteContractTermsDocumentOptions.ContractTermsID,
+		"document_id": *deleteContractTermsDocumentOptions.DocumentID,
+	}
+
+	builder := core.NewRequestBuilder(core.DELETE)
+	builder = builder.WithContext(ctx)
+	builder.EnableGzipCompression = dpx.GetEnableGzipCompression()
+	_, err = builder.ResolveRequestURL(dpx.Service.Options.URL, `/data_product_exchange/v1/data_product_versions/{data_product_version_id}/contract_terms/{contract_terms_id}/documents/{document_id}`, pathParamsMap)
+	if err != nil {
+		return
+	}
+
+	for headerName, headerValue := range deleteContractTermsDocumentOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+
+	sdkHeaders := common.GetSdkHeaders("dpx", "V1", "DeleteContractTermsDocument")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
+	request, err := builder.Build()
+	if err != nil {
+		return
+	}
+
+	response, err = dpx.Service.Request(request, nil)
+
+	return
+}
+
+// UpdateContractTermsDocument : Update a contract document
+// Use this API to update the properties of a contract document identified by a valid ID.
+//
+// Specify patch operations using http://jsonpatch.com/ syntax.
+//
+// Supported patch operations include:
+// - Update the url of document if it does not have an attachment:
+// - Update the type of the document Contract terms documents can only be updated if the data product version which the
+// contract terms are associated with is in a DRAFT state.
+func (dpx *DpxV1) UpdateContractTermsDocument(updateContractTermsDocumentOptions *UpdateContractTermsDocumentOptions) (result *ContractTermsDocument, response *core.DetailedResponse, err error) {
+	return dpx.UpdateContractTermsDocumentWithContext(context.Background(), updateContractTermsDocumentOptions)
+}
+
+// UpdateContractTermsDocumentWithContext is an alternate form of the UpdateContractTermsDocument method which supports a Context parameter
+func (dpx *DpxV1) UpdateContractTermsDocumentWithContext(ctx context.Context, updateContractTermsDocumentOptions *UpdateContractTermsDocumentOptions) (result *ContractTermsDocument, response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(updateContractTermsDocumentOptions, "updateContractTermsDocumentOptions cannot be nil")
+	if err != nil {
+		return
+	}
+	err = core.ValidateStruct(updateContractTermsDocumentOptions, "updateContractTermsDocumentOptions")
+	if err != nil {
+		return
+	}
+
+	pathParamsMap := map[string]string{
+		"data_product_version_id": *updateContractTermsDocumentOptions.DataProductVersionID,
+		"contract_terms_id": *updateContractTermsDocumentOptions.ContractTermsID,
+		"document_id": *updateContractTermsDocumentOptions.DocumentID,
+	}
+
+	builder := core.NewRequestBuilder(core.PATCH)
+	builder = builder.WithContext(ctx)
+	builder.EnableGzipCompression = dpx.GetEnableGzipCompression()
+	_, err = builder.ResolveRequestURL(dpx.Service.Options.URL, `/data_product_exchange/v1/data_product_versions/{data_product_version_id}/contract_terms/{contract_terms_id}/documents/{document_id}`, pathParamsMap)
+	if err != nil {
+		return
+	}
+
+	for headerName, headerValue := range updateContractTermsDocumentOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+
+	sdkHeaders := common.GetSdkHeaders("dpx", "V1", "UpdateContractTermsDocument")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+	builder.AddHeader("Accept", "application/json")
+	builder.AddHeader("Content-Type", "application/json-patch+json")
+
+	_, err = builder.SetBodyContentJSON(updateContractTermsDocumentOptions.JSONPatchInstructions)
+	if err != nil {
+		return
+	}
+
+	request, err := builder.Build()
+	if err != nil {
+		return
+	}
+
+	var rawResponse map[string]json.RawMessage
+	response, err = dpx.Service.Request(request, &rawResponse)
+	if err != nil {
+		return
+	}
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalContractTermsDocument)
 		if err != nil {
 			return
 		}
@@ -851,7 +1147,7 @@ type AssetPartReference struct {
 }
 
 // NewAssetPartReference : Instantiate AssetPartReference (Generic Model Constructor)
-func (*DataProductExchangeApiServiceV1) NewAssetPartReference(id string, container *ContainerReference) (_model *AssetPartReference, err error) {
+func (*DpxV1) NewAssetPartReference(id string, container *ContainerReference) (_model *AssetPartReference, err error) {
 	_model = &AssetPartReference{
 		ID: core.StringPtr(id),
 		Container: container,
@@ -879,13 +1175,23 @@ func UnmarshalAssetPartReference(m map[string]json.RawMessage, result interface{
 	return
 }
 
-// AssetReference : The asset referenced by the data product version.
+// AssetReference : AssetReference struct
 type AssetReference struct {
 	// The unique identifier of the asset.
 	ID *string `json:"id" validate:"required"`
 
 	// Data product exchange container.
 	Container *ContainerReference `json:"container" validate:"required"`
+}
+
+// NewAssetReference : Instantiate AssetReference (Generic Model Constructor)
+func (*DpxV1) NewAssetReference(id string, container *ContainerReference) (_model *AssetReference, err error) {
+	_model = &AssetReference{
+		ID: core.StringPtr(id),
+		Container: container,
+	}
+	err = core.ValidateStruct(_model, "required parameters")
+	return
 }
 
 // UnmarshalAssetReference unmarshals an instance of AssetReference from the specified map of raw messages.
@@ -901,6 +1207,54 @@ func UnmarshalAssetReference(m map[string]json.RawMessage, result interface{}) (
 	}
 	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
 	return
+}
+
+// CompleteContractTermsDocumentOptions : The CompleteContractTermsDocument options.
+type CompleteContractTermsDocumentOptions struct {
+	// Data product version id.
+	DataProductVersionID *string `json:"data_product_version_id" validate:"required,ne="`
+
+	// Contract terms id.
+	ContractTermsID *string `json:"contract_terms_id" validate:"required,ne="`
+
+	// Document id.
+	DocumentID *string `json:"document_id" validate:"required,ne="`
+
+	// Allows users to set headers on API requests
+	Headers map[string]string
+}
+
+// NewCompleteContractTermsDocumentOptions : Instantiate CompleteContractTermsDocumentOptions
+func (*DpxV1) NewCompleteContractTermsDocumentOptions(dataProductVersionID string, contractTermsID string, documentID string) *CompleteContractTermsDocumentOptions {
+	return &CompleteContractTermsDocumentOptions{
+		DataProductVersionID: core.StringPtr(dataProductVersionID),
+		ContractTermsID: core.StringPtr(contractTermsID),
+		DocumentID: core.StringPtr(documentID),
+	}
+}
+
+// SetDataProductVersionID : Allow user to set DataProductVersionID
+func (_options *CompleteContractTermsDocumentOptions) SetDataProductVersionID(dataProductVersionID string) *CompleteContractTermsDocumentOptions {
+	_options.DataProductVersionID = core.StringPtr(dataProductVersionID)
+	return _options
+}
+
+// SetContractTermsID : Allow user to set ContractTermsID
+func (_options *CompleteContractTermsDocumentOptions) SetContractTermsID(contractTermsID string) *CompleteContractTermsDocumentOptions {
+	_options.ContractTermsID = core.StringPtr(contractTermsID)
+	return _options
+}
+
+// SetDocumentID : Allow user to set DocumentID
+func (_options *CompleteContractTermsDocumentOptions) SetDocumentID(documentID string) *CompleteContractTermsDocumentOptions {
+	_options.DocumentID = core.StringPtr(documentID)
+	return _options
+}
+
+// SetHeaders : Allow user to set Headers
+func (options *CompleteContractTermsDocumentOptions) SetHeaders(param map[string]string) *CompleteContractTermsDocumentOptions {
+	options.Headers = param
+	return options
 }
 
 // ContainerReference : Data product exchange container.
@@ -919,7 +1273,7 @@ const (
 )
 
 // NewContainerReference : Instantiate ContainerReference (Generic Model Constructor)
-func (*DataProductExchangeApiServiceV1) NewContainerReference(id string) (_model *ContainerReference, err error) {
+func (*DpxV1) NewContainerReference(id string) (_model *ContainerReference, err error) {
 	_model = &ContainerReference{
 		ID: core.StringPtr(id),
 	}
@@ -940,6 +1294,218 @@ func UnmarshalContainerReference(m map[string]json.RawMessage, result interface{
 	}
 	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
 	return
+}
+
+// ContractTermsDocument : ContractTermsDocument struct
+type ContractTermsDocument struct {
+	// URL which can be used to retrieve the contract document.
+	URL *string `json:"url,omitempty"`
+
+	// Type of the contract document.
+	Type *string `json:"type" validate:"required"`
+
+	// Name of the contract document.
+	Name *string `json:"name" validate:"required"`
+
+	// Id uniquely identifying this document within contract terms instance.
+	ID *string `json:"id" validate:"required"`
+
+	// Attachment associated witht the document.
+	Attachment *ContractTermsDocumentAttachment `json:"attachment,omitempty"`
+}
+
+// Constants associated with the ContractTermsDocument.Type property.
+// Type of the contract document.
+const (
+	ContractTermsDocument_Type_Sla = "sla"
+	ContractTermsDocument_Type_TermsAndConditions = "terms_and_conditions"
+)
+
+// NewContractTermsDocument : Instantiate ContractTermsDocument (Generic Model Constructor)
+func (*DpxV1) NewContractTermsDocument(typeVar string, name string, id string) (_model *ContractTermsDocument, err error) {
+	_model = &ContractTermsDocument{
+		Type: core.StringPtr(typeVar),
+		Name: core.StringPtr(name),
+		ID: core.StringPtr(id),
+	}
+	err = core.ValidateStruct(_model, "required parameters")
+	return
+}
+
+// UnmarshalContractTermsDocument unmarshals an instance of ContractTermsDocument from the specified map of raw messages.
+func UnmarshalContractTermsDocument(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(ContractTermsDocument)
+	err = core.UnmarshalPrimitive(m, "url", &obj.URL)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "type", &obj.Type)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "name", &obj.Name)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "id", &obj.ID)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalModel(m, "attachment", &obj.Attachment, UnmarshalContractTermsDocumentAttachment)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
+
+func (*DpxV1) NewContractTermsDocumentPatch(contractTermsDocument *ContractTermsDocument) (_patch []JSONPatchOperation) {
+	if (contractTermsDocument.URL != nil) {
+		_patch = append(_patch, JSONPatchOperation{
+			Op: core.StringPtr(JSONPatchOperation_Op_Add),
+			Path: core.StringPtr("/url"),
+			Value: contractTermsDocument.URL,
+		})
+	}
+	if (contractTermsDocument.Type != nil) {
+		_patch = append(_patch, JSONPatchOperation{
+			Op: core.StringPtr(JSONPatchOperation_Op_Add),
+			Path: core.StringPtr("/type"),
+			Value: contractTermsDocument.Type,
+		})
+	}
+	if (contractTermsDocument.Name != nil) {
+		_patch = append(_patch, JSONPatchOperation{
+			Op: core.StringPtr(JSONPatchOperation_Op_Add),
+			Path: core.StringPtr("/name"),
+			Value: contractTermsDocument.Name,
+		})
+	}
+	if (contractTermsDocument.ID != nil) {
+		_patch = append(_patch, JSONPatchOperation{
+			Op: core.StringPtr(JSONPatchOperation_Op_Add),
+			Path: core.StringPtr("/id"),
+			Value: contractTermsDocument.ID,
+		})
+	}
+	if (contractTermsDocument.Attachment != nil) {
+		_patch = append(_patch, JSONPatchOperation{
+			Op: core.StringPtr(JSONPatchOperation_Op_Add),
+			Path: core.StringPtr("/attachment"),
+			Value: contractTermsDocument.Attachment,
+		})
+	}
+	return
+}
+
+// ContractTermsDocumentAttachment : Attachment associated witht the document.
+type ContractTermsDocumentAttachment struct {
+	// Id representing the corresponding attachment.
+	ID *string `json:"id,omitempty"`
+}
+
+// UnmarshalContractTermsDocumentAttachment unmarshals an instance of ContractTermsDocumentAttachment from the specified map of raw messages.
+func UnmarshalContractTermsDocumentAttachment(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(ContractTermsDocumentAttachment)
+	err = core.UnmarshalPrimitive(m, "id", &obj.ID)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
+
+// CreateContractTermsDocumentOptions : The CreateContractTermsDocument options.
+type CreateContractTermsDocumentOptions struct {
+	// Data product version id.
+	DataProductVersionID *string `json:"data_product_version_id" validate:"required,ne="`
+
+	// Contract terms id.
+	ContractTermsID *string `json:"contract_terms_id" validate:"required,ne="`
+
+	// Type of the contract document.
+	Type *string `json:"type" validate:"required"`
+
+	// Name of the contract document.
+	Name *string `json:"name" validate:"required"`
+
+	// Id uniquely identifying this document within contract terms instance.
+	ID *string `json:"id" validate:"required"`
+
+	// URL which can be used to retrieve the contract document.
+	URL *string `json:"url,omitempty"`
+
+	// Attachment associated witht the document.
+	Attachment *ContractTermsDocumentAttachment `json:"attachment,omitempty"`
+
+	// Allows users to set headers on API requests
+	Headers map[string]string
+}
+
+// Constants associated with the CreateContractTermsDocumentOptions.Type property.
+// Type of the contract document.
+const (
+	CreateContractTermsDocumentOptions_Type_Sla = "sla"
+	CreateContractTermsDocumentOptions_Type_TermsAndConditions = "terms_and_conditions"
+)
+
+// NewCreateContractTermsDocumentOptions : Instantiate CreateContractTermsDocumentOptions
+func (*DpxV1) NewCreateContractTermsDocumentOptions(dataProductVersionID string, contractTermsID string, typeVar string, name string, id string) *CreateContractTermsDocumentOptions {
+	return &CreateContractTermsDocumentOptions{
+		DataProductVersionID: core.StringPtr(dataProductVersionID),
+		ContractTermsID: core.StringPtr(contractTermsID),
+		Type: core.StringPtr(typeVar),
+		Name: core.StringPtr(name),
+		ID: core.StringPtr(id),
+	}
+}
+
+// SetDataProductVersionID : Allow user to set DataProductVersionID
+func (_options *CreateContractTermsDocumentOptions) SetDataProductVersionID(dataProductVersionID string) *CreateContractTermsDocumentOptions {
+	_options.DataProductVersionID = core.StringPtr(dataProductVersionID)
+	return _options
+}
+
+// SetContractTermsID : Allow user to set ContractTermsID
+func (_options *CreateContractTermsDocumentOptions) SetContractTermsID(contractTermsID string) *CreateContractTermsDocumentOptions {
+	_options.ContractTermsID = core.StringPtr(contractTermsID)
+	return _options
+}
+
+// SetType : Allow user to set Type
+func (_options *CreateContractTermsDocumentOptions) SetType(typeVar string) *CreateContractTermsDocumentOptions {
+	_options.Type = core.StringPtr(typeVar)
+	return _options
+}
+
+// SetName : Allow user to set Name
+func (_options *CreateContractTermsDocumentOptions) SetName(name string) *CreateContractTermsDocumentOptions {
+	_options.Name = core.StringPtr(name)
+	return _options
+}
+
+// SetID : Allow user to set ID
+func (_options *CreateContractTermsDocumentOptions) SetID(id string) *CreateContractTermsDocumentOptions {
+	_options.ID = core.StringPtr(id)
+	return _options
+}
+
+// SetURL : Allow user to set URL
+func (_options *CreateContractTermsDocumentOptions) SetURL(url string) *CreateContractTermsDocumentOptions {
+	_options.URL = core.StringPtr(url)
+	return _options
+}
+
+// SetAttachment : Allow user to set Attachment
+func (_options *CreateContractTermsDocumentOptions) SetAttachment(attachment *ContractTermsDocumentAttachment) *CreateContractTermsDocumentOptions {
+	_options.Attachment = attachment
+	return _options
+}
+
+// SetHeaders : Allow user to set Headers
+func (options *CreateContractTermsDocumentOptions) SetHeaders(param map[string]string) *CreateContractTermsDocumentOptions {
+	options.Headers = param
+	return options
 }
 
 // CreateDataProductVersionOptions : The CreateDataProductVersion options.
@@ -989,6 +1555,9 @@ type CreateDataProductVersionOptions struct {
 	// product parts will default to the parts list from the previous version of the data product.
 	PartsOut []DataProductPart `json:"parts_out,omitempty"`
 
+	// The contract terms that bind interactions with this data product version.
+	ContractTerms []DataProductContractTerms `json:"contract_terms,omitempty"`
+
 	// Allows users to set headers on API requests
 	Headers map[string]string
 }
@@ -1008,7 +1577,7 @@ const (
 )
 
 // NewCreateDataProductVersionOptions : Instantiate CreateDataProductVersionOptions
-func (*DataProductExchangeApiServiceV1) NewCreateDataProductVersionOptions(container *ContainerReference) *CreateDataProductVersionOptions {
+func (*DpxV1) NewCreateDataProductVersionOptions(container *ContainerReference) *CreateDataProductVersionOptions {
 	return &CreateDataProductVersionOptions{
 		Container: container,
 	}
@@ -1077,6 +1646,12 @@ func (_options *CreateDataProductVersionOptions) SetType(typeVar []string) *Crea
 // SetPartsOut : Allow user to set PartsOut
 func (_options *CreateDataProductVersionOptions) SetPartsOut(partsOut []DataProductPart) *CreateDataProductVersionOptions {
 	_options.PartsOut = partsOut
+	return _options
+}
+
+// SetContractTerms : Allow user to set ContractTerms
+func (_options *CreateDataProductVersionOptions) SetContractTerms(contractTerms []DataProductContractTerms) *CreateDataProductVersionOptions {
+	_options.ContractTerms = contractTerms
 	return _options
 }
 
@@ -1163,6 +1738,34 @@ func (resp *DataProductCollection) GetNextStart() (*string, error) {
 	return resp.Next.Start, nil
 }
 
+// DataProductContractTerms : DataProductContractTerms struct
+type DataProductContractTerms struct {
+	ID *string `json:"id,omitempty"`
+
+	Documents []ContractTermsDocument `json:"documents,omitempty"`
+
+	Asset *AssetReference `json:"asset,omitempty"`
+}
+
+// UnmarshalDataProductContractTerms unmarshals an instance of DataProductContractTerms from the specified map of raw messages.
+func UnmarshalDataProductContractTerms(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(DataProductContractTerms)
+	err = core.UnmarshalPrimitive(m, "id", &obj.ID)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalModel(m, "documents", &obj.Documents, UnmarshalContractTermsDocument)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalModel(m, "asset", &obj.Asset, UnmarshalAssetReference)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
+
 // DataProductIdentity : Data product identifier.
 type DataProductIdentity struct {
 	// Data product identifier.
@@ -1170,7 +1773,7 @@ type DataProductIdentity struct {
 }
 
 // NewDataProductIdentity : Instantiate DataProductIdentity (Generic Model Constructor)
-func (*DataProductExchangeApiServiceV1) NewDataProductIdentity(id string) (_model *DataProductIdentity, err error) {
+func (*DpxV1) NewDataProductIdentity(id string) (_model *DataProductIdentity, err error) {
 	_model = &DataProductIdentity{
 		ID: core.StringPtr(id),
 	}
@@ -1205,7 +1808,7 @@ type DataProductPart struct {
 }
 
 // NewDataProductPart : Instantiate DataProductPart (Generic Model Constructor)
-func (*DataProductExchangeApiServiceV1) NewDataProductPart(asset *AssetPartReference) (_model *DataProductPart, err error) {
+func (*DpxV1) NewDataProductPart(asset *AssetPartReference) (_model *DataProductPart, err error) {
 	_model = &DataProductPart{
 		Asset: asset,
 	}
@@ -1257,14 +1860,13 @@ type DataProductVersion struct {
 	// The identifier of the data product version.
 	ID *string `json:"id" validate:"required"`
 
-	// The asset referenced by the data product version.
 	Asset *AssetReference `json:"asset" validate:"required"`
 
 	// Tags on the data product.
 	Tags []string `json:"tags,omitempty"`
 
 	// A list of use cases associated with the data product version.
-	UseCases []UseCase `json:"use_cases" validate:"required"`
+	UseCases []UseCase `json:"use_cases,omitempty"`
 
 	// The business domain associated with the data product version.
 	Domain *Domain `json:"domain" validate:"required"`
@@ -1280,6 +1882,9 @@ type DataProductVersion struct {
 
 	// The time when this data product version was published.
 	PublishedAt *strfmt.DateTime `json:"published_at,omitempty"`
+
+	// Contract terms binding various aspects of the data product.
+	ContractTerms []DataProductContractTerms `json:"contract_terms,omitempty"`
 
 	// The creator of this data product version.
 	CreatedBy *string `json:"created_by" validate:"required"`
@@ -1361,6 +1966,10 @@ func UnmarshalDataProductVersion(m map[string]json.RawMessage, result interface{
 	if err != nil {
 		return
 	}
+	err = core.UnmarshalModel(m, "contract_terms", &obj.ContractTerms, UnmarshalDataProductContractTerms)
+	if err != nil {
+		return
+	}
 	err = core.UnmarshalPrimitive(m, "created_by", &obj.CreatedBy)
 	if err != nil {
 		return
@@ -1373,7 +1982,7 @@ func UnmarshalDataProductVersion(m map[string]json.RawMessage, result interface{
 	return
 }
 
-func (*DataProductExchangeApiServiceV1) NewDataProductVersionPatch(dataProductVersion *DataProductVersion) (_patch []JSONPatchOperation) {
+func (*DpxV1) NewDataProductVersionPatch(dataProductVersion *DataProductVersion) (_patch []JSONPatchOperation) {
 	if (dataProductVersion.Version != nil) {
 		_patch = append(_patch, JSONPatchOperation{
 			Op: core.StringPtr(JSONPatchOperation_Op_Add),
@@ -1472,6 +2081,13 @@ func (*DataProductExchangeApiServiceV1) NewDataProductVersionPatch(dataProductVe
 			Value: dataProductVersion.PublishedAt,
 		})
 	}
+	if (dataProductVersion.ContractTerms != nil) {
+		_patch = append(_patch, JSONPatchOperation{
+			Op: core.StringPtr(JSONPatchOperation_Op_Add),
+			Path: core.StringPtr("/contract_terms"),
+			Value: dataProductVersion.ContractTerms,
+		})
+	}
 	if (dataProductVersion.CreatedBy != nil) {
 		_patch = append(_patch, JSONPatchOperation{
 			Op: core.StringPtr(JSONPatchOperation_Op_Add),
@@ -1556,7 +2172,6 @@ type DataProductVersionSummary struct {
 	// The identifier of the data product version.
 	ID *string `json:"id" validate:"required"`
 
-	// The asset referenced by the data product version.
 	Asset *AssetReference `json:"asset" validate:"required"`
 }
 
@@ -1603,6 +2218,54 @@ func UnmarshalDataProductVersionSummary(m map[string]json.RawMessage, result int
 	return
 }
 
+// DeleteContractTermsDocumentOptions : The DeleteContractTermsDocument options.
+type DeleteContractTermsDocumentOptions struct {
+	// Data product version id.
+	DataProductVersionID *string `json:"data_product_version_id" validate:"required,ne="`
+
+	// Contract terms id.
+	ContractTermsID *string `json:"contract_terms_id" validate:"required,ne="`
+
+	// Document id.
+	DocumentID *string `json:"document_id" validate:"required,ne="`
+
+	// Allows users to set headers on API requests
+	Headers map[string]string
+}
+
+// NewDeleteContractTermsDocumentOptions : Instantiate DeleteContractTermsDocumentOptions
+func (*DpxV1) NewDeleteContractTermsDocumentOptions(dataProductVersionID string, contractTermsID string, documentID string) *DeleteContractTermsDocumentOptions {
+	return &DeleteContractTermsDocumentOptions{
+		DataProductVersionID: core.StringPtr(dataProductVersionID),
+		ContractTermsID: core.StringPtr(contractTermsID),
+		DocumentID: core.StringPtr(documentID),
+	}
+}
+
+// SetDataProductVersionID : Allow user to set DataProductVersionID
+func (_options *DeleteContractTermsDocumentOptions) SetDataProductVersionID(dataProductVersionID string) *DeleteContractTermsDocumentOptions {
+	_options.DataProductVersionID = core.StringPtr(dataProductVersionID)
+	return _options
+}
+
+// SetContractTermsID : Allow user to set ContractTermsID
+func (_options *DeleteContractTermsDocumentOptions) SetContractTermsID(contractTermsID string) *DeleteContractTermsDocumentOptions {
+	_options.ContractTermsID = core.StringPtr(contractTermsID)
+	return _options
+}
+
+// SetDocumentID : Allow user to set DocumentID
+func (_options *DeleteContractTermsDocumentOptions) SetDocumentID(documentID string) *DeleteContractTermsDocumentOptions {
+	_options.DocumentID = core.StringPtr(documentID)
+	return _options
+}
+
+// SetHeaders : Allow user to set Headers
+func (options *DeleteContractTermsDocumentOptions) SetHeaders(param map[string]string) *DeleteContractTermsDocumentOptions {
+	options.Headers = param
+	return options
+}
+
 // DeleteDataProductVersionOptions : The DeleteDataProductVersion options.
 type DeleteDataProductVersionOptions struct {
 	// Data product version ID.
@@ -1613,7 +2276,7 @@ type DeleteDataProductVersionOptions struct {
 }
 
 // NewDeleteDataProductVersionOptions : Instantiate DeleteDataProductVersionOptions
-func (*DataProductExchangeApiServiceV1) NewDeleteDataProductVersionOptions(id string) *DeleteDataProductVersionOptions {
+func (*DpxV1) NewDeleteDataProductVersionOptions(id string) *DeleteDataProductVersionOptions {
 	return &DeleteDataProductVersionOptions{
 		ID: core.StringPtr(id),
 	}
@@ -1631,43 +2294,6 @@ func (options *DeleteDataProductVersionOptions) SetHeaders(param map[string]stri
 	return options
 }
 
-// DeliverDataProductVersionOptions : The DeliverDataProductVersion options.
-type DeliverDataProductVersionOptions struct {
-	// Data product version id.
-	ID *string `json:"id" validate:"required,ne="`
-
-	// The order for the data product that should be delivered as part of this delivery operation.
-	Order *OrderReference `json:"order,omitempty"`
-
-	// Allows users to set headers on API requests
-	Headers map[string]string
-}
-
-// NewDeliverDataProductVersionOptions : Instantiate DeliverDataProductVersionOptions
-func (*DataProductExchangeApiServiceV1) NewDeliverDataProductVersionOptions(id string) *DeliverDataProductVersionOptions {
-	return &DeliverDataProductVersionOptions{
-		ID: core.StringPtr(id),
-	}
-}
-
-// SetID : Allow user to set ID
-func (_options *DeliverDataProductVersionOptions) SetID(id string) *DeliverDataProductVersionOptions {
-	_options.ID = core.StringPtr(id)
-	return _options
-}
-
-// SetOrder : Allow user to set Order
-func (_options *DeliverDataProductVersionOptions) SetOrder(order *OrderReference) *DeliverDataProductVersionOptions {
-	_options.Order = order
-	return _options
-}
-
-// SetHeaders : Allow user to set Headers
-func (options *DeliverDataProductVersionOptions) SetHeaders(param map[string]string) *DeliverDataProductVersionOptions {
-	options.Headers = param
-	return options
-}
-
 // DeliveryMethod : DeliveryMethod struct
 type DeliveryMethod struct {
 	// The ID of the delivery method.
@@ -1678,7 +2304,7 @@ type DeliveryMethod struct {
 }
 
 // NewDeliveryMethod : Instantiate DeliveryMethod (Generic Model Constructor)
-func (*DataProductExchangeApiServiceV1) NewDeliveryMethod(id string, container *ContainerReference) (_model *DeliveryMethod, err error) {
+func (*DpxV1) NewDeliveryMethod(id string, container *ContainerReference) (_model *DeliveryMethod, err error) {
 	_model = &DeliveryMethod{
 		ID: core.StringPtr(id),
 		Container: container,
@@ -1702,57 +2328,22 @@ func UnmarshalDeliveryMethod(m map[string]json.RawMessage, result interface{}) (
 	return
 }
 
-// DeliveryResource : DeliveryResource struct
-type DeliveryResource struct {
-	// Status of the deliver operation.
-	Status *string `json:"status" validate:"required"`
-
-	// Link to monitor the status of the deliver operation.
-	Href *string `json:"href,omitempty"`
-}
-
-// Constants associated with the DeliveryResource.Status property.
-// Status of the deliver operation.
-const (
-	DeliveryResource_Status_Delivered = "delivered"
-	DeliveryResource_Status_Failed = "failed"
-	DeliveryResource_Status_NotStarted = "not_started"
-	DeliveryResource_Status_Received = "received"
-	DeliveryResource_Status_Succeeded = "succeeded"
-)
-
-// UnmarshalDeliveryResource unmarshals an instance of DeliveryResource from the specified map of raw messages.
-func UnmarshalDeliveryResource(m map[string]json.RawMessage, result interface{}) (err error) {
-	obj := new(DeliveryResource)
-	err = core.UnmarshalPrimitive(m, "status", &obj.Status)
-	if err != nil {
-		return
-	}
-	err = core.UnmarshalPrimitive(m, "href", &obj.Href)
-	if err != nil {
-		return
-	}
-	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
-	return
-}
-
 // Domain : The business domain associated with the data product version.
 type Domain struct {
 	// The ID of the domain.
 	ID *string `json:"id" validate:"required"`
 
 	// The display name of the domain.
-	Name *string `json:"name" validate:"required"`
+	Name *string `json:"name,omitempty"`
 
 	// Data product exchange container.
 	Container *ContainerReference `json:"container,omitempty"`
 }
 
 // NewDomain : Instantiate Domain (Generic Model Constructor)
-func (*DataProductExchangeApiServiceV1) NewDomain(id string, name string) (_model *Domain, err error) {
+func (*DpxV1) NewDomain(id string) (_model *Domain, err error) {
 	_model = &Domain{
 		ID: core.StringPtr(id),
-		Name: core.StringPtr(name),
 	}
 	err = core.ValidateStruct(_model, "required parameters")
 	return
@@ -1777,25 +2368,58 @@ func UnmarshalDomain(m map[string]json.RawMessage, result interface{}) (err erro
 	return
 }
 
-// ErrorModel : ErrorModel struct
-type ErrorModel struct {
+// ErrorModelResource : Detailed error information.
+type ErrorModelResource struct {
+	// Error code.
 	Code *string `json:"code,omitempty"`
 
-	Target *ErrorTargetModel `json:"target,omitempty"`
-
+	// Error message.
 	Message *string `json:"message,omitempty"`
 
+	// Extra information about the error.
+	Extra map[string]interface{} `json:"extra,omitempty"`
+
+	// More info message.
 	MoreInfo *string `json:"more_info,omitempty"`
 }
 
-// UnmarshalErrorModel unmarshals an instance of ErrorModel from the specified map of raw messages.
-func UnmarshalErrorModel(m map[string]json.RawMessage, result interface{}) (err error) {
-	obj := new(ErrorModel)
+// Constants associated with the ErrorModelResource.Code property.
+// Error code.
+const (
+	ErrorModelResource_Code_AlreadyExists = "already_exists"
+	ErrorModelResource_Code_ConfigurationError = "configuration_error"
+	ErrorModelResource_Code_Conflict = "conflict"
+	ErrorModelResource_Code_ConstraintViolation = "constraint_violation"
+	ErrorModelResource_Code_CreateError = "create_error"
+	ErrorModelResource_Code_DataError = "data_error"
+	ErrorModelResource_Code_DatabaseError = "database_error"
+	ErrorModelResource_Code_DatabaseQueryError = "database_query_error"
+	ErrorModelResource_Code_DatabaseUsageLimits = "database_usage_limits"
+	ErrorModelResource_Code_DeleteError = "delete_error"
+	ErrorModelResource_Code_Deleted = "deleted"
+	ErrorModelResource_Code_DependentServiceError = "dependent_service_error"
+	ErrorModelResource_Code_DoesNotExist = "does_not_exist"
+	ErrorModelResource_Code_EntitlementEnforcement = "entitlement_enforcement"
+	ErrorModelResource_Code_FetchError = "fetch_error"
+	ErrorModelResource_Code_Forbidden = "forbidden"
+	ErrorModelResource_Code_GovernancePolicyDenial = "governance_policy_denial"
+	ErrorModelResource_Code_InactiveUser = "inactive_user"
+	ErrorModelResource_Code_InvalidParameter = "invalid_parameter"
+	ErrorModelResource_Code_MissingRequiredValue = "missing_required_value"
+	ErrorModelResource_Code_NotAuthenticated = "not_authenticated"
+	ErrorModelResource_Code_NotAuthorized = "not_authorized"
+	ErrorModelResource_Code_NotImplemented = "not_implemented"
+	ErrorModelResource_Code_RequestBodyError = "request_body_error"
+	ErrorModelResource_Code_TooManyRequests = "too_many_requests"
+	ErrorModelResource_Code_UnableToPerform = "unable_to_perform"
+	ErrorModelResource_Code_UnexpectedException = "unexpected_exception"
+	ErrorModelResource_Code_UpdateError = "update_error"
+)
+
+// UnmarshalErrorModelResource unmarshals an instance of ErrorModelResource from the specified map of raw messages.
+func UnmarshalErrorModelResource(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(ErrorModelResource)
 	err = core.UnmarshalPrimitive(m, "code", &obj.Code)
-	if err != nil {
-		return
-	}
-	err = core.UnmarshalModel(m, "target", &obj.Target, UnmarshalErrorTargetModel)
 	if err != nil {
 		return
 	}
@@ -1803,36 +2427,11 @@ func UnmarshalErrorModel(m map[string]json.RawMessage, result interface{}) (err 
 	if err != nil {
 		return
 	}
+	err = core.UnmarshalPrimitive(m, "extra", &obj.Extra)
+	if err != nil {
+		return
+	}
 	err = core.UnmarshalPrimitive(m, "more_info", &obj.MoreInfo)
-	if err != nil {
-		return
-	}
-	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
-	return
-}
-
-// ErrorTargetModel : ErrorTargetModel struct
-type ErrorTargetModel struct {
-	Type *string `json:"type,omitempty"`
-
-	Name *string `json:"name,omitempty"`
-}
-
-// Constants associated with the ErrorTargetModel.Type property.
-const (
-	ErrorTargetModel_Type_Field = "field"
-	ErrorTargetModel_Type_Header = "header"
-	ErrorTargetModel_Type_Parameter = "parameter"
-)
-
-// UnmarshalErrorTargetModel unmarshals an instance of ErrorTargetModel from the specified map of raw messages.
-func UnmarshalErrorTargetModel(m map[string]json.RawMessage, result interface{}) (err error) {
-	obj := new(ErrorTargetModel)
-	err = core.UnmarshalPrimitive(m, "type", &obj.Type)
-	if err != nil {
-		return
-	}
-	err = core.UnmarshalPrimitive(m, "name", &obj.Name)
 	if err != nil {
 		return
 	}
@@ -1857,6 +2456,54 @@ func UnmarshalFirstPage(m map[string]json.RawMessage, result interface{}) (err e
 	return
 }
 
+// GetContractTermsDocumentOptions : The GetContractTermsDocument options.
+type GetContractTermsDocumentOptions struct {
+	// Data product version id.
+	DataProductVersionID *string `json:"data_product_version_id" validate:"required,ne="`
+
+	// Contract terms id.
+	ContractTermsID *string `json:"contract_terms_id" validate:"required,ne="`
+
+	// Document id.
+	DocumentID *string `json:"document_id" validate:"required,ne="`
+
+	// Allows users to set headers on API requests
+	Headers map[string]string
+}
+
+// NewGetContractTermsDocumentOptions : Instantiate GetContractTermsDocumentOptions
+func (*DpxV1) NewGetContractTermsDocumentOptions(dataProductVersionID string, contractTermsID string, documentID string) *GetContractTermsDocumentOptions {
+	return &GetContractTermsDocumentOptions{
+		DataProductVersionID: core.StringPtr(dataProductVersionID),
+		ContractTermsID: core.StringPtr(contractTermsID),
+		DocumentID: core.StringPtr(documentID),
+	}
+}
+
+// SetDataProductVersionID : Allow user to set DataProductVersionID
+func (_options *GetContractTermsDocumentOptions) SetDataProductVersionID(dataProductVersionID string) *GetContractTermsDocumentOptions {
+	_options.DataProductVersionID = core.StringPtr(dataProductVersionID)
+	return _options
+}
+
+// SetContractTermsID : Allow user to set ContractTermsID
+func (_options *GetContractTermsDocumentOptions) SetContractTermsID(contractTermsID string) *GetContractTermsDocumentOptions {
+	_options.ContractTermsID = core.StringPtr(contractTermsID)
+	return _options
+}
+
+// SetDocumentID : Allow user to set DocumentID
+func (_options *GetContractTermsDocumentOptions) SetDocumentID(documentID string) *GetContractTermsDocumentOptions {
+	_options.DocumentID = core.StringPtr(documentID)
+	return _options
+}
+
+// SetHeaders : Allow user to set Headers
+func (options *GetContractTermsDocumentOptions) SetHeaders(param map[string]string) *GetContractTermsDocumentOptions {
+	options.Headers = param
+	return options
+}
+
 // GetDataProductOptions : The GetDataProduct options.
 type GetDataProductOptions struct {
 	// Data product id.
@@ -1867,7 +2514,7 @@ type GetDataProductOptions struct {
 }
 
 // NewGetDataProductOptions : Instantiate GetDataProductOptions
-func (*DataProductExchangeApiServiceV1) NewGetDataProductOptions(id string) *GetDataProductOptions {
+func (*DpxV1) NewGetDataProductOptions(id string) *GetDataProductOptions {
 	return &GetDataProductOptions{
 		ID: core.StringPtr(id),
 	}
@@ -1895,7 +2542,7 @@ type GetDataProductVersionOptions struct {
 }
 
 // NewGetDataProductVersionOptions : Instantiate GetDataProductVersionOptions
-func (*DataProductExchangeApiServiceV1) NewGetDataProductVersionOptions(id string) *GetDataProductVersionOptions {
+func (*DpxV1) NewGetDataProductVersionOptions(id string) *GetDataProductVersionOptions {
 	return &GetDataProductVersionOptions{
 		ID: core.StringPtr(id),
 	}
@@ -1924,7 +2571,7 @@ type GetInitializeStatusOptions struct {
 }
 
 // NewGetInitializeStatusOptions : Instantiate GetInitializeStatusOptions
-func (*DataProductExchangeApiServiceV1) NewGetInitializeStatusOptions() *GetInitializeStatusOptions {
+func (*DpxV1) NewGetInitializeStatusOptions() *GetInitializeStatusOptions {
 	return &GetInitializeStatusOptions{}
 }
 
@@ -1945,7 +2592,14 @@ type InitializeOptions struct {
 	// Data product exchange container.
 	Container *ContainerReference `json:"container,omitempty"`
 
-	// List of configuration options to initialize.
+	// If data product exchange has already been initialized in the account, re-initialize happens forcefully when this is
+	// set to true.
+	Force *bool `json:"force,omitempty"`
+
+	// Set this to true when reinitalizing the configuration.
+	Reinitialize *bool `json:"reinitialize,omitempty"`
+
+	// List of configuration options to (re-)initialize.
 	Include []string `json:"include,omitempty"`
 
 	// Allows users to set headers on API requests
@@ -1960,13 +2614,25 @@ const (
 )
 
 // NewInitializeOptions : Instantiate InitializeOptions
-func (*DataProductExchangeApiServiceV1) NewInitializeOptions() *InitializeOptions {
+func (*DpxV1) NewInitializeOptions() *InitializeOptions {
 	return &InitializeOptions{}
 }
 
 // SetContainer : Allow user to set Container
 func (_options *InitializeOptions) SetContainer(container *ContainerReference) *InitializeOptions {
 	_options.Container = container
+	return _options
+}
+
+// SetForce : Allow user to set Force
+func (_options *InitializeOptions) SetForce(force bool) *InitializeOptions {
+	_options.Force = core.BoolPtr(force)
+	return _options
+}
+
+// SetReinitialize : Allow user to set Reinitialize
+func (_options *InitializeOptions) SetReinitialize(reinitialize bool) *InitializeOptions {
+	_options.Reinitialize = core.BoolPtr(reinitialize)
 	return _options
 }
 
@@ -1982,7 +2648,7 @@ func (options *InitializeOptions) SetHeaders(param map[string]string) *Initializ
 	return options
 }
 
-// InitializeResource : InitializeResource struct
+// InitializeResource : Resource defining initialization parameters.
 type InitializeResource struct {
 	// Data product exchange container.
 	Container *ContainerReference `json:"container,omitempty"`
@@ -1996,8 +2662,8 @@ type InitializeResource struct {
 	// The id to trace the failed initialization operation.
 	Trace *string `json:"trace,omitempty"`
 
-	// The error(s) encountered in the initialization operation.
-	Errors []ErrorModel `json:"errors,omitempty"`
+	// Set of errors on the latest initialization request.
+	Errors []ErrorModelResource `json:"errors,omitempty"`
 
 	// Start time of the last initialization.
 	LastStartedAt *strfmt.DateTime `json:"last_started_at,omitempty"`
@@ -2037,7 +2703,7 @@ func UnmarshalInitializeResource(m map[string]json.RawMessage, result interface{
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalModel(m, "errors", &obj.Errors, UnmarshalErrorModel)
+	err = core.UnmarshalModel(m, "errors", &obj.Errors, UnmarshalErrorModelResource)
 	if err != nil {
 		return
 	}
@@ -2057,7 +2723,7 @@ func UnmarshalInitializeResource(m map[string]json.RawMessage, result interface{
 	return
 }
 
-// InitializedOption : Initialized options.
+// InitializedOption : List of options successfully initialized.
 type InitializedOption struct {
 	// The name of the option.
 	Name *string `json:"name,omitempty"`
@@ -2074,32 +2740,6 @@ func UnmarshalInitializedOption(m map[string]json.RawMessage, result interface{}
 		return
 	}
 	err = core.UnmarshalPrimitive(m, "version", &obj.Version)
-	if err != nil {
-		return
-	}
-	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
-	return
-}
-
-// ItemReference : ItemReference struct
-type ItemReference struct {
-	// The unique identifier of an item on an asset list representing a data product order.
-	ID *string `json:"id" validate:"required"`
-}
-
-// NewItemReference : Instantiate ItemReference (Generic Model Constructor)
-func (*DataProductExchangeApiServiceV1) NewItemReference(id string) (_model *ItemReference, err error) {
-	_model = &ItemReference{
-		ID: core.StringPtr(id),
-	}
-	err = core.ValidateStruct(_model, "required parameters")
-	return
-}
-
-// UnmarshalItemReference unmarshals an instance of ItemReference from the specified map of raw messages.
-func UnmarshalItemReference(m map[string]json.RawMessage, result interface{}) (err error) {
-	obj := new(ItemReference)
-	err = core.UnmarshalPrimitive(m, "id", &obj.ID)
 	if err != nil {
 		return
 	}
@@ -2134,7 +2774,7 @@ const (
 )
 
 // NewJSONPatchOperation : Instantiate JSONPatchOperation (Generic Model Constructor)
-func (*DataProductExchangeApiServiceV1) NewJSONPatchOperation(op string, path string) (_model *JSONPatchOperation, err error) {
+func (*DpxV1) NewJSONPatchOperation(op string, path string) (_model *JSONPatchOperation, err error) {
 	_model = &JSONPatchOperation{
 		Op: core.StringPtr(op),
 		Path: core.StringPtr(path),
@@ -2199,7 +2839,7 @@ const (
 )
 
 // NewListDataProductVersionsOptions : Instantiate ListDataProductVersionsOptions
-func (*DataProductExchangeApiServiceV1) NewListDataProductVersionsOptions() *ListDataProductVersionsOptions {
+func (*DpxV1) NewListDataProductVersionsOptions() *ListDataProductVersionsOptions {
 	return &ListDataProductVersionsOptions{}
 }
 
@@ -2258,7 +2898,7 @@ type ListDataProductsOptions struct {
 }
 
 // NewListDataProductsOptions : Instantiate ListDataProductsOptions
-func (*DataProductExchangeApiServiceV1) NewListDataProductsOptions() *ListDataProductsOptions {
+func (*DpxV1) NewListDataProductsOptions() *ListDataProductsOptions {
 	return &ListDataProductsOptions{}
 }
 
@@ -2304,38 +2944,62 @@ func UnmarshalNextPage(m map[string]json.RawMessage, result interface{}) (err er
 	return
 }
 
-// OrderReference : The order for the data product that should be delivered as part of this delivery operation.
-type OrderReference struct {
-	// The unique identifier of the asset list representing a data product order.
-	ID *string `json:"id" validate:"required"`
+// UpdateContractTermsDocumentOptions : The UpdateContractTermsDocument options.
+type UpdateContractTermsDocumentOptions struct {
+	// Data product version id.
+	DataProductVersionID *string `json:"data_product_version_id" validate:"required,ne="`
 
-	// The list of items to be delivered as part of this operation. This list can be a subset of items belonging to this
-	// order. All items specified must belong to this order.
-	Items []ItemReference `json:"items,omitempty"`
+	// Contract terms id.
+	ContractTermsID *string `json:"contract_terms_id" validate:"required,ne="`
+
+	// Document id.
+	DocumentID *string `json:"document_id" validate:"required,ne="`
+
+	// A set of patch operations as defined in RFC 6902. See http://jsonpatch.com/ for more information.
+	JSONPatchInstructions []JSONPatchOperation `json:"jsonPatchInstructions" validate:"required"`
+
+	// Allows users to set headers on API requests
+	Headers map[string]string
 }
 
-// NewOrderReference : Instantiate OrderReference (Generic Model Constructor)
-func (*DataProductExchangeApiServiceV1) NewOrderReference(id string) (_model *OrderReference, err error) {
-	_model = &OrderReference{
-		ID: core.StringPtr(id),
+// NewUpdateContractTermsDocumentOptions : Instantiate UpdateContractTermsDocumentOptions
+func (*DpxV1) NewUpdateContractTermsDocumentOptions(dataProductVersionID string, contractTermsID string, documentID string, jsonPatchInstructions []JSONPatchOperation) *UpdateContractTermsDocumentOptions {
+	return &UpdateContractTermsDocumentOptions{
+		DataProductVersionID: core.StringPtr(dataProductVersionID),
+		ContractTermsID: core.StringPtr(contractTermsID),
+		DocumentID: core.StringPtr(documentID),
+		JSONPatchInstructions: jsonPatchInstructions,
 	}
-	err = core.ValidateStruct(_model, "required parameters")
-	return
 }
 
-// UnmarshalOrderReference unmarshals an instance of OrderReference from the specified map of raw messages.
-func UnmarshalOrderReference(m map[string]json.RawMessage, result interface{}) (err error) {
-	obj := new(OrderReference)
-	err = core.UnmarshalPrimitive(m, "id", &obj.ID)
-	if err != nil {
-		return
-	}
-	err = core.UnmarshalModel(m, "items", &obj.Items, UnmarshalItemReference)
-	if err != nil {
-		return
-	}
-	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
-	return
+// SetDataProductVersionID : Allow user to set DataProductVersionID
+func (_options *UpdateContractTermsDocumentOptions) SetDataProductVersionID(dataProductVersionID string) *UpdateContractTermsDocumentOptions {
+	_options.DataProductVersionID = core.StringPtr(dataProductVersionID)
+	return _options
+}
+
+// SetContractTermsID : Allow user to set ContractTermsID
+func (_options *UpdateContractTermsDocumentOptions) SetContractTermsID(contractTermsID string) *UpdateContractTermsDocumentOptions {
+	_options.ContractTermsID = core.StringPtr(contractTermsID)
+	return _options
+}
+
+// SetDocumentID : Allow user to set DocumentID
+func (_options *UpdateContractTermsDocumentOptions) SetDocumentID(documentID string) *UpdateContractTermsDocumentOptions {
+	_options.DocumentID = core.StringPtr(documentID)
+	return _options
+}
+
+// SetJSONPatchInstructions : Allow user to set JSONPatchInstructions
+func (_options *UpdateContractTermsDocumentOptions) SetJSONPatchInstructions(jsonPatchInstructions []JSONPatchOperation) *UpdateContractTermsDocumentOptions {
+	_options.JSONPatchInstructions = jsonPatchInstructions
+	return _options
+}
+
+// SetHeaders : Allow user to set Headers
+func (options *UpdateContractTermsDocumentOptions) SetHeaders(param map[string]string) *UpdateContractTermsDocumentOptions {
+	options.Headers = param
+	return options
 }
 
 // UpdateDataProductVersionOptions : The UpdateDataProductVersion options.
@@ -2351,7 +3015,7 @@ type UpdateDataProductVersionOptions struct {
 }
 
 // NewUpdateDataProductVersionOptions : Instantiate UpdateDataProductVersionOptions
-func (*DataProductExchangeApiServiceV1) NewUpdateDataProductVersionOptions(id string, jsonPatchInstructions []JSONPatchOperation) *UpdateDataProductVersionOptions {
+func (*DpxV1) NewUpdateDataProductVersionOptions(id string, jsonPatchInstructions []JSONPatchOperation) *UpdateDataProductVersionOptions {
 	return &UpdateDataProductVersionOptions{
 		ID: core.StringPtr(id),
 		JSONPatchInstructions: jsonPatchInstructions,
@@ -2382,17 +3046,16 @@ type UseCase struct {
 	ID *string `json:"id" validate:"required"`
 
 	// The display name of the use case associated with the data product.
-	Name *string `json:"name" validate:"required"`
+	Name *string `json:"name,omitempty"`
 
 	// Data product exchange container.
 	Container *ContainerReference `json:"container,omitempty"`
 }
 
 // NewUseCase : Instantiate UseCase (Generic Model Constructor)
-func (*DataProductExchangeApiServiceV1) NewUseCase(id string, name string) (_model *UseCase, err error) {
+func (*DpxV1) NewUseCase(id string) (_model *UseCase, err error) {
 	_model = &UseCase{
 		ID: core.StringPtr(id),
-		Name: core.StringPtr(name),
 	}
 	err = core.ValidateStruct(_model, "required parameters")
 	return
@@ -2423,14 +3086,14 @@ func UnmarshalUseCase(m map[string]json.RawMessage, result interface{}) (err err
 type DataProductsPager struct {
 	hasNext bool
 	options *ListDataProductsOptions
-	client  *DataProductExchangeApiServiceV1
+	client  *DpxV1
 	pageContext struct {
 		next *string
 	}
 }
 
 // NewDataProductsPager returns a new DataProductsPager instance.
-func (dataProductExchangeApiService *DataProductExchangeApiServiceV1) NewDataProductsPager(options *ListDataProductsOptions) (pager *DataProductsPager, err error) {
+func (dpx *DpxV1) NewDataProductsPager(options *ListDataProductsOptions) (pager *DataProductsPager, err error) {
 	if options.Start != nil && *options.Start != "" {
 		err = fmt.Errorf("the 'options.Start' field should not be set")
 		return
@@ -2440,7 +3103,7 @@ func (dataProductExchangeApiService *DataProductExchangeApiServiceV1) NewDataPro
 	pager = &DataProductsPager{
 		hasNext: true,
 		options: &optionsCopy,
-		client:  dataProductExchangeApiService,
+		client:  dpx,
 	}
 	return
 }
@@ -2504,14 +3167,14 @@ func (pager *DataProductsPager) GetAll() (allItems []DataProduct, err error) {
 type DataProductVersionsPager struct {
 	hasNext bool
 	options *ListDataProductVersionsOptions
-	client  *DataProductExchangeApiServiceV1
+	client  *DpxV1
 	pageContext struct {
 		next *string
 	}
 }
 
 // NewDataProductVersionsPager returns a new DataProductVersionsPager instance.
-func (dataProductExchangeApiService *DataProductExchangeApiServiceV1) NewDataProductVersionsPager(options *ListDataProductVersionsOptions) (pager *DataProductVersionsPager, err error) {
+func (dpx *DpxV1) NewDataProductVersionsPager(options *ListDataProductVersionsOptions) (pager *DataProductVersionsPager, err error) {
 	if options.Start != nil && *options.Start != "" {
 		err = fmt.Errorf("the 'options.Start' field should not be set")
 		return
@@ -2521,7 +3184,7 @@ func (dataProductExchangeApiService *DataProductExchangeApiServiceV1) NewDataPro
 	pager = &DataProductVersionsPager{
 		hasNext: true,
 		options: &optionsCopy,
-		client:  dataProductExchangeApiService,
+		client:  dpx,
 	}
 	return
 }
