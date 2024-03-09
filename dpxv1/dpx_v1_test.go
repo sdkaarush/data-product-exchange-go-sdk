@@ -1,5 +1,5 @@
 /**
- * (C) Copyright IBM Corp. 2023.
+ * (C) Copyright IBM Corp. 2024.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@ package dpxv1_test
 import (
 	"bytes"
 	"context"
+	"encoding/json"
 	"fmt"
 	"io"
 	"net/http"
@@ -67,14 +68,13 @@ var _ = Describe(`DpxV1`, func() {
 		Context(`Using external config, construct service client instances`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"DPX_URL": "https://dpxv1/api",
+				"DPX_URL":       "https://dpxv1/api",
 				"DPX_AUTH_TYPE": "noauth",
 			}
 
 			It(`Create service client using external config successfully`, func() {
 				SetTestEnvironment(testEnvironment)
-				dpxService, serviceErr := dpxv1.NewDpxV1UsingExternalConfig(&dpxv1.DpxV1Options{
-				})
+				dpxService, serviceErr := dpxv1.NewDpxV1UsingExternalConfig(&dpxv1.DpxV1Options{})
 				Expect(dpxService).ToNot(BeNil())
 				Expect(serviceErr).To(BeNil())
 				ClearTestEnvironment(testEnvironment)
@@ -103,8 +103,7 @@ var _ = Describe(`DpxV1`, func() {
 			})
 			It(`Create service client using external config and set url programatically successfully`, func() {
 				SetTestEnvironment(testEnvironment)
-				dpxService, serviceErr := dpxv1.NewDpxV1UsingExternalConfig(&dpxv1.DpxV1Options{
-				})
+				dpxService, serviceErr := dpxv1.NewDpxV1UsingExternalConfig(&dpxv1.DpxV1Options{})
 				err := dpxService.SetServiceURL("https://testService/api")
 				Expect(err).To(BeNil())
 				Expect(dpxService).ToNot(BeNil())
@@ -122,13 +121,12 @@ var _ = Describe(`DpxV1`, func() {
 		Context(`Using external config, construct service client instances with error: Invalid Auth`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"DPX_URL": "https://dpxv1/api",
+				"DPX_URL":       "https://dpxv1/api",
 				"DPX_AUTH_TYPE": "someOtherAuth",
 			}
 
 			SetTestEnvironment(testEnvironment)
-			dpxService, serviceErr := dpxv1.NewDpxV1UsingExternalConfig(&dpxv1.DpxV1Options{
-			})
+			dpxService, serviceErr := dpxv1.NewDpxV1UsingExternalConfig(&dpxv1.DpxV1Options{})
 
 			It(`Instantiate service client with error`, func() {
 				Expect(dpxService).To(BeNil())
@@ -139,7 +137,7 @@ var _ = Describe(`DpxV1`, func() {
 		Context(`Using external config, construct service client instances with error: Invalid URL`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"DPX_AUTH_TYPE":   "NOAuth",
+				"DPX_AUTH_TYPE": "NOAuth",
 			}
 
 			SetTestEnvironment(testEnvironment)
@@ -228,7 +226,7 @@ var _ = Describe(`DpxV1`, func() {
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
-					fmt.Fprintf(res, "%s", `{"container": {"id": "d29c42eb-7100-4b7a-8257-c196dbcca1cd", "type": "catalog"}, "href": "http://api.example.com/configuration/initialize/status?catalog_id=d29c42eb-7100-4b7a-8257-c196dbcca1cd", "status": "not_started", "trace": "Trace", "errors": [{"code": "request_body_error", "message": "Message", "extra": {"anyKey": "anyValue"}, "more_info": "MoreInfo"}], "last_started_at": "2023-08-21T15:24:06.021Z", "last_finished_at": "2023-08-21T20:24:34.450Z", "initialized_options": [{"name": "Name", "version": 1}]}`)
+					fmt.Fprintf(res, "%s", `{"container": {"id": "d29c42eb-7100-4b7a-8257-c196dbcca1cd", "type": "catalog"}, "href": "https://api.example.com/configuration/initialize/status?catalog_id=d29c42eb-7100-4b7a-8257-c196dbcca1cd", "status": "not_started", "trace": "Trace", "errors": [{"code": "request_body_error", "message": "Message", "extra": {"anyKey": "anyValue"}, "more_info": "MoreInfo"}], "last_started_at": "2023-08-21T15:24:06.021Z", "last_finished_at": "2023-08-21T20:24:34.450Z", "initialized_options": [{"name": "Name", "version": 1}]}`)
 				}))
 			})
 			It(`Invoke GetInitializeStatus successfully with retries`, func() {
@@ -283,7 +281,7 @@ var _ = Describe(`DpxV1`, func() {
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
-					fmt.Fprintf(res, "%s", `{"container": {"id": "d29c42eb-7100-4b7a-8257-c196dbcca1cd", "type": "catalog"}, "href": "http://api.example.com/configuration/initialize/status?catalog_id=d29c42eb-7100-4b7a-8257-c196dbcca1cd", "status": "not_started", "trace": "Trace", "errors": [{"code": "request_body_error", "message": "Message", "extra": {"anyKey": "anyValue"}, "more_info": "MoreInfo"}], "last_started_at": "2023-08-21T15:24:06.021Z", "last_finished_at": "2023-08-21T20:24:34.450Z", "initialized_options": [{"name": "Name", "version": 1}]}`)
+					fmt.Fprintf(res, "%s", `{"container": {"id": "d29c42eb-7100-4b7a-8257-c196dbcca1cd", "type": "catalog"}, "href": "https://api.example.com/configuration/initialize/status?catalog_id=d29c42eb-7100-4b7a-8257-c196dbcca1cd", "status": "not_started", "trace": "Trace", "errors": [{"code": "request_body_error", "message": "Message", "extra": {"anyKey": "anyValue"}, "more_info": "MoreInfo"}], "last_started_at": "2023-08-21T15:24:06.021Z", "last_finished_at": "2023-08-21T20:24:34.450Z", "initialized_options": [{"name": "Name", "version": 1}]}`)
 				}))
 			})
 			It(`Invoke GetInitializeStatus successfully`, func() {
@@ -403,8 +401,6 @@ var _ = Describe(`DpxV1`, func() {
 				// Construct an instance of the InitializeOptions model
 				initializeOptionsModel := new(dpxv1.InitializeOptions)
 				initializeOptionsModel.Container = containerReferenceModel
-				initializeOptionsModel.Force = core.BoolPtr(true)
-				initializeOptionsModel.Reinitialize = core.BoolPtr(true)
 				initializeOptionsModel.Include = []string{"delivery_methods", "data_product_samples", "domains_multi_industry"}
 				initializeOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 				// Expect response parsing to fail since we are receiving a text/plain response
@@ -458,7 +454,7 @@ var _ = Describe(`DpxV1`, func() {
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(202)
-					fmt.Fprintf(res, "%s", `{"container": {"id": "d29c42eb-7100-4b7a-8257-c196dbcca1cd", "type": "catalog"}, "href": "http://api.example.com/configuration/initialize/status?catalog_id=d29c42eb-7100-4b7a-8257-c196dbcca1cd", "status": "not_started", "trace": "Trace", "errors": [{"code": "request_body_error", "message": "Message", "extra": {"anyKey": "anyValue"}, "more_info": "MoreInfo"}], "last_started_at": "2023-08-21T15:24:06.021Z", "last_finished_at": "2023-08-21T20:24:34.450Z", "initialized_options": [{"name": "Name", "version": 1}]}`)
+					fmt.Fprintf(res, "%s", `{"container": {"id": "d29c42eb-7100-4b7a-8257-c196dbcca1cd", "type": "catalog"}, "href": "https://api.example.com/configuration/initialize/status?catalog_id=d29c42eb-7100-4b7a-8257-c196dbcca1cd", "status": "not_started", "trace": "Trace", "errors": [{"code": "request_body_error", "message": "Message", "extra": {"anyKey": "anyValue"}, "more_info": "MoreInfo"}], "last_started_at": "2023-08-21T15:24:06.021Z", "last_finished_at": "2023-08-21T20:24:34.450Z", "initialized_options": [{"name": "Name", "version": 1}]}`)
 				}))
 			})
 			It(`Invoke Initialize successfully with retries`, func() {
@@ -478,8 +474,6 @@ var _ = Describe(`DpxV1`, func() {
 				// Construct an instance of the InitializeOptions model
 				initializeOptionsModel := new(dpxv1.InitializeOptions)
 				initializeOptionsModel.Container = containerReferenceModel
-				initializeOptionsModel.Force = core.BoolPtr(true)
-				initializeOptionsModel.Reinitialize = core.BoolPtr(true)
 				initializeOptionsModel.Include = []string{"delivery_methods", "data_product_samples", "domains_multi_industry"}
 				initializeOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
@@ -536,7 +530,7 @@ var _ = Describe(`DpxV1`, func() {
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(202)
-					fmt.Fprintf(res, "%s", `{"container": {"id": "d29c42eb-7100-4b7a-8257-c196dbcca1cd", "type": "catalog"}, "href": "http://api.example.com/configuration/initialize/status?catalog_id=d29c42eb-7100-4b7a-8257-c196dbcca1cd", "status": "not_started", "trace": "Trace", "errors": [{"code": "request_body_error", "message": "Message", "extra": {"anyKey": "anyValue"}, "more_info": "MoreInfo"}], "last_started_at": "2023-08-21T15:24:06.021Z", "last_finished_at": "2023-08-21T20:24:34.450Z", "initialized_options": [{"name": "Name", "version": 1}]}`)
+					fmt.Fprintf(res, "%s", `{"container": {"id": "d29c42eb-7100-4b7a-8257-c196dbcca1cd", "type": "catalog"}, "href": "https://api.example.com/configuration/initialize/status?catalog_id=d29c42eb-7100-4b7a-8257-c196dbcca1cd", "status": "not_started", "trace": "Trace", "errors": [{"code": "request_body_error", "message": "Message", "extra": {"anyKey": "anyValue"}, "more_info": "MoreInfo"}], "last_started_at": "2023-08-21T15:24:06.021Z", "last_finished_at": "2023-08-21T20:24:34.450Z", "initialized_options": [{"name": "Name", "version": 1}]}`)
 				}))
 			})
 			It(`Invoke Initialize successfully`, func() {
@@ -561,8 +555,6 @@ var _ = Describe(`DpxV1`, func() {
 				// Construct an instance of the InitializeOptions model
 				initializeOptionsModel := new(dpxv1.InitializeOptions)
 				initializeOptionsModel.Container = containerReferenceModel
-				initializeOptionsModel.Force = core.BoolPtr(true)
-				initializeOptionsModel.Reinitialize = core.BoolPtr(true)
 				initializeOptionsModel.Include = []string{"delivery_methods", "data_product_samples", "domains_multi_industry"}
 				initializeOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
@@ -589,8 +581,6 @@ var _ = Describe(`DpxV1`, func() {
 				// Construct an instance of the InitializeOptions model
 				initializeOptionsModel := new(dpxv1.InitializeOptions)
 				initializeOptionsModel.Container = containerReferenceModel
-				initializeOptionsModel.Force = core.BoolPtr(true)
-				initializeOptionsModel.Reinitialize = core.BoolPtr(true)
 				initializeOptionsModel.Include = []string{"delivery_methods", "data_product_samples", "domains_multi_industry"}
 				initializeOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 				// Invoke operation with empty URL (negative test)
@@ -631,8 +621,6 @@ var _ = Describe(`DpxV1`, func() {
 				// Construct an instance of the InitializeOptions model
 				initializeOptionsModel := new(dpxv1.InitializeOptions)
 				initializeOptionsModel.Container = containerReferenceModel
-				initializeOptionsModel.Force = core.BoolPtr(true)
-				initializeOptionsModel.Reinitialize = core.BoolPtr(true)
 				initializeOptionsModel.Include = []string{"delivery_methods", "data_product_samples", "domains_multi_industry"}
 				initializeOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
@@ -649,126 +637,21 @@ var _ = Describe(`DpxV1`, func() {
 			})
 		})
 	})
-	Describe(`GetDataProduct(getDataProductOptions *GetDataProductOptions) - Operation response error`, func() {
-		getDataProductPath := "/data_product_exchange/v1/data_products/testString"
-		Context(`Using mock server endpoint with invalid JSON response`, func() {
-			BeforeEach(func() {
-				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
-					defer GinkgoRecover()
-
-					// Verify the contents of the request
-					Expect(req.URL.EscapedPath()).To(Equal(getDataProductPath))
-					Expect(req.Method).To(Equal("GET"))
-					res.Header().Set("Content-type", "application/json")
-					res.WriteHeader(200)
-					fmt.Fprint(res, `} this is not valid json {`)
-				}))
-			})
-			It(`Invoke GetDataProduct with error: Operation response processing error`, func() {
-				dpxService, serviceErr := dpxv1.NewDpxV1(&dpxv1.DpxV1Options{
-					URL:           testServer.URL,
-					Authenticator: &core.NoAuthAuthenticator{},
-				})
-				Expect(serviceErr).To(BeNil())
-				Expect(dpxService).ToNot(BeNil())
-
-				// Construct an instance of the GetDataProductOptions model
-				getDataProductOptionsModel := new(dpxv1.GetDataProductOptions)
-				getDataProductOptionsModel.ID = core.StringPtr("testString")
-				getDataProductOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
-				// Expect response parsing to fail since we are receiving a text/plain response
-				result, response, operationErr := dpxService.GetDataProduct(getDataProductOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).To(BeNil())
-
-				// Enable retries and test again
-				dpxService.EnableRetries(0, 0)
-				result, response, operationErr = dpxService.GetDataProduct(getDataProductOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).To(BeNil())
-			})
-			AfterEach(func() {
-				testServer.Close()
-			})
-		})
-	})
-	Describe(`GetDataProduct(getDataProductOptions *GetDataProductOptions)`, func() {
-		getDataProductPath := "/data_product_exchange/v1/data_products/testString"
-		Context(`Using mock server endpoint with timeout`, func() {
-			BeforeEach(func() {
-				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
-					defer GinkgoRecover()
-
-					// Verify the contents of the request
-					Expect(req.URL.EscapedPath()).To(Equal(getDataProductPath))
-					Expect(req.Method).To(Equal("GET"))
-
-					// Sleep a short time to support a timeout test
-					time.Sleep(100 * time.Millisecond)
-
-					// Set mock response
-					res.Header().Set("Content-type", "application/json")
-					res.WriteHeader(200)
-					fmt.Fprintf(res, "%s", `{"id": "b38df608-d34b-4d58-8136-ed25e6c6684e", "container": {"id": "d29c42eb-7100-4b7a-8257-c196dbcca1cd", "type": "catalog"}, "name": "Sample Data Product"}`)
-				}))
-			})
-			It(`Invoke GetDataProduct successfully with retries`, func() {
-				dpxService, serviceErr := dpxv1.NewDpxV1(&dpxv1.DpxV1Options{
-					URL:           testServer.URL,
-					Authenticator: &core.NoAuthAuthenticator{},
-				})
-				Expect(serviceErr).To(BeNil())
-				Expect(dpxService).ToNot(BeNil())
-				dpxService.EnableRetries(0, 0)
-
-				// Construct an instance of the GetDataProductOptions model
-				getDataProductOptionsModel := new(dpxv1.GetDataProductOptions)
-				getDataProductOptionsModel.ID = core.StringPtr("testString")
-				getDataProductOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
-
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				_, _, operationErr := dpxService.GetDataProductWithContext(ctx, getDataProductOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-
-				// Disable retries and test again
-				dpxService.DisableRetries()
-				result, response, operationErr := dpxService.GetDataProduct(getDataProductOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				_, _, operationErr = dpxService.GetDataProductWithContext(ctx, getDataProductOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-			})
-			AfterEach(func() {
-				testServer.Close()
-			})
-		})
+	Describe(`ManageApiKeys(manageApiKeysOptions *ManageApiKeysOptions)`, func() {
+		manageApiKeysPath := "/data_product_exchange/v1/configuration/rotate_credentials"
 		Context(`Using mock server endpoint`, func() {
 			BeforeEach(func() {
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
 					// Verify the contents of the request
-					Expect(req.URL.EscapedPath()).To(Equal(getDataProductPath))
-					Expect(req.Method).To(Equal("GET"))
+					Expect(req.URL.EscapedPath()).To(Equal(manageApiKeysPath))
+					Expect(req.Method).To(Equal("POST"))
 
-					// Set mock response
-					res.Header().Set("Content-type", "application/json")
-					res.WriteHeader(200)
-					fmt.Fprintf(res, "%s", `{"id": "b38df608-d34b-4d58-8136-ed25e6c6684e", "container": {"id": "d29c42eb-7100-4b7a-8257-c196dbcca1cd", "type": "catalog"}, "name": "Sample Data Product"}`)
+					res.WriteHeader(204)
 				}))
 			})
-			It(`Invoke GetDataProduct successfully`, func() {
+			It(`Invoke ManageApiKeys successfully`, func() {
 				dpxService, serviceErr := dpxv1.NewDpxV1(&dpxv1.DpxV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
@@ -777,24 +660,20 @@ var _ = Describe(`DpxV1`, func() {
 				Expect(dpxService).ToNot(BeNil())
 
 				// Invoke operation with nil options model (negative test)
-				result, response, operationErr := dpxService.GetDataProduct(nil)
+				response, operationErr := dpxService.ManageApiKeys(nil)
 				Expect(operationErr).NotTo(BeNil())
 				Expect(response).To(BeNil())
-				Expect(result).To(BeNil())
 
-				// Construct an instance of the GetDataProductOptions model
-				getDataProductOptionsModel := new(dpxv1.GetDataProductOptions)
-				getDataProductOptionsModel.ID = core.StringPtr("testString")
-				getDataProductOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+				// Construct an instance of the ManageApiKeysOptions model
+				manageApiKeysOptionsModel := new(dpxv1.ManageApiKeysOptions)
+				manageApiKeysOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation with valid options model (positive test)
-				result, response, operationErr = dpxService.GetDataProduct(getDataProductOptionsModel)
+				response, operationErr = dpxService.ManageApiKeys(manageApiKeysOptionsModel)
 				Expect(operationErr).To(BeNil())
 				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
 			})
-			It(`Invoke GetDataProduct with error: Operation validation and request error`, func() {
+			It(`Invoke ManageApiKeys with error: Operation request error`, func() {
 				dpxService, serviceErr := dpxv1.NewDpxV1(&dpxv1.DpxV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
@@ -802,59 +681,16 @@ var _ = Describe(`DpxV1`, func() {
 				Expect(serviceErr).To(BeNil())
 				Expect(dpxService).ToNot(BeNil())
 
-				// Construct an instance of the GetDataProductOptions model
-				getDataProductOptionsModel := new(dpxv1.GetDataProductOptions)
-				getDataProductOptionsModel.ID = core.StringPtr("testString")
-				getDataProductOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+				// Construct an instance of the ManageApiKeysOptions model
+				manageApiKeysOptionsModel := new(dpxv1.ManageApiKeysOptions)
+				manageApiKeysOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 				// Invoke operation with empty URL (negative test)
 				err := dpxService.SetServiceURL("")
 				Expect(err).To(BeNil())
-				result, response, operationErr := dpxService.GetDataProduct(getDataProductOptionsModel)
+				response, operationErr := dpxService.ManageApiKeys(manageApiKeysOptionsModel)
 				Expect(operationErr).ToNot(BeNil())
 				Expect(operationErr.Error()).To(ContainSubstring(core.ERRORMSG_SERVICE_URL_MISSING))
 				Expect(response).To(BeNil())
-				Expect(result).To(BeNil())
-				// Construct a second instance of the GetDataProductOptions model with no property values
-				getDataProductOptionsModelNew := new(dpxv1.GetDataProductOptions)
-				// Invoke operation with invalid model (negative test)
-				result, response, operationErr = dpxService.GetDataProduct(getDataProductOptionsModelNew)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(response).To(BeNil())
-				Expect(result).To(BeNil())
-			})
-			AfterEach(func() {
-				testServer.Close()
-			})
-		})
-		Context(`Using mock server endpoint with missing response body`, func() {
-			BeforeEach(func() {
-				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
-					defer GinkgoRecover()
-
-					// Set success status code with no respoonse body
-					res.WriteHeader(200)
-				}))
-			})
-			It(`Invoke GetDataProduct successfully`, func() {
-				dpxService, serviceErr := dpxv1.NewDpxV1(&dpxv1.DpxV1Options{
-					URL:           testServer.URL,
-					Authenticator: &core.NoAuthAuthenticator{},
-				})
-				Expect(serviceErr).To(BeNil())
-				Expect(dpxService).ToNot(BeNil())
-
-				// Construct an instance of the GetDataProductOptions model
-				getDataProductOptionsModel := new(dpxv1.GetDataProductOptions)
-				getDataProductOptionsModel.ID = core.StringPtr("testString")
-				getDataProductOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
-
-				// Invoke operation
-				result, response, operationErr := dpxService.GetDataProduct(getDataProductOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-
-				// Verify a nil result
-				Expect(result).To(BeNil())
 			})
 			AfterEach(func() {
 				testServer.Close()
@@ -928,7 +764,7 @@ var _ = Describe(`DpxV1`, func() {
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
-					fmt.Fprintf(res, "%s", `{"limit": 200, "first": {"href": "http://api.example.com/collection"}, "next": {"href": "http://api.example.com/collection?start=eyJvZmZzZXQiOjAsImRvbmUiOnRydWV9", "start": "eyJvZmZzZXQiOjAsImRvbmUiOnRydWV9"}, "data_products": [{"id": "b38df608-d34b-4d58-8136-ed25e6c6684e", "container": {"id": "d29c42eb-7100-4b7a-8257-c196dbcca1cd", "type": "catalog"}, "name": "Sample Data Product"}]}`)
+					fmt.Fprintf(res, "%s", `{"limit": 200, "first": {"href": "https://api.example.com/collection"}, "next": {"href": "https://api.example.com/collection?start=eyJvZmZzZXQiOjAsImRvbmUiOnRydWV9", "start": "eyJvZmZzZXQiOjAsImRvbmUiOnRydWV9"}, "data_products": [{"id": "b38df608-d34b-4d58-8136-ed25e6c6684e", "container": {"id": "d29c42eb-7100-4b7a-8257-c196dbcca1cd", "type": "catalog"}}]}`)
 				}))
 			})
 			It(`Invoke ListDataProducts successfully with retries`, func() {
@@ -985,7 +821,7 @@ var _ = Describe(`DpxV1`, func() {
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
-					fmt.Fprintf(res, "%s", `{"limit": 200, "first": {"href": "http://api.example.com/collection"}, "next": {"href": "http://api.example.com/collection?start=eyJvZmZzZXQiOjAsImRvbmUiOnRydWV9", "start": "eyJvZmZzZXQiOjAsImRvbmUiOnRydWV9"}, "data_products": [{"id": "b38df608-d34b-4d58-8136-ed25e6c6684e", "container": {"id": "d29c42eb-7100-4b7a-8257-c196dbcca1cd", "type": "catalog"}, "name": "Sample Data Product"}]}`)
+					fmt.Fprintf(res, "%s", `{"limit": 200, "first": {"href": "https://api.example.com/collection"}, "next": {"href": "https://api.example.com/collection?start=eyJvZmZzZXQiOjAsImRvbmUiOnRydWV9", "start": "eyJvZmZzZXQiOjAsImRvbmUiOnRydWV9"}, "data_products": [{"id": "b38df608-d34b-4d58-8136-ed25e6c6684e", "container": {"id": "d29c42eb-7100-4b7a-8257-c196dbcca1cd", "type": "catalog"}}]}`)
 				}))
 			})
 			It(`Invoke ListDataProducts successfully`, func() {
@@ -1078,7 +914,7 @@ var _ = Describe(`DpxV1`, func() {
 		})
 		Context(`Test pagination helper method on response`, func() {
 			It(`Invoke GetNextStart successfully`, func() {
-				responseObject := new(dpxv1.DataProductCollection)
+				responseObject := new(dpxv1.DataProductSummaryCollection)
 				nextObject := new(dpxv1.NextPage)
 				nextObject.Start = core.StringPtr("abc-123")
 				responseObject.Next = nextObject
@@ -1088,7 +924,7 @@ var _ = Describe(`DpxV1`, func() {
 				Expect(value).To(Equal(core.StringPtr("abc-123")))
 			})
 			It(`Invoke GetNextStart without a "Next" property in the response`, func() {
-				responseObject := new(dpxv1.DataProductCollection)
+				responseObject := new(dpxv1.DataProductSummaryCollection)
 
 				value, err := responseObject.GetNextStart()
 				Expect(err).To(BeNil())
@@ -1110,9 +946,9 @@ var _ = Describe(`DpxV1`, func() {
 					res.WriteHeader(200)
 					requestNumber++
 					if requestNumber == 1 {
-						fmt.Fprintf(res, "%s", `{"next":{"start":"1"},"total_count":2,"limit":1,"data_products":[{"id":"b38df608-d34b-4d58-8136-ed25e6c6684e","container":{"id":"d29c42eb-7100-4b7a-8257-c196dbcca1cd","type":"catalog"},"name":"Sample Data Product"}]}`)
+						fmt.Fprintf(res, "%s", `{"next":{"start":"1"},"total_count":2,"limit":1,"data_products":[{"id":"b38df608-d34b-4d58-8136-ed25e6c6684e","container":{"id":"d29c42eb-7100-4b7a-8257-c196dbcca1cd","type":"catalog"}}]}`)
 					} else if requestNumber == 2 {
-						fmt.Fprintf(res, "%s", `{"total_count":2,"limit":1,"data_products":[{"id":"b38df608-d34b-4d58-8136-ed25e6c6684e","container":{"id":"d29c42eb-7100-4b7a-8257-c196dbcca1cd","type":"catalog"},"name":"Sample Data Product"}]}`)
+						fmt.Fprintf(res, "%s", `{"total_count":2,"limit":1,"data_products":[{"id":"b38df608-d34b-4d58-8136-ed25e6c6684e","container":{"id":"d29c42eb-7100-4b7a-8257-c196dbcca1cd","type":"catalog"}}]}`)
 					} else {
 						res.WriteHeader(400)
 					}
@@ -1134,7 +970,7 @@ var _ = Describe(`DpxV1`, func() {
 				Expect(err).To(BeNil())
 				Expect(pager).ToNot(BeNil())
 
-				var allResults []dpxv1.DataProduct
+				var allResults []dpxv1.DataProductSummary
 				for pager.HasNext() {
 					nextPage, err := pager.GetNext()
 					Expect(err).To(BeNil())
@@ -1166,28 +1002,22 @@ var _ = Describe(`DpxV1`, func() {
 			})
 		})
 	})
-	Describe(`ListDataProductVersions(listDataProductVersionsOptions *ListDataProductVersionsOptions) - Operation response error`, func() {
-		listDataProductVersionsPath := "/data_product_exchange/v1/data_product_versions"
+	Describe(`CreateDataProduct(createDataProductOptions *CreateDataProductOptions) - Operation response error`, func() {
+		createDataProductPath := "/data_product_exchange/v1/data_products"
 		Context(`Using mock server endpoint with invalid JSON response`, func() {
 			BeforeEach(func() {
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
 					// Verify the contents of the request
-					Expect(req.URL.EscapedPath()).To(Equal(listDataProductVersionsPath))
-					Expect(req.Method).To(Equal("GET"))
-					Expect(req.URL.Query()["asset.container.id"]).To(Equal([]string{"testString"}))
-					Expect(req.URL.Query()["data_product"]).To(Equal([]string{"testString"}))
-					Expect(req.URL.Query()["state"]).To(Equal([]string{"draft"}))
-					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-					Expect(req.URL.Query()["limit"]).To(Equal([]string{fmt.Sprint(int64(10))}))
-					Expect(req.URL.Query()["start"]).To(Equal([]string{"testString"}))
+					Expect(req.URL.EscapedPath()).To(Equal(createDataProductPath))
+					Expect(req.Method).To(Equal("POST"))
 					res.Header().Set("Content-type", "application/json")
-					res.WriteHeader(200)
+					res.WriteHeader(201)
 					fmt.Fprint(res, `} this is not valid json {`)
 				}))
 			})
-			It(`Invoke ListDataProductVersions with error: Operation response processing error`, func() {
+			It(`Invoke CreateDataProduct with error: Operation response processing error`, func() {
 				dpxService, serviceErr := dpxv1.NewDpxV1(&dpxv1.DpxV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
@@ -1195,24 +1025,98 @@ var _ = Describe(`DpxV1`, func() {
 				Expect(serviceErr).To(BeNil())
 				Expect(dpxService).ToNot(BeNil())
 
-				// Construct an instance of the ListDataProductVersionsOptions model
-				listDataProductVersionsOptionsModel := new(dpxv1.ListDataProductVersionsOptions)
-				listDataProductVersionsOptionsModel.AssetContainerID = core.StringPtr("testString")
-				listDataProductVersionsOptionsModel.DataProduct = core.StringPtr("testString")
-				listDataProductVersionsOptionsModel.State = core.StringPtr("draft")
-				listDataProductVersionsOptionsModel.Version = core.StringPtr("testString")
-				listDataProductVersionsOptionsModel.Limit = core.Int64Ptr(int64(10))
-				listDataProductVersionsOptionsModel.Start = core.StringPtr("testString")
-				listDataProductVersionsOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+				// Construct an instance of the DataProductIdentity model
+				dataProductIdentityModel := new(dpxv1.DataProductIdentity)
+				dataProductIdentityModel.ID = core.StringPtr("b38df608-d34b-4d58-8136-ed25e6c6684e")
+
+				// Construct an instance of the ContainerReference model
+				containerReferenceModel := new(dpxv1.ContainerReference)
+				containerReferenceModel.ID = core.StringPtr("d29c42eb-7100-4b7a-8257-c196dbcca1cd")
+				containerReferenceModel.Type = core.StringPtr("catalog")
+
+				// Construct an instance of the AssetReference model
+				assetReferenceModel := new(dpxv1.AssetReference)
+				assetReferenceModel.ID = core.StringPtr("2b0bf220-079c-11ee-be56-0242ac120002")
+				assetReferenceModel.Container = containerReferenceModel
+
+				// Construct an instance of the UseCase model
+				useCaseModel := new(dpxv1.UseCase)
+				useCaseModel.ID = core.StringPtr("testString")
+				useCaseModel.Name = core.StringPtr("testString")
+				useCaseModel.Container = containerReferenceModel
+
+				// Construct an instance of the Domain model
+				domainModel := new(dpxv1.Domain)
+				domainModel.ID = core.StringPtr("testString")
+				domainModel.Name = core.StringPtr("testString")
+				domainModel.Container = containerReferenceModel
+
+				// Construct an instance of the AssetPartReference model
+				assetPartReferenceModel := new(dpxv1.AssetPartReference)
+				assetPartReferenceModel.ID = core.StringPtr("2b0bf220-079c-11ee-be56-0242ac120002")
+				assetPartReferenceModel.Container = containerReferenceModel
+				assetPartReferenceModel.Type = core.StringPtr("data_asset")
+
+				// Construct an instance of the DeliveryMethod model
+				deliveryMethodModel := new(dpxv1.DeliveryMethod)
+				deliveryMethodModel.ID = core.StringPtr("09cf5fcc-cb9d-4995-a8e4-16517b25229f")
+				deliveryMethodModel.Container = containerReferenceModel
+
+				// Construct an instance of the DataProductPart model
+				dataProductPartModel := new(dpxv1.DataProductPart)
+				dataProductPartModel.Asset = assetPartReferenceModel
+				dataProductPartModel.Revision = core.Int64Ptr(int64(1))
+				dataProductPartModel.UpdatedAt = CreateMockDateTime("2023-07-01T22:22:34.876Z")
+				dataProductPartModel.DeliveryMethods = []dpxv1.DeliveryMethod{*deliveryMethodModel}
+
+				// Construct an instance of the ContractTermsDocumentAttachment model
+				contractTermsDocumentAttachmentModel := new(dpxv1.ContractTermsDocumentAttachment)
+				contractTermsDocumentAttachmentModel.ID = core.StringPtr("testString")
+
+				// Construct an instance of the ContractTermsDocument model
+				contractTermsDocumentModel := new(dpxv1.ContractTermsDocument)
+				contractTermsDocumentModel.URL = core.StringPtr("testString")
+				contractTermsDocumentModel.Type = core.StringPtr("terms_and_conditions")
+				contractTermsDocumentModel.Name = core.StringPtr("testString")
+				contractTermsDocumentModel.ID = core.StringPtr("2b0bf220-079c-11ee-be56-0242ac120002")
+				contractTermsDocumentModel.Attachment = contractTermsDocumentAttachmentModel
+				contractTermsDocumentModel.UploadURL = core.StringPtr("testString")
+
+				// Construct an instance of the DataProductContractTerms model
+				dataProductContractTermsModel := new(dpxv1.DataProductContractTerms)
+				dataProductContractTermsModel.Asset = assetReferenceModel
+				dataProductContractTermsModel.ID = core.StringPtr("testString")
+				dataProductContractTermsModel.Documents = []dpxv1.ContractTermsDocument{*contractTermsDocumentModel}
+
+				// Construct an instance of the DataProductVersionPrototype model
+				dataProductVersionPrototypeModel := new(dpxv1.DataProductVersionPrototype)
+				dataProductVersionPrototypeModel.Version = core.StringPtr("1.0.0")
+				dataProductVersionPrototypeModel.State = core.StringPtr("draft")
+				dataProductVersionPrototypeModel.DataProduct = dataProductIdentityModel
+				dataProductVersionPrototypeModel.Name = core.StringPtr("My New Data Product")
+				dataProductVersionPrototypeModel.Description = core.StringPtr("This is a description of My Data Product.")
+				dataProductVersionPrototypeModel.Asset = assetReferenceModel
+				dataProductVersionPrototypeModel.Tags = []string{"testString"}
+				dataProductVersionPrototypeModel.UseCases = []dpxv1.UseCase{*useCaseModel}
+				dataProductVersionPrototypeModel.Domain = domainModel
+				dataProductVersionPrototypeModel.Types = []string{"data"}
+				dataProductVersionPrototypeModel.PartsOut = []dpxv1.DataProductPart{*dataProductPartModel}
+				dataProductVersionPrototypeModel.ContractTerms = []dpxv1.DataProductContractTerms{*dataProductContractTermsModel}
+				dataProductVersionPrototypeModel.IsRestricted = core.BoolPtr(true)
+
+				// Construct an instance of the CreateDataProductOptions model
+				createDataProductOptionsModel := new(dpxv1.CreateDataProductOptions)
+				createDataProductOptionsModel.Drafts = []dpxv1.DataProductVersionPrototype{*dataProductVersionPrototypeModel}
+				createDataProductOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 				// Expect response parsing to fail since we are receiving a text/plain response
-				result, response, operationErr := dpxService.ListDataProductVersions(listDataProductVersionsOptionsModel)
+				result, response, operationErr := dpxService.CreateDataProduct(createDataProductOptionsModel)
 				Expect(operationErr).ToNot(BeNil())
 				Expect(response).ToNot(BeNil())
 				Expect(result).To(BeNil())
 
 				// Enable retries and test again
 				dpxService.EnableRetries(0, 0)
-				result, response, operationErr = dpxService.ListDataProductVersions(listDataProductVersionsOptionsModel)
+				result, response, operationErr = dpxService.CreateDataProduct(createDataProductOptionsModel)
 				Expect(operationErr).ToNot(BeNil())
 				Expect(response).ToNot(BeNil())
 				Expect(result).To(BeNil())
@@ -1222,33 +1126,43 @@ var _ = Describe(`DpxV1`, func() {
 			})
 		})
 	})
-	Describe(`ListDataProductVersions(listDataProductVersionsOptions *ListDataProductVersionsOptions)`, func() {
-		listDataProductVersionsPath := "/data_product_exchange/v1/data_product_versions"
+	Describe(`CreateDataProduct(createDataProductOptions *CreateDataProductOptions)`, func() {
+		createDataProductPath := "/data_product_exchange/v1/data_products"
 		Context(`Using mock server endpoint with timeout`, func() {
 			BeforeEach(func() {
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
 					// Verify the contents of the request
-					Expect(req.URL.EscapedPath()).To(Equal(listDataProductVersionsPath))
-					Expect(req.Method).To(Equal("GET"))
+					Expect(req.URL.EscapedPath()).To(Equal(createDataProductPath))
+					Expect(req.Method).To(Equal("POST"))
 
-					Expect(req.URL.Query()["asset.container.id"]).To(Equal([]string{"testString"}))
-					Expect(req.URL.Query()["data_product"]).To(Equal([]string{"testString"}))
-					Expect(req.URL.Query()["state"]).To(Equal([]string{"draft"}))
-					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-					Expect(req.URL.Query()["limit"]).To(Equal([]string{fmt.Sprint(int64(10))}))
-					Expect(req.URL.Query()["start"]).To(Equal([]string{"testString"}))
+					// For gzip-disabled operation, verify Content-Encoding is not set.
+					Expect(req.Header.Get("Content-Encoding")).To(BeEmpty())
+
+					// If there is a body, then make sure we can read it
+					bodyBuf := new(bytes.Buffer)
+					if req.Header.Get("Content-Encoding") == "gzip" {
+						body, err := core.NewGzipDecompressionReader(req.Body)
+						Expect(err).To(BeNil())
+						_, err = bodyBuf.ReadFrom(body)
+						Expect(err).To(BeNil())
+					} else {
+						_, err := bodyBuf.ReadFrom(req.Body)
+						Expect(err).To(BeNil())
+					}
+					fmt.Fprintf(GinkgoWriter, "  Request body: %s", bodyBuf.String())
+
 					// Sleep a short time to support a timeout test
 					time.Sleep(100 * time.Millisecond)
 
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
-					res.WriteHeader(200)
-					fmt.Fprintf(res, "%s", `{"limit": 200, "first": {"href": "http://api.example.com/collection"}, "next": {"href": "http://api.example.com/collection?start=eyJvZmZzZXQiOjAsImRvbmUiOnRydWV9", "start": "eyJvZmZzZXQiOjAsImRvbmUiOnRydWV9"}, "data_product_versions": [{"version": "1.0.0", "state": "draft", "data_product": {"id": "b38df608-d34b-4d58-8136-ed25e6c6684e"}, "name": "My Data Product", "description": "This is a description of My Data Product.", "id": "2b0bf220-079c-11ee-be56-0242ac120002@d29c42eb-7100-4b7a-8257-c196dbcca1cd", "asset": {"id": "2b0bf220-079c-11ee-be56-0242ac120002", "container": {"id": "d29c42eb-7100-4b7a-8257-c196dbcca1cd", "type": "catalog"}}}]}`)
+					res.WriteHeader(201)
+					fmt.Fprintf(res, "%s", `{"id": "b38df608-d34b-4d58-8136-ed25e6c6684e", "container": {"id": "d29c42eb-7100-4b7a-8257-c196dbcca1cd", "type": "catalog"}, "latest_release": {"version": "1.0.0", "state": "draft", "data_product": {"id": "b38df608-d34b-4d58-8136-ed25e6c6684e"}, "name": "My Data Product", "description": "This is a description of My Data Product.", "id": "2b0bf220-079c-11ee-be56-0242ac120002@d29c42eb-7100-4b7a-8257-c196dbcca1cd", "asset": {"id": "2b0bf220-079c-11ee-be56-0242ac120002", "container": {"id": "d29c42eb-7100-4b7a-8257-c196dbcca1cd", "type": "catalog"}}}, "drafts": [{"version": "1.0.0", "state": "draft", "data_product": {"id": "b38df608-d34b-4d58-8136-ed25e6c6684e"}, "name": "My Data Product", "description": "This is a description of My Data Product.", "id": "2b0bf220-079c-11ee-be56-0242ac120002@d29c42eb-7100-4b7a-8257-c196dbcca1cd", "asset": {"id": "2b0bf220-079c-11ee-be56-0242ac120002", "container": {"id": "d29c42eb-7100-4b7a-8257-c196dbcca1cd", "type": "catalog"}}}]}`)
 				}))
 			})
-			It(`Invoke ListDataProductVersions successfully with retries`, func() {
+			It(`Invoke CreateDataProduct successfully with retries`, func() {
 				dpxService, serviceErr := dpxv1.NewDpxV1(&dpxv1.DpxV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
@@ -1257,26 +1171,100 @@ var _ = Describe(`DpxV1`, func() {
 				Expect(dpxService).ToNot(BeNil())
 				dpxService.EnableRetries(0, 0)
 
-				// Construct an instance of the ListDataProductVersionsOptions model
-				listDataProductVersionsOptionsModel := new(dpxv1.ListDataProductVersionsOptions)
-				listDataProductVersionsOptionsModel.AssetContainerID = core.StringPtr("testString")
-				listDataProductVersionsOptionsModel.DataProduct = core.StringPtr("testString")
-				listDataProductVersionsOptionsModel.State = core.StringPtr("draft")
-				listDataProductVersionsOptionsModel.Version = core.StringPtr("testString")
-				listDataProductVersionsOptionsModel.Limit = core.Int64Ptr(int64(10))
-				listDataProductVersionsOptionsModel.Start = core.StringPtr("testString")
-				listDataProductVersionsOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+				// Construct an instance of the DataProductIdentity model
+				dataProductIdentityModel := new(dpxv1.DataProductIdentity)
+				dataProductIdentityModel.ID = core.StringPtr("b38df608-d34b-4d58-8136-ed25e6c6684e")
+
+				// Construct an instance of the ContainerReference model
+				containerReferenceModel := new(dpxv1.ContainerReference)
+				containerReferenceModel.ID = core.StringPtr("d29c42eb-7100-4b7a-8257-c196dbcca1cd")
+				containerReferenceModel.Type = core.StringPtr("catalog")
+
+				// Construct an instance of the AssetReference model
+				assetReferenceModel := new(dpxv1.AssetReference)
+				assetReferenceModel.ID = core.StringPtr("2b0bf220-079c-11ee-be56-0242ac120002")
+				assetReferenceModel.Container = containerReferenceModel
+
+				// Construct an instance of the UseCase model
+				useCaseModel := new(dpxv1.UseCase)
+				useCaseModel.ID = core.StringPtr("testString")
+				useCaseModel.Name = core.StringPtr("testString")
+				useCaseModel.Container = containerReferenceModel
+
+				// Construct an instance of the Domain model
+				domainModel := new(dpxv1.Domain)
+				domainModel.ID = core.StringPtr("testString")
+				domainModel.Name = core.StringPtr("testString")
+				domainModel.Container = containerReferenceModel
+
+				// Construct an instance of the AssetPartReference model
+				assetPartReferenceModel := new(dpxv1.AssetPartReference)
+				assetPartReferenceModel.ID = core.StringPtr("2b0bf220-079c-11ee-be56-0242ac120002")
+				assetPartReferenceModel.Container = containerReferenceModel
+				assetPartReferenceModel.Type = core.StringPtr("data_asset")
+
+				// Construct an instance of the DeliveryMethod model
+				deliveryMethodModel := new(dpxv1.DeliveryMethod)
+				deliveryMethodModel.ID = core.StringPtr("09cf5fcc-cb9d-4995-a8e4-16517b25229f")
+				deliveryMethodModel.Container = containerReferenceModel
+
+				// Construct an instance of the DataProductPart model
+				dataProductPartModel := new(dpxv1.DataProductPart)
+				dataProductPartModel.Asset = assetPartReferenceModel
+				dataProductPartModel.Revision = core.Int64Ptr(int64(1))
+				dataProductPartModel.UpdatedAt = CreateMockDateTime("2023-07-01T22:22:34.876Z")
+				dataProductPartModel.DeliveryMethods = []dpxv1.DeliveryMethod{*deliveryMethodModel}
+
+				// Construct an instance of the ContractTermsDocumentAttachment model
+				contractTermsDocumentAttachmentModel := new(dpxv1.ContractTermsDocumentAttachment)
+				contractTermsDocumentAttachmentModel.ID = core.StringPtr("testString")
+
+				// Construct an instance of the ContractTermsDocument model
+				contractTermsDocumentModel := new(dpxv1.ContractTermsDocument)
+				contractTermsDocumentModel.URL = core.StringPtr("testString")
+				contractTermsDocumentModel.Type = core.StringPtr("terms_and_conditions")
+				contractTermsDocumentModel.Name = core.StringPtr("testString")
+				contractTermsDocumentModel.ID = core.StringPtr("2b0bf220-079c-11ee-be56-0242ac120002")
+				contractTermsDocumentModel.Attachment = contractTermsDocumentAttachmentModel
+				contractTermsDocumentModel.UploadURL = core.StringPtr("testString")
+
+				// Construct an instance of the DataProductContractTerms model
+				dataProductContractTermsModel := new(dpxv1.DataProductContractTerms)
+				dataProductContractTermsModel.Asset = assetReferenceModel
+				dataProductContractTermsModel.ID = core.StringPtr("testString")
+				dataProductContractTermsModel.Documents = []dpxv1.ContractTermsDocument{*contractTermsDocumentModel}
+
+				// Construct an instance of the DataProductVersionPrototype model
+				dataProductVersionPrototypeModel := new(dpxv1.DataProductVersionPrototype)
+				dataProductVersionPrototypeModel.Version = core.StringPtr("1.0.0")
+				dataProductVersionPrototypeModel.State = core.StringPtr("draft")
+				dataProductVersionPrototypeModel.DataProduct = dataProductIdentityModel
+				dataProductVersionPrototypeModel.Name = core.StringPtr("My New Data Product")
+				dataProductVersionPrototypeModel.Description = core.StringPtr("This is a description of My Data Product.")
+				dataProductVersionPrototypeModel.Asset = assetReferenceModel
+				dataProductVersionPrototypeModel.Tags = []string{"testString"}
+				dataProductVersionPrototypeModel.UseCases = []dpxv1.UseCase{*useCaseModel}
+				dataProductVersionPrototypeModel.Domain = domainModel
+				dataProductVersionPrototypeModel.Types = []string{"data"}
+				dataProductVersionPrototypeModel.PartsOut = []dpxv1.DataProductPart{*dataProductPartModel}
+				dataProductVersionPrototypeModel.ContractTerms = []dpxv1.DataProductContractTerms{*dataProductContractTermsModel}
+				dataProductVersionPrototypeModel.IsRestricted = core.BoolPtr(true)
+
+				// Construct an instance of the CreateDataProductOptions model
+				createDataProductOptionsModel := new(dpxv1.CreateDataProductOptions)
+				createDataProductOptionsModel.Drafts = []dpxv1.DataProductVersionPrototype{*dataProductVersionPrototypeModel}
+				createDataProductOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation with a Context to test a timeout error
 				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
 				defer cancelFunc()
-				_, _, operationErr := dpxService.ListDataProductVersionsWithContext(ctx, listDataProductVersionsOptionsModel)
+				_, _, operationErr := dpxService.CreateDataProductWithContext(ctx, createDataProductOptionsModel)
 				Expect(operationErr).ToNot(BeNil())
 				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
 
 				// Disable retries and test again
 				dpxService.DisableRetries()
-				result, response, operationErr := dpxService.ListDataProductVersions(listDataProductVersionsOptionsModel)
+				result, response, operationErr := dpxService.CreateDataProduct(createDataProductOptionsModel)
 				Expect(operationErr).To(BeNil())
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
@@ -1284,7 +1272,7 @@ var _ = Describe(`DpxV1`, func() {
 				// Re-test the timeout error with retries disabled
 				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
 				defer cancelFunc2()
-				_, _, operationErr = dpxService.ListDataProductVersionsWithContext(ctx, listDataProductVersionsOptionsModel)
+				_, _, operationErr = dpxService.CreateDataProductWithContext(ctx, createDataProductOptionsModel)
 				Expect(operationErr).ToNot(BeNil())
 				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
 			})
@@ -1298,22 +1286,32 @@ var _ = Describe(`DpxV1`, func() {
 					defer GinkgoRecover()
 
 					// Verify the contents of the request
-					Expect(req.URL.EscapedPath()).To(Equal(listDataProductVersionsPath))
-					Expect(req.Method).To(Equal("GET"))
+					Expect(req.URL.EscapedPath()).To(Equal(createDataProductPath))
+					Expect(req.Method).To(Equal("POST"))
 
-					Expect(req.URL.Query()["asset.container.id"]).To(Equal([]string{"testString"}))
-					Expect(req.URL.Query()["data_product"]).To(Equal([]string{"testString"}))
-					Expect(req.URL.Query()["state"]).To(Equal([]string{"draft"}))
-					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-					Expect(req.URL.Query()["limit"]).To(Equal([]string{fmt.Sprint(int64(10))}))
-					Expect(req.URL.Query()["start"]).To(Equal([]string{"testString"}))
+					// For gzip-disabled operation, verify Content-Encoding is not set.
+					Expect(req.Header.Get("Content-Encoding")).To(BeEmpty())
+
+					// If there is a body, then make sure we can read it
+					bodyBuf := new(bytes.Buffer)
+					if req.Header.Get("Content-Encoding") == "gzip" {
+						body, err := core.NewGzipDecompressionReader(req.Body)
+						Expect(err).To(BeNil())
+						_, err = bodyBuf.ReadFrom(body)
+						Expect(err).To(BeNil())
+					} else {
+						_, err := bodyBuf.ReadFrom(req.Body)
+						Expect(err).To(BeNil())
+					}
+					fmt.Fprintf(GinkgoWriter, "  Request body: %s", bodyBuf.String())
+
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
-					res.WriteHeader(200)
-					fmt.Fprintf(res, "%s", `{"limit": 200, "first": {"href": "http://api.example.com/collection"}, "next": {"href": "http://api.example.com/collection?start=eyJvZmZzZXQiOjAsImRvbmUiOnRydWV9", "start": "eyJvZmZzZXQiOjAsImRvbmUiOnRydWV9"}, "data_product_versions": [{"version": "1.0.0", "state": "draft", "data_product": {"id": "b38df608-d34b-4d58-8136-ed25e6c6684e"}, "name": "My Data Product", "description": "This is a description of My Data Product.", "id": "2b0bf220-079c-11ee-be56-0242ac120002@d29c42eb-7100-4b7a-8257-c196dbcca1cd", "asset": {"id": "2b0bf220-079c-11ee-be56-0242ac120002", "container": {"id": "d29c42eb-7100-4b7a-8257-c196dbcca1cd", "type": "catalog"}}}]}`)
+					res.WriteHeader(201)
+					fmt.Fprintf(res, "%s", `{"id": "b38df608-d34b-4d58-8136-ed25e6c6684e", "container": {"id": "d29c42eb-7100-4b7a-8257-c196dbcca1cd", "type": "catalog"}, "latest_release": {"version": "1.0.0", "state": "draft", "data_product": {"id": "b38df608-d34b-4d58-8136-ed25e6c6684e"}, "name": "My Data Product", "description": "This is a description of My Data Product.", "id": "2b0bf220-079c-11ee-be56-0242ac120002@d29c42eb-7100-4b7a-8257-c196dbcca1cd", "asset": {"id": "2b0bf220-079c-11ee-be56-0242ac120002", "container": {"id": "d29c42eb-7100-4b7a-8257-c196dbcca1cd", "type": "catalog"}}}, "drafts": [{"version": "1.0.0", "state": "draft", "data_product": {"id": "b38df608-d34b-4d58-8136-ed25e6c6684e"}, "name": "My Data Product", "description": "This is a description of My Data Product.", "id": "2b0bf220-079c-11ee-be56-0242ac120002@d29c42eb-7100-4b7a-8257-c196dbcca1cd", "asset": {"id": "2b0bf220-079c-11ee-be56-0242ac120002", "container": {"id": "d29c42eb-7100-4b7a-8257-c196dbcca1cd", "type": "catalog"}}}]}`)
 				}))
 			})
-			It(`Invoke ListDataProductVersions successfully`, func() {
+			It(`Invoke CreateDataProduct successfully`, func() {
 				dpxService, serviceErr := dpxv1.NewDpxV1(&dpxv1.DpxV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
@@ -1322,29 +1320,103 @@ var _ = Describe(`DpxV1`, func() {
 				Expect(dpxService).ToNot(BeNil())
 
 				// Invoke operation with nil options model (negative test)
-				result, response, operationErr := dpxService.ListDataProductVersions(nil)
+				result, response, operationErr := dpxService.CreateDataProduct(nil)
 				Expect(operationErr).NotTo(BeNil())
 				Expect(response).To(BeNil())
 				Expect(result).To(BeNil())
 
-				// Construct an instance of the ListDataProductVersionsOptions model
-				listDataProductVersionsOptionsModel := new(dpxv1.ListDataProductVersionsOptions)
-				listDataProductVersionsOptionsModel.AssetContainerID = core.StringPtr("testString")
-				listDataProductVersionsOptionsModel.DataProduct = core.StringPtr("testString")
-				listDataProductVersionsOptionsModel.State = core.StringPtr("draft")
-				listDataProductVersionsOptionsModel.Version = core.StringPtr("testString")
-				listDataProductVersionsOptionsModel.Limit = core.Int64Ptr(int64(10))
-				listDataProductVersionsOptionsModel.Start = core.StringPtr("testString")
-				listDataProductVersionsOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+				// Construct an instance of the DataProductIdentity model
+				dataProductIdentityModel := new(dpxv1.DataProductIdentity)
+				dataProductIdentityModel.ID = core.StringPtr("b38df608-d34b-4d58-8136-ed25e6c6684e")
+
+				// Construct an instance of the ContainerReference model
+				containerReferenceModel := new(dpxv1.ContainerReference)
+				containerReferenceModel.ID = core.StringPtr("d29c42eb-7100-4b7a-8257-c196dbcca1cd")
+				containerReferenceModel.Type = core.StringPtr("catalog")
+
+				// Construct an instance of the AssetReference model
+				assetReferenceModel := new(dpxv1.AssetReference)
+				assetReferenceModel.ID = core.StringPtr("2b0bf220-079c-11ee-be56-0242ac120002")
+				assetReferenceModel.Container = containerReferenceModel
+
+				// Construct an instance of the UseCase model
+				useCaseModel := new(dpxv1.UseCase)
+				useCaseModel.ID = core.StringPtr("testString")
+				useCaseModel.Name = core.StringPtr("testString")
+				useCaseModel.Container = containerReferenceModel
+
+				// Construct an instance of the Domain model
+				domainModel := new(dpxv1.Domain)
+				domainModel.ID = core.StringPtr("testString")
+				domainModel.Name = core.StringPtr("testString")
+				domainModel.Container = containerReferenceModel
+
+				// Construct an instance of the AssetPartReference model
+				assetPartReferenceModel := new(dpxv1.AssetPartReference)
+				assetPartReferenceModel.ID = core.StringPtr("2b0bf220-079c-11ee-be56-0242ac120002")
+				assetPartReferenceModel.Container = containerReferenceModel
+				assetPartReferenceModel.Type = core.StringPtr("data_asset")
+
+				// Construct an instance of the DeliveryMethod model
+				deliveryMethodModel := new(dpxv1.DeliveryMethod)
+				deliveryMethodModel.ID = core.StringPtr("09cf5fcc-cb9d-4995-a8e4-16517b25229f")
+				deliveryMethodModel.Container = containerReferenceModel
+
+				// Construct an instance of the DataProductPart model
+				dataProductPartModel := new(dpxv1.DataProductPart)
+				dataProductPartModel.Asset = assetPartReferenceModel
+				dataProductPartModel.Revision = core.Int64Ptr(int64(1))
+				dataProductPartModel.UpdatedAt = CreateMockDateTime("2023-07-01T22:22:34.876Z")
+				dataProductPartModel.DeliveryMethods = []dpxv1.DeliveryMethod{*deliveryMethodModel}
+
+				// Construct an instance of the ContractTermsDocumentAttachment model
+				contractTermsDocumentAttachmentModel := new(dpxv1.ContractTermsDocumentAttachment)
+				contractTermsDocumentAttachmentModel.ID = core.StringPtr("testString")
+
+				// Construct an instance of the ContractTermsDocument model
+				contractTermsDocumentModel := new(dpxv1.ContractTermsDocument)
+				contractTermsDocumentModel.URL = core.StringPtr("testString")
+				contractTermsDocumentModel.Type = core.StringPtr("terms_and_conditions")
+				contractTermsDocumentModel.Name = core.StringPtr("testString")
+				contractTermsDocumentModel.ID = core.StringPtr("2b0bf220-079c-11ee-be56-0242ac120002")
+				contractTermsDocumentModel.Attachment = contractTermsDocumentAttachmentModel
+				contractTermsDocumentModel.UploadURL = core.StringPtr("testString")
+
+				// Construct an instance of the DataProductContractTerms model
+				dataProductContractTermsModel := new(dpxv1.DataProductContractTerms)
+				dataProductContractTermsModel.Asset = assetReferenceModel
+				dataProductContractTermsModel.ID = core.StringPtr("testString")
+				dataProductContractTermsModel.Documents = []dpxv1.ContractTermsDocument{*contractTermsDocumentModel}
+
+				// Construct an instance of the DataProductVersionPrototype model
+				dataProductVersionPrototypeModel := new(dpxv1.DataProductVersionPrototype)
+				dataProductVersionPrototypeModel.Version = core.StringPtr("1.0.0")
+				dataProductVersionPrototypeModel.State = core.StringPtr("draft")
+				dataProductVersionPrototypeModel.DataProduct = dataProductIdentityModel
+				dataProductVersionPrototypeModel.Name = core.StringPtr("My New Data Product")
+				dataProductVersionPrototypeModel.Description = core.StringPtr("This is a description of My Data Product.")
+				dataProductVersionPrototypeModel.Asset = assetReferenceModel
+				dataProductVersionPrototypeModel.Tags = []string{"testString"}
+				dataProductVersionPrototypeModel.UseCases = []dpxv1.UseCase{*useCaseModel}
+				dataProductVersionPrototypeModel.Domain = domainModel
+				dataProductVersionPrototypeModel.Types = []string{"data"}
+				dataProductVersionPrototypeModel.PartsOut = []dpxv1.DataProductPart{*dataProductPartModel}
+				dataProductVersionPrototypeModel.ContractTerms = []dpxv1.DataProductContractTerms{*dataProductContractTermsModel}
+				dataProductVersionPrototypeModel.IsRestricted = core.BoolPtr(true)
+
+				// Construct an instance of the CreateDataProductOptions model
+				createDataProductOptionsModel := new(dpxv1.CreateDataProductOptions)
+				createDataProductOptionsModel.Drafts = []dpxv1.DataProductVersionPrototype{*dataProductVersionPrototypeModel}
+				createDataProductOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation with valid options model (positive test)
-				result, response, operationErr = dpxService.ListDataProductVersions(listDataProductVersionsOptionsModel)
+				result, response, operationErr = dpxService.CreateDataProduct(createDataProductOptionsModel)
 				Expect(operationErr).To(BeNil())
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
 
 			})
-			It(`Invoke ListDataProductVersions with error: Operation request error`, func() {
+			It(`Invoke CreateDataProduct with error: Operation validation and request error`, func() {
 				dpxService, serviceErr := dpxv1.NewDpxV1(&dpxv1.DpxV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
@@ -1352,21 +1424,393 @@ var _ = Describe(`DpxV1`, func() {
 				Expect(serviceErr).To(BeNil())
 				Expect(dpxService).ToNot(BeNil())
 
-				// Construct an instance of the ListDataProductVersionsOptions model
-				listDataProductVersionsOptionsModel := new(dpxv1.ListDataProductVersionsOptions)
-				listDataProductVersionsOptionsModel.AssetContainerID = core.StringPtr("testString")
-				listDataProductVersionsOptionsModel.DataProduct = core.StringPtr("testString")
-				listDataProductVersionsOptionsModel.State = core.StringPtr("draft")
-				listDataProductVersionsOptionsModel.Version = core.StringPtr("testString")
-				listDataProductVersionsOptionsModel.Limit = core.Int64Ptr(int64(10))
-				listDataProductVersionsOptionsModel.Start = core.StringPtr("testString")
-				listDataProductVersionsOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+				// Construct an instance of the DataProductIdentity model
+				dataProductIdentityModel := new(dpxv1.DataProductIdentity)
+				dataProductIdentityModel.ID = core.StringPtr("b38df608-d34b-4d58-8136-ed25e6c6684e")
+
+				// Construct an instance of the ContainerReference model
+				containerReferenceModel := new(dpxv1.ContainerReference)
+				containerReferenceModel.ID = core.StringPtr("d29c42eb-7100-4b7a-8257-c196dbcca1cd")
+				containerReferenceModel.Type = core.StringPtr("catalog")
+
+				// Construct an instance of the AssetReference model
+				assetReferenceModel := new(dpxv1.AssetReference)
+				assetReferenceModel.ID = core.StringPtr("2b0bf220-079c-11ee-be56-0242ac120002")
+				assetReferenceModel.Container = containerReferenceModel
+
+				// Construct an instance of the UseCase model
+				useCaseModel := new(dpxv1.UseCase)
+				useCaseModel.ID = core.StringPtr("testString")
+				useCaseModel.Name = core.StringPtr("testString")
+				useCaseModel.Container = containerReferenceModel
+
+				// Construct an instance of the Domain model
+				domainModel := new(dpxv1.Domain)
+				domainModel.ID = core.StringPtr("testString")
+				domainModel.Name = core.StringPtr("testString")
+				domainModel.Container = containerReferenceModel
+
+				// Construct an instance of the AssetPartReference model
+				assetPartReferenceModel := new(dpxv1.AssetPartReference)
+				assetPartReferenceModel.ID = core.StringPtr("2b0bf220-079c-11ee-be56-0242ac120002")
+				assetPartReferenceModel.Container = containerReferenceModel
+				assetPartReferenceModel.Type = core.StringPtr("data_asset")
+
+				// Construct an instance of the DeliveryMethod model
+				deliveryMethodModel := new(dpxv1.DeliveryMethod)
+				deliveryMethodModel.ID = core.StringPtr("09cf5fcc-cb9d-4995-a8e4-16517b25229f")
+				deliveryMethodModel.Container = containerReferenceModel
+
+				// Construct an instance of the DataProductPart model
+				dataProductPartModel := new(dpxv1.DataProductPart)
+				dataProductPartModel.Asset = assetPartReferenceModel
+				dataProductPartModel.Revision = core.Int64Ptr(int64(1))
+				dataProductPartModel.UpdatedAt = CreateMockDateTime("2023-07-01T22:22:34.876Z")
+				dataProductPartModel.DeliveryMethods = []dpxv1.DeliveryMethod{*deliveryMethodModel}
+
+				// Construct an instance of the ContractTermsDocumentAttachment model
+				contractTermsDocumentAttachmentModel := new(dpxv1.ContractTermsDocumentAttachment)
+				contractTermsDocumentAttachmentModel.ID = core.StringPtr("testString")
+
+				// Construct an instance of the ContractTermsDocument model
+				contractTermsDocumentModel := new(dpxv1.ContractTermsDocument)
+				contractTermsDocumentModel.URL = core.StringPtr("testString")
+				contractTermsDocumentModel.Type = core.StringPtr("terms_and_conditions")
+				contractTermsDocumentModel.Name = core.StringPtr("testString")
+				contractTermsDocumentModel.ID = core.StringPtr("2b0bf220-079c-11ee-be56-0242ac120002")
+				contractTermsDocumentModel.Attachment = contractTermsDocumentAttachmentModel
+				contractTermsDocumentModel.UploadURL = core.StringPtr("testString")
+
+				// Construct an instance of the DataProductContractTerms model
+				dataProductContractTermsModel := new(dpxv1.DataProductContractTerms)
+				dataProductContractTermsModel.Asset = assetReferenceModel
+				dataProductContractTermsModel.ID = core.StringPtr("testString")
+				dataProductContractTermsModel.Documents = []dpxv1.ContractTermsDocument{*contractTermsDocumentModel}
+
+				// Construct an instance of the DataProductVersionPrototype model
+				dataProductVersionPrototypeModel := new(dpxv1.DataProductVersionPrototype)
+				dataProductVersionPrototypeModel.Version = core.StringPtr("1.0.0")
+				dataProductVersionPrototypeModel.State = core.StringPtr("draft")
+				dataProductVersionPrototypeModel.DataProduct = dataProductIdentityModel
+				dataProductVersionPrototypeModel.Name = core.StringPtr("My New Data Product")
+				dataProductVersionPrototypeModel.Description = core.StringPtr("This is a description of My Data Product.")
+				dataProductVersionPrototypeModel.Asset = assetReferenceModel
+				dataProductVersionPrototypeModel.Tags = []string{"testString"}
+				dataProductVersionPrototypeModel.UseCases = []dpxv1.UseCase{*useCaseModel}
+				dataProductVersionPrototypeModel.Domain = domainModel
+				dataProductVersionPrototypeModel.Types = []string{"data"}
+				dataProductVersionPrototypeModel.PartsOut = []dpxv1.DataProductPart{*dataProductPartModel}
+				dataProductVersionPrototypeModel.ContractTerms = []dpxv1.DataProductContractTerms{*dataProductContractTermsModel}
+				dataProductVersionPrototypeModel.IsRestricted = core.BoolPtr(true)
+
+				// Construct an instance of the CreateDataProductOptions model
+				createDataProductOptionsModel := new(dpxv1.CreateDataProductOptions)
+				createDataProductOptionsModel.Drafts = []dpxv1.DataProductVersionPrototype{*dataProductVersionPrototypeModel}
+				createDataProductOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 				// Invoke operation with empty URL (negative test)
 				err := dpxService.SetServiceURL("")
 				Expect(err).To(BeNil())
-				result, response, operationErr := dpxService.ListDataProductVersions(listDataProductVersionsOptionsModel)
+				result, response, operationErr := dpxService.CreateDataProduct(createDataProductOptionsModel)
 				Expect(operationErr).ToNot(BeNil())
 				Expect(operationErr.Error()).To(ContainSubstring(core.ERRORMSG_SERVICE_URL_MISSING))
+				Expect(response).To(BeNil())
+				Expect(result).To(BeNil())
+				// Construct a second instance of the CreateDataProductOptions model with no property values
+				createDataProductOptionsModelNew := new(dpxv1.CreateDataProductOptions)
+				// Invoke operation with invalid model (negative test)
+				result, response, operationErr = dpxService.CreateDataProduct(createDataProductOptionsModelNew)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(response).To(BeNil())
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+		Context(`Using mock server endpoint with missing response body`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Set success status code with no respoonse body
+					res.WriteHeader(201)
+				}))
+			})
+			It(`Invoke CreateDataProduct successfully`, func() {
+				dpxService, serviceErr := dpxv1.NewDpxV1(&dpxv1.DpxV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(dpxService).ToNot(BeNil())
+
+				// Construct an instance of the DataProductIdentity model
+				dataProductIdentityModel := new(dpxv1.DataProductIdentity)
+				dataProductIdentityModel.ID = core.StringPtr("b38df608-d34b-4d58-8136-ed25e6c6684e")
+
+				// Construct an instance of the ContainerReference model
+				containerReferenceModel := new(dpxv1.ContainerReference)
+				containerReferenceModel.ID = core.StringPtr("d29c42eb-7100-4b7a-8257-c196dbcca1cd")
+				containerReferenceModel.Type = core.StringPtr("catalog")
+
+				// Construct an instance of the AssetReference model
+				assetReferenceModel := new(dpxv1.AssetReference)
+				assetReferenceModel.ID = core.StringPtr("2b0bf220-079c-11ee-be56-0242ac120002")
+				assetReferenceModel.Container = containerReferenceModel
+
+				// Construct an instance of the UseCase model
+				useCaseModel := new(dpxv1.UseCase)
+				useCaseModel.ID = core.StringPtr("testString")
+				useCaseModel.Name = core.StringPtr("testString")
+				useCaseModel.Container = containerReferenceModel
+
+				// Construct an instance of the Domain model
+				domainModel := new(dpxv1.Domain)
+				domainModel.ID = core.StringPtr("testString")
+				domainModel.Name = core.StringPtr("testString")
+				domainModel.Container = containerReferenceModel
+
+				// Construct an instance of the AssetPartReference model
+				assetPartReferenceModel := new(dpxv1.AssetPartReference)
+				assetPartReferenceModel.ID = core.StringPtr("2b0bf220-079c-11ee-be56-0242ac120002")
+				assetPartReferenceModel.Container = containerReferenceModel
+				assetPartReferenceModel.Type = core.StringPtr("data_asset")
+
+				// Construct an instance of the DeliveryMethod model
+				deliveryMethodModel := new(dpxv1.DeliveryMethod)
+				deliveryMethodModel.ID = core.StringPtr("09cf5fcc-cb9d-4995-a8e4-16517b25229f")
+				deliveryMethodModel.Container = containerReferenceModel
+
+				// Construct an instance of the DataProductPart model
+				dataProductPartModel := new(dpxv1.DataProductPart)
+				dataProductPartModel.Asset = assetPartReferenceModel
+				dataProductPartModel.Revision = core.Int64Ptr(int64(1))
+				dataProductPartModel.UpdatedAt = CreateMockDateTime("2023-07-01T22:22:34.876Z")
+				dataProductPartModel.DeliveryMethods = []dpxv1.DeliveryMethod{*deliveryMethodModel}
+
+				// Construct an instance of the ContractTermsDocumentAttachment model
+				contractTermsDocumentAttachmentModel := new(dpxv1.ContractTermsDocumentAttachment)
+				contractTermsDocumentAttachmentModel.ID = core.StringPtr("testString")
+
+				// Construct an instance of the ContractTermsDocument model
+				contractTermsDocumentModel := new(dpxv1.ContractTermsDocument)
+				contractTermsDocumentModel.URL = core.StringPtr("testString")
+				contractTermsDocumentModel.Type = core.StringPtr("terms_and_conditions")
+				contractTermsDocumentModel.Name = core.StringPtr("testString")
+				contractTermsDocumentModel.ID = core.StringPtr("2b0bf220-079c-11ee-be56-0242ac120002")
+				contractTermsDocumentModel.Attachment = contractTermsDocumentAttachmentModel
+				contractTermsDocumentModel.UploadURL = core.StringPtr("testString")
+
+				// Construct an instance of the DataProductContractTerms model
+				dataProductContractTermsModel := new(dpxv1.DataProductContractTerms)
+				dataProductContractTermsModel.Asset = assetReferenceModel
+				dataProductContractTermsModel.ID = core.StringPtr("testString")
+				dataProductContractTermsModel.Documents = []dpxv1.ContractTermsDocument{*contractTermsDocumentModel}
+
+				// Construct an instance of the DataProductVersionPrototype model
+				dataProductVersionPrototypeModel := new(dpxv1.DataProductVersionPrototype)
+				dataProductVersionPrototypeModel.Version = core.StringPtr("1.0.0")
+				dataProductVersionPrototypeModel.State = core.StringPtr("draft")
+				dataProductVersionPrototypeModel.DataProduct = dataProductIdentityModel
+				dataProductVersionPrototypeModel.Name = core.StringPtr("My New Data Product")
+				dataProductVersionPrototypeModel.Description = core.StringPtr("This is a description of My Data Product.")
+				dataProductVersionPrototypeModel.Asset = assetReferenceModel
+				dataProductVersionPrototypeModel.Tags = []string{"testString"}
+				dataProductVersionPrototypeModel.UseCases = []dpxv1.UseCase{*useCaseModel}
+				dataProductVersionPrototypeModel.Domain = domainModel
+				dataProductVersionPrototypeModel.Types = []string{"data"}
+				dataProductVersionPrototypeModel.PartsOut = []dpxv1.DataProductPart{*dataProductPartModel}
+				dataProductVersionPrototypeModel.ContractTerms = []dpxv1.DataProductContractTerms{*dataProductContractTermsModel}
+				dataProductVersionPrototypeModel.IsRestricted = core.BoolPtr(true)
+
+				// Construct an instance of the CreateDataProductOptions model
+				createDataProductOptionsModel := new(dpxv1.CreateDataProductOptions)
+				createDataProductOptionsModel.Drafts = []dpxv1.DataProductVersionPrototype{*dataProductVersionPrototypeModel}
+				createDataProductOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation
+				result, response, operationErr := dpxService.CreateDataProduct(createDataProductOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+
+				// Verify a nil result
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+	})
+	Describe(`GetDataProduct(getDataProductOptions *GetDataProductOptions) - Operation response error`, func() {
+		getDataProductPath := "/data_product_exchange/v1/data_products/b38df608-d34b-4d58-8136-ed25e6c6684e"
+		Context(`Using mock server endpoint with invalid JSON response`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(getDataProductPath))
+					Expect(req.Method).To(Equal("GET"))
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprint(res, `} this is not valid json {`)
+				}))
+			})
+			It(`Invoke GetDataProduct with error: Operation response processing error`, func() {
+				dpxService, serviceErr := dpxv1.NewDpxV1(&dpxv1.DpxV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(dpxService).ToNot(BeNil())
+
+				// Construct an instance of the GetDataProductOptions model
+				getDataProductOptionsModel := new(dpxv1.GetDataProductOptions)
+				getDataProductOptionsModel.DataProductID = core.StringPtr("b38df608-d34b-4d58-8136-ed25e6c6684e")
+				getDataProductOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+				// Expect response parsing to fail since we are receiving a text/plain response
+				result, response, operationErr := dpxService.GetDataProduct(getDataProductOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).To(BeNil())
+
+				// Enable retries and test again
+				dpxService.EnableRetries(0, 0)
+				result, response, operationErr = dpxService.GetDataProduct(getDataProductOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+	})
+	Describe(`GetDataProduct(getDataProductOptions *GetDataProductOptions)`, func() {
+		getDataProductPath := "/data_product_exchange/v1/data_products/b38df608-d34b-4d58-8136-ed25e6c6684e"
+		Context(`Using mock server endpoint with timeout`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(getDataProductPath))
+					Expect(req.Method).To(Equal("GET"))
+
+					// Sleep a short time to support a timeout test
+					time.Sleep(100 * time.Millisecond)
+
+					// Set mock response
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprintf(res, "%s", `{"id": "b38df608-d34b-4d58-8136-ed25e6c6684e", "container": {"id": "d29c42eb-7100-4b7a-8257-c196dbcca1cd", "type": "catalog"}, "latest_release": {"version": "1.0.0", "state": "draft", "data_product": {"id": "b38df608-d34b-4d58-8136-ed25e6c6684e"}, "name": "My Data Product", "description": "This is a description of My Data Product.", "id": "2b0bf220-079c-11ee-be56-0242ac120002@d29c42eb-7100-4b7a-8257-c196dbcca1cd", "asset": {"id": "2b0bf220-079c-11ee-be56-0242ac120002", "container": {"id": "d29c42eb-7100-4b7a-8257-c196dbcca1cd", "type": "catalog"}}}, "drafts": [{"version": "1.0.0", "state": "draft", "data_product": {"id": "b38df608-d34b-4d58-8136-ed25e6c6684e"}, "name": "My Data Product", "description": "This is a description of My Data Product.", "id": "2b0bf220-079c-11ee-be56-0242ac120002@d29c42eb-7100-4b7a-8257-c196dbcca1cd", "asset": {"id": "2b0bf220-079c-11ee-be56-0242ac120002", "container": {"id": "d29c42eb-7100-4b7a-8257-c196dbcca1cd", "type": "catalog"}}}]}`)
+				}))
+			})
+			It(`Invoke GetDataProduct successfully with retries`, func() {
+				dpxService, serviceErr := dpxv1.NewDpxV1(&dpxv1.DpxV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(dpxService).ToNot(BeNil())
+				dpxService.EnableRetries(0, 0)
+
+				// Construct an instance of the GetDataProductOptions model
+				getDataProductOptionsModel := new(dpxv1.GetDataProductOptions)
+				getDataProductOptionsModel.DataProductID = core.StringPtr("b38df608-d34b-4d58-8136-ed25e6c6684e")
+				getDataProductOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with a Context to test a timeout error
+				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc()
+				_, _, operationErr := dpxService.GetDataProductWithContext(ctx, getDataProductOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+
+				// Disable retries and test again
+				dpxService.DisableRetries()
+				result, response, operationErr := dpxService.GetDataProduct(getDataProductOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+
+				// Re-test the timeout error with retries disabled
+				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc2()
+				_, _, operationErr = dpxService.GetDataProductWithContext(ctx, getDataProductOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(getDataProductPath))
+					Expect(req.Method).To(Equal("GET"))
+
+					// Set mock response
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprintf(res, "%s", `{"id": "b38df608-d34b-4d58-8136-ed25e6c6684e", "container": {"id": "d29c42eb-7100-4b7a-8257-c196dbcca1cd", "type": "catalog"}, "latest_release": {"version": "1.0.0", "state": "draft", "data_product": {"id": "b38df608-d34b-4d58-8136-ed25e6c6684e"}, "name": "My Data Product", "description": "This is a description of My Data Product.", "id": "2b0bf220-079c-11ee-be56-0242ac120002@d29c42eb-7100-4b7a-8257-c196dbcca1cd", "asset": {"id": "2b0bf220-079c-11ee-be56-0242ac120002", "container": {"id": "d29c42eb-7100-4b7a-8257-c196dbcca1cd", "type": "catalog"}}}, "drafts": [{"version": "1.0.0", "state": "draft", "data_product": {"id": "b38df608-d34b-4d58-8136-ed25e6c6684e"}, "name": "My Data Product", "description": "This is a description of My Data Product.", "id": "2b0bf220-079c-11ee-be56-0242ac120002@d29c42eb-7100-4b7a-8257-c196dbcca1cd", "asset": {"id": "2b0bf220-079c-11ee-be56-0242ac120002", "container": {"id": "d29c42eb-7100-4b7a-8257-c196dbcca1cd", "type": "catalog"}}}]}`)
+				}))
+			})
+			It(`Invoke GetDataProduct successfully`, func() {
+				dpxService, serviceErr := dpxv1.NewDpxV1(&dpxv1.DpxV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(dpxService).ToNot(BeNil())
+
+				// Invoke operation with nil options model (negative test)
+				result, response, operationErr := dpxService.GetDataProduct(nil)
+				Expect(operationErr).NotTo(BeNil())
+				Expect(response).To(BeNil())
+				Expect(result).To(BeNil())
+
+				// Construct an instance of the GetDataProductOptions model
+				getDataProductOptionsModel := new(dpxv1.GetDataProductOptions)
+				getDataProductOptionsModel.DataProductID = core.StringPtr("b38df608-d34b-4d58-8136-ed25e6c6684e")
+				getDataProductOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with valid options model (positive test)
+				result, response, operationErr = dpxService.GetDataProduct(getDataProductOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+
+			})
+			It(`Invoke GetDataProduct with error: Operation validation and request error`, func() {
+				dpxService, serviceErr := dpxv1.NewDpxV1(&dpxv1.DpxV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(dpxService).ToNot(BeNil())
+
+				// Construct an instance of the GetDataProductOptions model
+				getDataProductOptionsModel := new(dpxv1.GetDataProductOptions)
+				getDataProductOptionsModel.DataProductID = core.StringPtr("b38df608-d34b-4d58-8136-ed25e6c6684e")
+				getDataProductOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+				// Invoke operation with empty URL (negative test)
+				err := dpxService.SetServiceURL("")
+				Expect(err).To(BeNil())
+				result, response, operationErr := dpxService.GetDataProduct(getDataProductOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring(core.ERRORMSG_SERVICE_URL_MISSING))
+				Expect(response).To(BeNil())
+				Expect(result).To(BeNil())
+				// Construct a second instance of the GetDataProductOptions model with no property values
+				getDataProductOptionsModelNew := new(dpxv1.GetDataProductOptions)
+				// Invoke operation with invalid model (negative test)
+				result, response, operationErr = dpxService.GetDataProduct(getDataProductOptionsModelNew)
+				Expect(operationErr).ToNot(BeNil())
 				Expect(response).To(BeNil())
 				Expect(result).To(BeNil())
 			})
@@ -1383,7 +1827,7 @@ var _ = Describe(`DpxV1`, func() {
 					res.WriteHeader(200)
 				}))
 			})
-			It(`Invoke ListDataProductVersions successfully`, func() {
+			It(`Invoke GetDataProduct successfully`, func() {
 				dpxService, serviceErr := dpxv1.NewDpxV1(&dpxv1.DpxV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
@@ -1391,18 +1835,484 @@ var _ = Describe(`DpxV1`, func() {
 				Expect(serviceErr).To(BeNil())
 				Expect(dpxService).ToNot(BeNil())
 
-				// Construct an instance of the ListDataProductVersionsOptions model
-				listDataProductVersionsOptionsModel := new(dpxv1.ListDataProductVersionsOptions)
-				listDataProductVersionsOptionsModel.AssetContainerID = core.StringPtr("testString")
-				listDataProductVersionsOptionsModel.DataProduct = core.StringPtr("testString")
-				listDataProductVersionsOptionsModel.State = core.StringPtr("draft")
-				listDataProductVersionsOptionsModel.Version = core.StringPtr("testString")
-				listDataProductVersionsOptionsModel.Limit = core.Int64Ptr(int64(10))
-				listDataProductVersionsOptionsModel.Start = core.StringPtr("testString")
-				listDataProductVersionsOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+				// Construct an instance of the GetDataProductOptions model
+				getDataProductOptionsModel := new(dpxv1.GetDataProductOptions)
+				getDataProductOptionsModel.DataProductID = core.StringPtr("b38df608-d34b-4d58-8136-ed25e6c6684e")
+				getDataProductOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation
-				result, response, operationErr := dpxService.ListDataProductVersions(listDataProductVersionsOptionsModel)
+				result, response, operationErr := dpxService.GetDataProduct(getDataProductOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+
+				// Verify a nil result
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+	})
+	Describe(`CompleteDraftContractTermsDocument(completeDraftContractTermsDocumentOptions *CompleteDraftContractTermsDocumentOptions) - Operation response error`, func() {
+		completeDraftContractTermsDocumentPath := "/data_product_exchange/v1/data_products/b38df608-d34b-4d58-8136-ed25e6c6684e/drafts/2b0bf220-079c-11ee-be56-0242ac120002@d29c42eb-7100-4b7a-8257-c196dbcca1cd/contract_terms/598183cd-b910-4e8d-9a97-97097afda3c1@e4fe2f87-0e56-46dd-b3b8-e9af32309e82/documents/testString/complete"
+		Context(`Using mock server endpoint with invalid JSON response`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(completeDraftContractTermsDocumentPath))
+					Expect(req.Method).To(Equal("POST"))
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprint(res, `} this is not valid json {`)
+				}))
+			})
+			It(`Invoke CompleteDraftContractTermsDocument with error: Operation response processing error`, func() {
+				dpxService, serviceErr := dpxv1.NewDpxV1(&dpxv1.DpxV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(dpxService).ToNot(BeNil())
+
+				// Construct an instance of the CompleteDraftContractTermsDocumentOptions model
+				completeDraftContractTermsDocumentOptionsModel := new(dpxv1.CompleteDraftContractTermsDocumentOptions)
+				completeDraftContractTermsDocumentOptionsModel.DataProductID = core.StringPtr("b38df608-d34b-4d58-8136-ed25e6c6684e")
+				completeDraftContractTermsDocumentOptionsModel.DraftID = core.StringPtr("2b0bf220-079c-11ee-be56-0242ac120002@d29c42eb-7100-4b7a-8257-c196dbcca1cd")
+				completeDraftContractTermsDocumentOptionsModel.ContractTermsID = core.StringPtr("598183cd-b910-4e8d-9a97-97097afda3c1@e4fe2f87-0e56-46dd-b3b8-e9af32309e82")
+				completeDraftContractTermsDocumentOptionsModel.DocumentID = core.StringPtr("testString")
+				completeDraftContractTermsDocumentOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+				// Expect response parsing to fail since we are receiving a text/plain response
+				result, response, operationErr := dpxService.CompleteDraftContractTermsDocument(completeDraftContractTermsDocumentOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).To(BeNil())
+
+				// Enable retries and test again
+				dpxService.EnableRetries(0, 0)
+				result, response, operationErr = dpxService.CompleteDraftContractTermsDocument(completeDraftContractTermsDocumentOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+	})
+	Describe(`CompleteDraftContractTermsDocument(completeDraftContractTermsDocumentOptions *CompleteDraftContractTermsDocumentOptions)`, func() {
+		completeDraftContractTermsDocumentPath := "/data_product_exchange/v1/data_products/b38df608-d34b-4d58-8136-ed25e6c6684e/drafts/2b0bf220-079c-11ee-be56-0242ac120002@d29c42eb-7100-4b7a-8257-c196dbcca1cd/contract_terms/598183cd-b910-4e8d-9a97-97097afda3c1@e4fe2f87-0e56-46dd-b3b8-e9af32309e82/documents/testString/complete"
+		Context(`Using mock server endpoint with timeout`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(completeDraftContractTermsDocumentPath))
+					Expect(req.Method).To(Equal("POST"))
+
+					// Sleep a short time to support a timeout test
+					time.Sleep(100 * time.Millisecond)
+
+					// Set mock response
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprintf(res, "%s", `{"url": "URL", "type": "terms_and_conditions", "name": "Name", "id": "2b0bf220-079c-11ee-be56-0242ac120002", "attachment": {"id": "ID"}, "upload_url": "UploadURL"}`)
+				}))
+			})
+			It(`Invoke CompleteDraftContractTermsDocument successfully with retries`, func() {
+				dpxService, serviceErr := dpxv1.NewDpxV1(&dpxv1.DpxV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(dpxService).ToNot(BeNil())
+				dpxService.EnableRetries(0, 0)
+
+				// Construct an instance of the CompleteDraftContractTermsDocumentOptions model
+				completeDraftContractTermsDocumentOptionsModel := new(dpxv1.CompleteDraftContractTermsDocumentOptions)
+				completeDraftContractTermsDocumentOptionsModel.DataProductID = core.StringPtr("b38df608-d34b-4d58-8136-ed25e6c6684e")
+				completeDraftContractTermsDocumentOptionsModel.DraftID = core.StringPtr("2b0bf220-079c-11ee-be56-0242ac120002@d29c42eb-7100-4b7a-8257-c196dbcca1cd")
+				completeDraftContractTermsDocumentOptionsModel.ContractTermsID = core.StringPtr("598183cd-b910-4e8d-9a97-97097afda3c1@e4fe2f87-0e56-46dd-b3b8-e9af32309e82")
+				completeDraftContractTermsDocumentOptionsModel.DocumentID = core.StringPtr("testString")
+				completeDraftContractTermsDocumentOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with a Context to test a timeout error
+				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc()
+				_, _, operationErr := dpxService.CompleteDraftContractTermsDocumentWithContext(ctx, completeDraftContractTermsDocumentOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+
+				// Disable retries and test again
+				dpxService.DisableRetries()
+				result, response, operationErr := dpxService.CompleteDraftContractTermsDocument(completeDraftContractTermsDocumentOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+
+				// Re-test the timeout error with retries disabled
+				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc2()
+				_, _, operationErr = dpxService.CompleteDraftContractTermsDocumentWithContext(ctx, completeDraftContractTermsDocumentOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(completeDraftContractTermsDocumentPath))
+					Expect(req.Method).To(Equal("POST"))
+
+					// Set mock response
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprintf(res, "%s", `{"url": "URL", "type": "terms_and_conditions", "name": "Name", "id": "2b0bf220-079c-11ee-be56-0242ac120002", "attachment": {"id": "ID"}, "upload_url": "UploadURL"}`)
+				}))
+			})
+			It(`Invoke CompleteDraftContractTermsDocument successfully`, func() {
+				dpxService, serviceErr := dpxv1.NewDpxV1(&dpxv1.DpxV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(dpxService).ToNot(BeNil())
+
+				// Invoke operation with nil options model (negative test)
+				result, response, operationErr := dpxService.CompleteDraftContractTermsDocument(nil)
+				Expect(operationErr).NotTo(BeNil())
+				Expect(response).To(BeNil())
+				Expect(result).To(BeNil())
+
+				// Construct an instance of the CompleteDraftContractTermsDocumentOptions model
+				completeDraftContractTermsDocumentOptionsModel := new(dpxv1.CompleteDraftContractTermsDocumentOptions)
+				completeDraftContractTermsDocumentOptionsModel.DataProductID = core.StringPtr("b38df608-d34b-4d58-8136-ed25e6c6684e")
+				completeDraftContractTermsDocumentOptionsModel.DraftID = core.StringPtr("2b0bf220-079c-11ee-be56-0242ac120002@d29c42eb-7100-4b7a-8257-c196dbcca1cd")
+				completeDraftContractTermsDocumentOptionsModel.ContractTermsID = core.StringPtr("598183cd-b910-4e8d-9a97-97097afda3c1@e4fe2f87-0e56-46dd-b3b8-e9af32309e82")
+				completeDraftContractTermsDocumentOptionsModel.DocumentID = core.StringPtr("testString")
+				completeDraftContractTermsDocumentOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with valid options model (positive test)
+				result, response, operationErr = dpxService.CompleteDraftContractTermsDocument(completeDraftContractTermsDocumentOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+
+			})
+			It(`Invoke CompleteDraftContractTermsDocument with error: Operation validation and request error`, func() {
+				dpxService, serviceErr := dpxv1.NewDpxV1(&dpxv1.DpxV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(dpxService).ToNot(BeNil())
+
+				// Construct an instance of the CompleteDraftContractTermsDocumentOptions model
+				completeDraftContractTermsDocumentOptionsModel := new(dpxv1.CompleteDraftContractTermsDocumentOptions)
+				completeDraftContractTermsDocumentOptionsModel.DataProductID = core.StringPtr("b38df608-d34b-4d58-8136-ed25e6c6684e")
+				completeDraftContractTermsDocumentOptionsModel.DraftID = core.StringPtr("2b0bf220-079c-11ee-be56-0242ac120002@d29c42eb-7100-4b7a-8257-c196dbcca1cd")
+				completeDraftContractTermsDocumentOptionsModel.ContractTermsID = core.StringPtr("598183cd-b910-4e8d-9a97-97097afda3c1@e4fe2f87-0e56-46dd-b3b8-e9af32309e82")
+				completeDraftContractTermsDocumentOptionsModel.DocumentID = core.StringPtr("testString")
+				completeDraftContractTermsDocumentOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+				// Invoke operation with empty URL (negative test)
+				err := dpxService.SetServiceURL("")
+				Expect(err).To(BeNil())
+				result, response, operationErr := dpxService.CompleteDraftContractTermsDocument(completeDraftContractTermsDocumentOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring(core.ERRORMSG_SERVICE_URL_MISSING))
+				Expect(response).To(BeNil())
+				Expect(result).To(BeNil())
+				// Construct a second instance of the CompleteDraftContractTermsDocumentOptions model with no property values
+				completeDraftContractTermsDocumentOptionsModelNew := new(dpxv1.CompleteDraftContractTermsDocumentOptions)
+				// Invoke operation with invalid model (negative test)
+				result, response, operationErr = dpxService.CompleteDraftContractTermsDocument(completeDraftContractTermsDocumentOptionsModelNew)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(response).To(BeNil())
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+		Context(`Using mock server endpoint with missing response body`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Set success status code with no respoonse body
+					res.WriteHeader(200)
+				}))
+			})
+			It(`Invoke CompleteDraftContractTermsDocument successfully`, func() {
+				dpxService, serviceErr := dpxv1.NewDpxV1(&dpxv1.DpxV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(dpxService).ToNot(BeNil())
+
+				// Construct an instance of the CompleteDraftContractTermsDocumentOptions model
+				completeDraftContractTermsDocumentOptionsModel := new(dpxv1.CompleteDraftContractTermsDocumentOptions)
+				completeDraftContractTermsDocumentOptionsModel.DataProductID = core.StringPtr("b38df608-d34b-4d58-8136-ed25e6c6684e")
+				completeDraftContractTermsDocumentOptionsModel.DraftID = core.StringPtr("2b0bf220-079c-11ee-be56-0242ac120002@d29c42eb-7100-4b7a-8257-c196dbcca1cd")
+				completeDraftContractTermsDocumentOptionsModel.ContractTermsID = core.StringPtr("598183cd-b910-4e8d-9a97-97097afda3c1@e4fe2f87-0e56-46dd-b3b8-e9af32309e82")
+				completeDraftContractTermsDocumentOptionsModel.DocumentID = core.StringPtr("testString")
+				completeDraftContractTermsDocumentOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation
+				result, response, operationErr := dpxService.CompleteDraftContractTermsDocument(completeDraftContractTermsDocumentOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+
+				// Verify a nil result
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+	})
+	Describe(`ListDataProductDrafts(listDataProductDraftsOptions *ListDataProductDraftsOptions) - Operation response error`, func() {
+		listDataProductDraftsPath := "/data_product_exchange/v1/data_products/b38df608-d34b-4d58-8136-ed25e6c6684e/drafts"
+		Context(`Using mock server endpoint with invalid JSON response`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(listDataProductDraftsPath))
+					Expect(req.Method).To(Equal("GET"))
+					Expect(req.URL.Query()["asset.container.id"]).To(Equal([]string{"testString"}))
+					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
+					Expect(req.URL.Query()["limit"]).To(Equal([]string{fmt.Sprint(int64(10))}))
+					Expect(req.URL.Query()["start"]).To(Equal([]string{"testString"}))
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprint(res, `} this is not valid json {`)
+				}))
+			})
+			It(`Invoke ListDataProductDrafts with error: Operation response processing error`, func() {
+				dpxService, serviceErr := dpxv1.NewDpxV1(&dpxv1.DpxV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(dpxService).ToNot(BeNil())
+
+				// Construct an instance of the ListDataProductDraftsOptions model
+				listDataProductDraftsOptionsModel := new(dpxv1.ListDataProductDraftsOptions)
+				listDataProductDraftsOptionsModel.DataProductID = core.StringPtr("b38df608-d34b-4d58-8136-ed25e6c6684e")
+				listDataProductDraftsOptionsModel.AssetContainerID = core.StringPtr("testString")
+				listDataProductDraftsOptionsModel.Version = core.StringPtr("testString")
+				listDataProductDraftsOptionsModel.Limit = core.Int64Ptr(int64(10))
+				listDataProductDraftsOptionsModel.Start = core.StringPtr("testString")
+				listDataProductDraftsOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+				// Expect response parsing to fail since we are receiving a text/plain response
+				result, response, operationErr := dpxService.ListDataProductDrafts(listDataProductDraftsOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).To(BeNil())
+
+				// Enable retries and test again
+				dpxService.EnableRetries(0, 0)
+				result, response, operationErr = dpxService.ListDataProductDrafts(listDataProductDraftsOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+	})
+	Describe(`ListDataProductDrafts(listDataProductDraftsOptions *ListDataProductDraftsOptions)`, func() {
+		listDataProductDraftsPath := "/data_product_exchange/v1/data_products/b38df608-d34b-4d58-8136-ed25e6c6684e/drafts"
+		Context(`Using mock server endpoint with timeout`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(listDataProductDraftsPath))
+					Expect(req.Method).To(Equal("GET"))
+
+					Expect(req.URL.Query()["asset.container.id"]).To(Equal([]string{"testString"}))
+					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
+					Expect(req.URL.Query()["limit"]).To(Equal([]string{fmt.Sprint(int64(10))}))
+					Expect(req.URL.Query()["start"]).To(Equal([]string{"testString"}))
+					// Sleep a short time to support a timeout test
+					time.Sleep(100 * time.Millisecond)
+
+					// Set mock response
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprintf(res, "%s", `{"limit": 200, "first": {"href": "https://api.example.com/collection"}, "next": {"href": "https://api.example.com/collection?start=eyJvZmZzZXQiOjAsImRvbmUiOnRydWV9", "start": "eyJvZmZzZXQiOjAsImRvbmUiOnRydWV9"}, "drafts": [{"version": "1.0.0", "state": "draft", "data_product": {"id": "b38df608-d34b-4d58-8136-ed25e6c6684e"}, "name": "My Data Product", "description": "This is a description of My Data Product.", "id": "2b0bf220-079c-11ee-be56-0242ac120002@d29c42eb-7100-4b7a-8257-c196dbcca1cd", "asset": {"id": "2b0bf220-079c-11ee-be56-0242ac120002", "container": {"id": "d29c42eb-7100-4b7a-8257-c196dbcca1cd", "type": "catalog"}}}]}`)
+				}))
+			})
+			It(`Invoke ListDataProductDrafts successfully with retries`, func() {
+				dpxService, serviceErr := dpxv1.NewDpxV1(&dpxv1.DpxV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(dpxService).ToNot(BeNil())
+				dpxService.EnableRetries(0, 0)
+
+				// Construct an instance of the ListDataProductDraftsOptions model
+				listDataProductDraftsOptionsModel := new(dpxv1.ListDataProductDraftsOptions)
+				listDataProductDraftsOptionsModel.DataProductID = core.StringPtr("b38df608-d34b-4d58-8136-ed25e6c6684e")
+				listDataProductDraftsOptionsModel.AssetContainerID = core.StringPtr("testString")
+				listDataProductDraftsOptionsModel.Version = core.StringPtr("testString")
+				listDataProductDraftsOptionsModel.Limit = core.Int64Ptr(int64(10))
+				listDataProductDraftsOptionsModel.Start = core.StringPtr("testString")
+				listDataProductDraftsOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with a Context to test a timeout error
+				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc()
+				_, _, operationErr := dpxService.ListDataProductDraftsWithContext(ctx, listDataProductDraftsOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+
+				// Disable retries and test again
+				dpxService.DisableRetries()
+				result, response, operationErr := dpxService.ListDataProductDrafts(listDataProductDraftsOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+
+				// Re-test the timeout error with retries disabled
+				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc2()
+				_, _, operationErr = dpxService.ListDataProductDraftsWithContext(ctx, listDataProductDraftsOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(listDataProductDraftsPath))
+					Expect(req.Method).To(Equal("GET"))
+
+					Expect(req.URL.Query()["asset.container.id"]).To(Equal([]string{"testString"}))
+					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
+					Expect(req.URL.Query()["limit"]).To(Equal([]string{fmt.Sprint(int64(10))}))
+					Expect(req.URL.Query()["start"]).To(Equal([]string{"testString"}))
+					// Set mock response
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprintf(res, "%s", `{"limit": 200, "first": {"href": "https://api.example.com/collection"}, "next": {"href": "https://api.example.com/collection?start=eyJvZmZzZXQiOjAsImRvbmUiOnRydWV9", "start": "eyJvZmZzZXQiOjAsImRvbmUiOnRydWV9"}, "drafts": [{"version": "1.0.0", "state": "draft", "data_product": {"id": "b38df608-d34b-4d58-8136-ed25e6c6684e"}, "name": "My Data Product", "description": "This is a description of My Data Product.", "id": "2b0bf220-079c-11ee-be56-0242ac120002@d29c42eb-7100-4b7a-8257-c196dbcca1cd", "asset": {"id": "2b0bf220-079c-11ee-be56-0242ac120002", "container": {"id": "d29c42eb-7100-4b7a-8257-c196dbcca1cd", "type": "catalog"}}}]}`)
+				}))
+			})
+			It(`Invoke ListDataProductDrafts successfully`, func() {
+				dpxService, serviceErr := dpxv1.NewDpxV1(&dpxv1.DpxV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(dpxService).ToNot(BeNil())
+
+				// Invoke operation with nil options model (negative test)
+				result, response, operationErr := dpxService.ListDataProductDrafts(nil)
+				Expect(operationErr).NotTo(BeNil())
+				Expect(response).To(BeNil())
+				Expect(result).To(BeNil())
+
+				// Construct an instance of the ListDataProductDraftsOptions model
+				listDataProductDraftsOptionsModel := new(dpxv1.ListDataProductDraftsOptions)
+				listDataProductDraftsOptionsModel.DataProductID = core.StringPtr("b38df608-d34b-4d58-8136-ed25e6c6684e")
+				listDataProductDraftsOptionsModel.AssetContainerID = core.StringPtr("testString")
+				listDataProductDraftsOptionsModel.Version = core.StringPtr("testString")
+				listDataProductDraftsOptionsModel.Limit = core.Int64Ptr(int64(10))
+				listDataProductDraftsOptionsModel.Start = core.StringPtr("testString")
+				listDataProductDraftsOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with valid options model (positive test)
+				result, response, operationErr = dpxService.ListDataProductDrafts(listDataProductDraftsOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+
+			})
+			It(`Invoke ListDataProductDrafts with error: Operation validation and request error`, func() {
+				dpxService, serviceErr := dpxv1.NewDpxV1(&dpxv1.DpxV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(dpxService).ToNot(BeNil())
+
+				// Construct an instance of the ListDataProductDraftsOptions model
+				listDataProductDraftsOptionsModel := new(dpxv1.ListDataProductDraftsOptions)
+				listDataProductDraftsOptionsModel.DataProductID = core.StringPtr("b38df608-d34b-4d58-8136-ed25e6c6684e")
+				listDataProductDraftsOptionsModel.AssetContainerID = core.StringPtr("testString")
+				listDataProductDraftsOptionsModel.Version = core.StringPtr("testString")
+				listDataProductDraftsOptionsModel.Limit = core.Int64Ptr(int64(10))
+				listDataProductDraftsOptionsModel.Start = core.StringPtr("testString")
+				listDataProductDraftsOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+				// Invoke operation with empty URL (negative test)
+				err := dpxService.SetServiceURL("")
+				Expect(err).To(BeNil())
+				result, response, operationErr := dpxService.ListDataProductDrafts(listDataProductDraftsOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring(core.ERRORMSG_SERVICE_URL_MISSING))
+				Expect(response).To(BeNil())
+				Expect(result).To(BeNil())
+				// Construct a second instance of the ListDataProductDraftsOptions model with no property values
+				listDataProductDraftsOptionsModelNew := new(dpxv1.ListDataProductDraftsOptions)
+				// Invoke operation with invalid model (negative test)
+				result, response, operationErr = dpxService.ListDataProductDrafts(listDataProductDraftsOptionsModelNew)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(response).To(BeNil())
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+		Context(`Using mock server endpoint with missing response body`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Set success status code with no respoonse body
+					res.WriteHeader(200)
+				}))
+			})
+			It(`Invoke ListDataProductDrafts successfully`, func() {
+				dpxService, serviceErr := dpxv1.NewDpxV1(&dpxv1.DpxV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(dpxService).ToNot(BeNil())
+
+				// Construct an instance of the ListDataProductDraftsOptions model
+				listDataProductDraftsOptionsModel := new(dpxv1.ListDataProductDraftsOptions)
+				listDataProductDraftsOptionsModel.DataProductID = core.StringPtr("b38df608-d34b-4d58-8136-ed25e6c6684e")
+				listDataProductDraftsOptionsModel.AssetContainerID = core.StringPtr("testString")
+				listDataProductDraftsOptionsModel.Version = core.StringPtr("testString")
+				listDataProductDraftsOptionsModel.Limit = core.Int64Ptr(int64(10))
+				listDataProductDraftsOptionsModel.Start = core.StringPtr("testString")
+				listDataProductDraftsOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation
+				result, response, operationErr := dpxService.ListDataProductDrafts(listDataProductDraftsOptionsModel)
 				Expect(operationErr).To(BeNil())
 				Expect(response).ToNot(BeNil())
 
@@ -1415,7 +2325,7 @@ var _ = Describe(`DpxV1`, func() {
 		})
 		Context(`Test pagination helper method on response`, func() {
 			It(`Invoke GetNextStart successfully`, func() {
-				responseObject := new(dpxv1.DataProductVersionCollection)
+				responseObject := new(dpxv1.DataProductDraftCollection)
 				nextObject := new(dpxv1.NextPage)
 				nextObject.Start = core.StringPtr("abc-123")
 				responseObject.Next = nextObject
@@ -1425,7 +2335,7 @@ var _ = Describe(`DpxV1`, func() {
 				Expect(value).To(Equal(core.StringPtr("abc-123")))
 			})
 			It(`Invoke GetNextStart without a "Next" property in the response`, func() {
-				responseObject := new(dpxv1.DataProductVersionCollection)
+				responseObject := new(dpxv1.DataProductDraftCollection)
 
 				value, err := responseObject.GetNextStart()
 				Expect(err).To(BeNil())
@@ -1439,7 +2349,7 @@ var _ = Describe(`DpxV1`, func() {
 					defer GinkgoRecover()
 
 					// Verify the contents of the request
-					Expect(req.URL.EscapedPath()).To(Equal(listDataProductVersionsPath))
+					Expect(req.URL.EscapedPath()).To(Equal(listDataProductDraftsPath))
 					Expect(req.Method).To(Equal("GET"))
 
 					// Set mock response
@@ -1447,15 +2357,15 @@ var _ = Describe(`DpxV1`, func() {
 					res.WriteHeader(200)
 					requestNumber++
 					if requestNumber == 1 {
-						fmt.Fprintf(res, "%s", `{"next":{"start":"1"},"data_product_versions":[{"version":"1.0.0","state":"draft","data_product":{"id":"b38df608-d34b-4d58-8136-ed25e6c6684e"},"name":"My Data Product","description":"This is a description of My Data Product.","id":"2b0bf220-079c-11ee-be56-0242ac120002@d29c42eb-7100-4b7a-8257-c196dbcca1cd","asset":{"id":"2b0bf220-079c-11ee-be56-0242ac120002","container":{"id":"d29c42eb-7100-4b7a-8257-c196dbcca1cd","type":"catalog"}}}],"total_count":2,"limit":1}`)
+						fmt.Fprintf(res, "%s", `{"next":{"start":"1"},"total_count":2,"limit":1,"drafts":[{"version":"1.0.0","state":"draft","data_product":{"id":"b38df608-d34b-4d58-8136-ed25e6c6684e"},"name":"My Data Product","description":"This is a description of My Data Product.","id":"2b0bf220-079c-11ee-be56-0242ac120002@d29c42eb-7100-4b7a-8257-c196dbcca1cd","asset":{"id":"2b0bf220-079c-11ee-be56-0242ac120002","container":{"id":"d29c42eb-7100-4b7a-8257-c196dbcca1cd","type":"catalog"}}}]}`)
 					} else if requestNumber == 2 {
-						fmt.Fprintf(res, "%s", `{"data_product_versions":[{"version":"1.0.0","state":"draft","data_product":{"id":"b38df608-d34b-4d58-8136-ed25e6c6684e"},"name":"My Data Product","description":"This is a description of My Data Product.","id":"2b0bf220-079c-11ee-be56-0242ac120002@d29c42eb-7100-4b7a-8257-c196dbcca1cd","asset":{"id":"2b0bf220-079c-11ee-be56-0242ac120002","container":{"id":"d29c42eb-7100-4b7a-8257-c196dbcca1cd","type":"catalog"}}}],"total_count":2,"limit":1}`)
+						fmt.Fprintf(res, "%s", `{"total_count":2,"limit":1,"drafts":[{"version":"1.0.0","state":"draft","data_product":{"id":"b38df608-d34b-4d58-8136-ed25e6c6684e"},"name":"My Data Product","description":"This is a description of My Data Product.","id":"2b0bf220-079c-11ee-be56-0242ac120002@d29c42eb-7100-4b7a-8257-c196dbcca1cd","asset":{"id":"2b0bf220-079c-11ee-be56-0242ac120002","container":{"id":"d29c42eb-7100-4b7a-8257-c196dbcca1cd","type":"catalog"}}}]}`)
 					} else {
 						res.WriteHeader(400)
 					}
 				}))
 			})
-			It(`Use DataProductVersionsPager.GetNext successfully`, func() {
+			It(`Use DataProductDraftsPager.GetNext successfully`, func() {
 				dpxService, serviceErr := dpxv1.NewDpxV1(&dpxv1.DpxV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
@@ -1463,15 +2373,14 @@ var _ = Describe(`DpxV1`, func() {
 				Expect(serviceErr).To(BeNil())
 				Expect(dpxService).ToNot(BeNil())
 
-				listDataProductVersionsOptionsModel := &dpxv1.ListDataProductVersionsOptions{
+				listDataProductDraftsOptionsModel := &dpxv1.ListDataProductDraftsOptions{
+					DataProductID:    core.StringPtr("b38df608-d34b-4d58-8136-ed25e6c6684e"),
 					AssetContainerID: core.StringPtr("testString"),
-					DataProduct: core.StringPtr("testString"),
-					State: core.StringPtr("draft"),
-					Version: core.StringPtr("testString"),
-					Limit: core.Int64Ptr(int64(10)),
+					Version:          core.StringPtr("testString"),
+					Limit:            core.Int64Ptr(int64(10)),
 				}
 
-				pager, err := dpxService.NewDataProductVersionsPager(listDataProductVersionsOptionsModel)
+				pager, err := dpxService.NewDataProductDraftsPager(listDataProductDraftsOptionsModel)
 				Expect(err).To(BeNil())
 				Expect(pager).ToNot(BeNil())
 
@@ -1484,7 +2393,7 @@ var _ = Describe(`DpxV1`, func() {
 				}
 				Expect(len(allResults)).To(Equal(2))
 			})
-			It(`Use DataProductVersionsPager.GetAll successfully`, func() {
+			It(`Use DataProductDraftsPager.GetAll successfully`, func() {
 				dpxService, serviceErr := dpxv1.NewDpxV1(&dpxv1.DpxV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
@@ -1492,15 +2401,14 @@ var _ = Describe(`DpxV1`, func() {
 				Expect(serviceErr).To(BeNil())
 				Expect(dpxService).ToNot(BeNil())
 
-				listDataProductVersionsOptionsModel := &dpxv1.ListDataProductVersionsOptions{
+				listDataProductDraftsOptionsModel := &dpxv1.ListDataProductDraftsOptions{
+					DataProductID:    core.StringPtr("b38df608-d34b-4d58-8136-ed25e6c6684e"),
 					AssetContainerID: core.StringPtr("testString"),
-					DataProduct: core.StringPtr("testString"),
-					State: core.StringPtr("draft"),
-					Version: core.StringPtr("testString"),
-					Limit: core.Int64Ptr(int64(10)),
+					Version:          core.StringPtr("testString"),
+					Limit:            core.Int64Ptr(int64(10)),
 				}
 
-				pager, err := dpxService.NewDataProductVersionsPager(listDataProductVersionsOptionsModel)
+				pager, err := dpxService.NewDataProductDraftsPager(listDataProductDraftsOptionsModel)
 				Expect(err).To(BeNil())
 				Expect(pager).ToNot(BeNil())
 
@@ -1511,22 +2419,22 @@ var _ = Describe(`DpxV1`, func() {
 			})
 		})
 	})
-	Describe(`CreateDataProductVersion(createDataProductVersionOptions *CreateDataProductVersionOptions) - Operation response error`, func() {
-		createDataProductVersionPath := "/data_product_exchange/v1/data_product_versions"
+	Describe(`CreateDataProductDraft(createDataProductDraftOptions *CreateDataProductDraftOptions) - Operation response error`, func() {
+		createDataProductDraftPath := "/data_product_exchange/v1/data_products/b38df608-d34b-4d58-8136-ed25e6c6684e/drafts"
 		Context(`Using mock server endpoint with invalid JSON response`, func() {
 			BeforeEach(func() {
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
 					// Verify the contents of the request
-					Expect(req.URL.EscapedPath()).To(Equal(createDataProductVersionPath))
+					Expect(req.URL.EscapedPath()).To(Equal(createDataProductDraftPath))
 					Expect(req.Method).To(Equal("POST"))
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(201)
 					fmt.Fprint(res, `} this is not valid json {`)
 				}))
 			})
-			It(`Invoke CreateDataProductVersion with error: Operation response processing error`, func() {
+			It(`Invoke CreateDataProductDraft with error: Operation response processing error`, func() {
 				dpxService, serviceErr := dpxv1.NewDpxV1(&dpxv1.DpxV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
@@ -1538,6 +2446,11 @@ var _ = Describe(`DpxV1`, func() {
 				containerReferenceModel := new(dpxv1.ContainerReference)
 				containerReferenceModel.ID = core.StringPtr("d29c42eb-7100-4b7a-8257-c196dbcca1cd")
 				containerReferenceModel.Type = core.StringPtr("catalog")
+
+				// Construct an instance of the AssetReference model
+				assetReferenceModel := new(dpxv1.AssetReference)
+				assetReferenceModel.ID = core.StringPtr("2b0bf220-079c-11ee-be56-0242ac120002")
+				assetReferenceModel.Container = containerReferenceModel
 
 				// Construct an instance of the DataProductIdentity model
 				dataProductIdentityModel := new(dpxv1.DataProductIdentity)
@@ -1584,42 +2497,40 @@ var _ = Describe(`DpxV1`, func() {
 				contractTermsDocumentModel.Name = core.StringPtr("testString")
 				contractTermsDocumentModel.ID = core.StringPtr("2b0bf220-079c-11ee-be56-0242ac120002")
 				contractTermsDocumentModel.Attachment = contractTermsDocumentAttachmentModel
-
-				// Construct an instance of the AssetReference model
-				assetReferenceModel := new(dpxv1.AssetReference)
-				assetReferenceModel.ID = core.StringPtr("2b0bf220-079c-11ee-be56-0242ac120002")
-				assetReferenceModel.Container = containerReferenceModel
+				contractTermsDocumentModel.UploadURL = core.StringPtr("testString")
 
 				// Construct an instance of the DataProductContractTerms model
 				dataProductContractTermsModel := new(dpxv1.DataProductContractTerms)
+				dataProductContractTermsModel.Asset = assetReferenceModel
 				dataProductContractTermsModel.ID = core.StringPtr("testString")
 				dataProductContractTermsModel.Documents = []dpxv1.ContractTermsDocument{*contractTermsDocumentModel}
-				dataProductContractTermsModel.Asset = assetReferenceModel
 
-				// Construct an instance of the CreateDataProductVersionOptions model
-				createDataProductVersionOptionsModel := new(dpxv1.CreateDataProductVersionOptions)
-				createDataProductVersionOptionsModel.Container = containerReferenceModel
-				createDataProductVersionOptionsModel.Version = core.StringPtr("testString")
-				createDataProductVersionOptionsModel.State = core.StringPtr("draft")
-				createDataProductVersionOptionsModel.DataProduct = dataProductIdentityModel
-				createDataProductVersionOptionsModel.Name = core.StringPtr("My New Data Product")
-				createDataProductVersionOptionsModel.Description = core.StringPtr("testString")
-				createDataProductVersionOptionsModel.Tags = []string{"testString"}
-				createDataProductVersionOptionsModel.UseCases = []dpxv1.UseCase{*useCaseModel}
-				createDataProductVersionOptionsModel.Domain = domainModel
-				createDataProductVersionOptionsModel.Type = []string{"data"}
-				createDataProductVersionOptionsModel.PartsOut = []dpxv1.DataProductPart{*dataProductPartModel}
-				createDataProductVersionOptionsModel.ContractTerms = []dpxv1.DataProductContractTerms{*dataProductContractTermsModel}
-				createDataProductVersionOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+				// Construct an instance of the CreateDataProductDraftOptions model
+				createDataProductDraftOptionsModel := new(dpxv1.CreateDataProductDraftOptions)
+				createDataProductDraftOptionsModel.DataProductID = core.StringPtr("b38df608-d34b-4d58-8136-ed25e6c6684e")
+				createDataProductDraftOptionsModel.Asset = assetReferenceModel
+				createDataProductDraftOptionsModel.Version = core.StringPtr("1.2.0")
+				createDataProductDraftOptionsModel.State = core.StringPtr("draft")
+				createDataProductDraftOptionsModel.DataProduct = dataProductIdentityModel
+				createDataProductDraftOptionsModel.Name = core.StringPtr("testString")
+				createDataProductDraftOptionsModel.Description = core.StringPtr("testString")
+				createDataProductDraftOptionsModel.Tags = []string{"testString"}
+				createDataProductDraftOptionsModel.UseCases = []dpxv1.UseCase{*useCaseModel}
+				createDataProductDraftOptionsModel.Domain = domainModel
+				createDataProductDraftOptionsModel.Types = []string{"data"}
+				createDataProductDraftOptionsModel.PartsOut = []dpxv1.DataProductPart{*dataProductPartModel}
+				createDataProductDraftOptionsModel.ContractTerms = []dpxv1.DataProductContractTerms{*dataProductContractTermsModel}
+				createDataProductDraftOptionsModel.IsRestricted = core.BoolPtr(true)
+				createDataProductDraftOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 				// Expect response parsing to fail since we are receiving a text/plain response
-				result, response, operationErr := dpxService.CreateDataProductVersion(createDataProductVersionOptionsModel)
+				result, response, operationErr := dpxService.CreateDataProductDraft(createDataProductDraftOptionsModel)
 				Expect(operationErr).ToNot(BeNil())
 				Expect(response).ToNot(BeNil())
 				Expect(result).To(BeNil())
 
 				// Enable retries and test again
 				dpxService.EnableRetries(0, 0)
-				result, response, operationErr = dpxService.CreateDataProductVersion(createDataProductVersionOptionsModel)
+				result, response, operationErr = dpxService.CreateDataProductDraft(createDataProductDraftOptionsModel)
 				Expect(operationErr).ToNot(BeNil())
 				Expect(response).ToNot(BeNil())
 				Expect(result).To(BeNil())
@@ -1629,15 +2540,15 @@ var _ = Describe(`DpxV1`, func() {
 			})
 		})
 	})
-	Describe(`CreateDataProductVersion(createDataProductVersionOptions *CreateDataProductVersionOptions)`, func() {
-		createDataProductVersionPath := "/data_product_exchange/v1/data_product_versions"
+	Describe(`CreateDataProductDraft(createDataProductDraftOptions *CreateDataProductDraftOptions)`, func() {
+		createDataProductDraftPath := "/data_product_exchange/v1/data_products/b38df608-d34b-4d58-8136-ed25e6c6684e/drafts"
 		Context(`Using mock server endpoint with timeout`, func() {
 			BeforeEach(func() {
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
 					// Verify the contents of the request
-					Expect(req.URL.EscapedPath()).To(Equal(createDataProductVersionPath))
+					Expect(req.URL.EscapedPath()).To(Equal(createDataProductDraftPath))
 					Expect(req.Method).To(Equal("POST"))
 
 					// For gzip-disabled operation, verify Content-Encoding is not set.
@@ -1662,10 +2573,10 @@ var _ = Describe(`DpxV1`, func() {
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(201)
-					fmt.Fprintf(res, "%s", `{"version": "1.0.0", "state": "draft", "data_product": {"id": "b38df608-d34b-4d58-8136-ed25e6c6684e"}, "name": "My Data Product", "description": "This is a description of My Data Product.", "id": "2b0bf220-079c-11ee-be56-0242ac120002@d29c42eb-7100-4b7a-8257-c196dbcca1cd", "asset": {"id": "2b0bf220-079c-11ee-be56-0242ac120002", "container": {"id": "d29c42eb-7100-4b7a-8257-c196dbcca1cd", "type": "catalog"}}, "tags": ["Tags"], "use_cases": [{"id": "ID", "name": "Name", "container": {"id": "d29c42eb-7100-4b7a-8257-c196dbcca1cd", "type": "catalog"}}], "domain": {"id": "ID", "name": "Name", "container": {"id": "d29c42eb-7100-4b7a-8257-c196dbcca1cd", "type": "catalog"}}, "type": ["data"], "parts_out": [{"asset": {"id": "2b0bf220-079c-11ee-be56-0242ac120002", "container": {"id": "d29c42eb-7100-4b7a-8257-c196dbcca1cd", "type": "catalog"}, "type": "data_asset"}, "revision": 1, "updated_at": "2023-07-01T22:22:34.876Z", "delivery_methods": [{"id": "09cf5fcc-cb9d-4995-a8e4-16517b25229f", "container": {"id": "d29c42eb-7100-4b7a-8257-c196dbcca1cd", "type": "catalog"}}]}], "published_by": "PublishedBy", "published_at": "2019-01-01T12:00:00.000Z", "contract_terms": [{"id": "ID", "documents": [{"url": "URL", "type": "terms_and_conditions", "name": "Name", "id": "2b0bf220-079c-11ee-be56-0242ac120002", "attachment": {"id": "ID"}}], "asset": {"id": "2b0bf220-079c-11ee-be56-0242ac120002", "container": {"id": "d29c42eb-7100-4b7a-8257-c196dbcca1cd", "type": "catalog"}}}], "created_by": "CreatedBy", "created_at": "2019-01-01T12:00:00.000Z"}`)
+					fmt.Fprintf(res, "%s", `{"version": "1.0.0", "state": "draft", "data_product": {"id": "b38df608-d34b-4d58-8136-ed25e6c6684e"}, "name": "My Data Product", "description": "This is a description of My Data Product.", "id": "2b0bf220-079c-11ee-be56-0242ac120002@d29c42eb-7100-4b7a-8257-c196dbcca1cd", "asset": {"id": "2b0bf220-079c-11ee-be56-0242ac120002", "container": {"id": "d29c42eb-7100-4b7a-8257-c196dbcca1cd", "type": "catalog"}}, "tags": ["Tags"], "use_cases": [{"id": "ID", "name": "Name", "container": {"id": "d29c42eb-7100-4b7a-8257-c196dbcca1cd", "type": "catalog"}}], "domain": {"id": "ID", "name": "Name", "container": {"id": "d29c42eb-7100-4b7a-8257-c196dbcca1cd", "type": "catalog"}}, "types": ["data"], "parts_out": [{"asset": {"id": "2b0bf220-079c-11ee-be56-0242ac120002", "container": {"id": "d29c42eb-7100-4b7a-8257-c196dbcca1cd", "type": "catalog"}, "type": "data_asset"}, "revision": 1, "updated_at": "2023-07-01T22:22:34.876Z", "delivery_methods": [{"id": "09cf5fcc-cb9d-4995-a8e4-16517b25229f", "container": {"id": "d29c42eb-7100-4b7a-8257-c196dbcca1cd", "type": "catalog"}}]}], "published_by": "PublishedBy", "published_at": "2019-01-01T12:00:00.000Z", "contract_terms": [{"asset": {"id": "2b0bf220-079c-11ee-be56-0242ac120002", "container": {"id": "d29c42eb-7100-4b7a-8257-c196dbcca1cd", "type": "catalog"}}, "id": "ID", "documents": [{"url": "URL", "type": "terms_and_conditions", "name": "Name", "id": "2b0bf220-079c-11ee-be56-0242ac120002", "attachment": {"id": "ID"}, "upload_url": "UploadURL"}]}], "created_by": "CreatedBy", "created_at": "2019-01-01T12:00:00.000Z", "is_restricted": true}`)
 				}))
 			})
-			It(`Invoke CreateDataProductVersion successfully with retries`, func() {
+			It(`Invoke CreateDataProductDraft successfully with retries`, func() {
 				dpxService, serviceErr := dpxv1.NewDpxV1(&dpxv1.DpxV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
@@ -1678,6 +2589,11 @@ var _ = Describe(`DpxV1`, func() {
 				containerReferenceModel := new(dpxv1.ContainerReference)
 				containerReferenceModel.ID = core.StringPtr("d29c42eb-7100-4b7a-8257-c196dbcca1cd")
 				containerReferenceModel.Type = core.StringPtr("catalog")
+
+				// Construct an instance of the AssetReference model
+				assetReferenceModel := new(dpxv1.AssetReference)
+				assetReferenceModel.ID = core.StringPtr("2b0bf220-079c-11ee-be56-0242ac120002")
+				assetReferenceModel.Container = containerReferenceModel
 
 				// Construct an instance of the DataProductIdentity model
 				dataProductIdentityModel := new(dpxv1.DataProductIdentity)
@@ -1724,44 +2640,42 @@ var _ = Describe(`DpxV1`, func() {
 				contractTermsDocumentModel.Name = core.StringPtr("testString")
 				contractTermsDocumentModel.ID = core.StringPtr("2b0bf220-079c-11ee-be56-0242ac120002")
 				contractTermsDocumentModel.Attachment = contractTermsDocumentAttachmentModel
-
-				// Construct an instance of the AssetReference model
-				assetReferenceModel := new(dpxv1.AssetReference)
-				assetReferenceModel.ID = core.StringPtr("2b0bf220-079c-11ee-be56-0242ac120002")
-				assetReferenceModel.Container = containerReferenceModel
+				contractTermsDocumentModel.UploadURL = core.StringPtr("testString")
 
 				// Construct an instance of the DataProductContractTerms model
 				dataProductContractTermsModel := new(dpxv1.DataProductContractTerms)
+				dataProductContractTermsModel.Asset = assetReferenceModel
 				dataProductContractTermsModel.ID = core.StringPtr("testString")
 				dataProductContractTermsModel.Documents = []dpxv1.ContractTermsDocument{*contractTermsDocumentModel}
-				dataProductContractTermsModel.Asset = assetReferenceModel
 
-				// Construct an instance of the CreateDataProductVersionOptions model
-				createDataProductVersionOptionsModel := new(dpxv1.CreateDataProductVersionOptions)
-				createDataProductVersionOptionsModel.Container = containerReferenceModel
-				createDataProductVersionOptionsModel.Version = core.StringPtr("testString")
-				createDataProductVersionOptionsModel.State = core.StringPtr("draft")
-				createDataProductVersionOptionsModel.DataProduct = dataProductIdentityModel
-				createDataProductVersionOptionsModel.Name = core.StringPtr("My New Data Product")
-				createDataProductVersionOptionsModel.Description = core.StringPtr("testString")
-				createDataProductVersionOptionsModel.Tags = []string{"testString"}
-				createDataProductVersionOptionsModel.UseCases = []dpxv1.UseCase{*useCaseModel}
-				createDataProductVersionOptionsModel.Domain = domainModel
-				createDataProductVersionOptionsModel.Type = []string{"data"}
-				createDataProductVersionOptionsModel.PartsOut = []dpxv1.DataProductPart{*dataProductPartModel}
-				createDataProductVersionOptionsModel.ContractTerms = []dpxv1.DataProductContractTerms{*dataProductContractTermsModel}
-				createDataProductVersionOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+				// Construct an instance of the CreateDataProductDraftOptions model
+				createDataProductDraftOptionsModel := new(dpxv1.CreateDataProductDraftOptions)
+				createDataProductDraftOptionsModel.DataProductID = core.StringPtr("b38df608-d34b-4d58-8136-ed25e6c6684e")
+				createDataProductDraftOptionsModel.Asset = assetReferenceModel
+				createDataProductDraftOptionsModel.Version = core.StringPtr("1.2.0")
+				createDataProductDraftOptionsModel.State = core.StringPtr("draft")
+				createDataProductDraftOptionsModel.DataProduct = dataProductIdentityModel
+				createDataProductDraftOptionsModel.Name = core.StringPtr("testString")
+				createDataProductDraftOptionsModel.Description = core.StringPtr("testString")
+				createDataProductDraftOptionsModel.Tags = []string{"testString"}
+				createDataProductDraftOptionsModel.UseCases = []dpxv1.UseCase{*useCaseModel}
+				createDataProductDraftOptionsModel.Domain = domainModel
+				createDataProductDraftOptionsModel.Types = []string{"data"}
+				createDataProductDraftOptionsModel.PartsOut = []dpxv1.DataProductPart{*dataProductPartModel}
+				createDataProductDraftOptionsModel.ContractTerms = []dpxv1.DataProductContractTerms{*dataProductContractTermsModel}
+				createDataProductDraftOptionsModel.IsRestricted = core.BoolPtr(true)
+				createDataProductDraftOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation with a Context to test a timeout error
 				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
 				defer cancelFunc()
-				_, _, operationErr := dpxService.CreateDataProductVersionWithContext(ctx, createDataProductVersionOptionsModel)
+				_, _, operationErr := dpxService.CreateDataProductDraftWithContext(ctx, createDataProductDraftOptionsModel)
 				Expect(operationErr).ToNot(BeNil())
 				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
 
 				// Disable retries and test again
 				dpxService.DisableRetries()
-				result, response, operationErr := dpxService.CreateDataProductVersion(createDataProductVersionOptionsModel)
+				result, response, operationErr := dpxService.CreateDataProductDraft(createDataProductDraftOptionsModel)
 				Expect(operationErr).To(BeNil())
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
@@ -1769,7 +2683,7 @@ var _ = Describe(`DpxV1`, func() {
 				// Re-test the timeout error with retries disabled
 				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
 				defer cancelFunc2()
-				_, _, operationErr = dpxService.CreateDataProductVersionWithContext(ctx, createDataProductVersionOptionsModel)
+				_, _, operationErr = dpxService.CreateDataProductDraftWithContext(ctx, createDataProductDraftOptionsModel)
 				Expect(operationErr).ToNot(BeNil())
 				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
 			})
@@ -1783,7 +2697,7 @@ var _ = Describe(`DpxV1`, func() {
 					defer GinkgoRecover()
 
 					// Verify the contents of the request
-					Expect(req.URL.EscapedPath()).To(Equal(createDataProductVersionPath))
+					Expect(req.URL.EscapedPath()).To(Equal(createDataProductDraftPath))
 					Expect(req.Method).To(Equal("POST"))
 
 					// For gzip-disabled operation, verify Content-Encoding is not set.
@@ -1805,10 +2719,10 @@ var _ = Describe(`DpxV1`, func() {
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(201)
-					fmt.Fprintf(res, "%s", `{"version": "1.0.0", "state": "draft", "data_product": {"id": "b38df608-d34b-4d58-8136-ed25e6c6684e"}, "name": "My Data Product", "description": "This is a description of My Data Product.", "id": "2b0bf220-079c-11ee-be56-0242ac120002@d29c42eb-7100-4b7a-8257-c196dbcca1cd", "asset": {"id": "2b0bf220-079c-11ee-be56-0242ac120002", "container": {"id": "d29c42eb-7100-4b7a-8257-c196dbcca1cd", "type": "catalog"}}, "tags": ["Tags"], "use_cases": [{"id": "ID", "name": "Name", "container": {"id": "d29c42eb-7100-4b7a-8257-c196dbcca1cd", "type": "catalog"}}], "domain": {"id": "ID", "name": "Name", "container": {"id": "d29c42eb-7100-4b7a-8257-c196dbcca1cd", "type": "catalog"}}, "type": ["data"], "parts_out": [{"asset": {"id": "2b0bf220-079c-11ee-be56-0242ac120002", "container": {"id": "d29c42eb-7100-4b7a-8257-c196dbcca1cd", "type": "catalog"}, "type": "data_asset"}, "revision": 1, "updated_at": "2023-07-01T22:22:34.876Z", "delivery_methods": [{"id": "09cf5fcc-cb9d-4995-a8e4-16517b25229f", "container": {"id": "d29c42eb-7100-4b7a-8257-c196dbcca1cd", "type": "catalog"}}]}], "published_by": "PublishedBy", "published_at": "2019-01-01T12:00:00.000Z", "contract_terms": [{"id": "ID", "documents": [{"url": "URL", "type": "terms_and_conditions", "name": "Name", "id": "2b0bf220-079c-11ee-be56-0242ac120002", "attachment": {"id": "ID"}}], "asset": {"id": "2b0bf220-079c-11ee-be56-0242ac120002", "container": {"id": "d29c42eb-7100-4b7a-8257-c196dbcca1cd", "type": "catalog"}}}], "created_by": "CreatedBy", "created_at": "2019-01-01T12:00:00.000Z"}`)
+					fmt.Fprintf(res, "%s", `{"version": "1.0.0", "state": "draft", "data_product": {"id": "b38df608-d34b-4d58-8136-ed25e6c6684e"}, "name": "My Data Product", "description": "This is a description of My Data Product.", "id": "2b0bf220-079c-11ee-be56-0242ac120002@d29c42eb-7100-4b7a-8257-c196dbcca1cd", "asset": {"id": "2b0bf220-079c-11ee-be56-0242ac120002", "container": {"id": "d29c42eb-7100-4b7a-8257-c196dbcca1cd", "type": "catalog"}}, "tags": ["Tags"], "use_cases": [{"id": "ID", "name": "Name", "container": {"id": "d29c42eb-7100-4b7a-8257-c196dbcca1cd", "type": "catalog"}}], "domain": {"id": "ID", "name": "Name", "container": {"id": "d29c42eb-7100-4b7a-8257-c196dbcca1cd", "type": "catalog"}}, "types": ["data"], "parts_out": [{"asset": {"id": "2b0bf220-079c-11ee-be56-0242ac120002", "container": {"id": "d29c42eb-7100-4b7a-8257-c196dbcca1cd", "type": "catalog"}, "type": "data_asset"}, "revision": 1, "updated_at": "2023-07-01T22:22:34.876Z", "delivery_methods": [{"id": "09cf5fcc-cb9d-4995-a8e4-16517b25229f", "container": {"id": "d29c42eb-7100-4b7a-8257-c196dbcca1cd", "type": "catalog"}}]}], "published_by": "PublishedBy", "published_at": "2019-01-01T12:00:00.000Z", "contract_terms": [{"asset": {"id": "2b0bf220-079c-11ee-be56-0242ac120002", "container": {"id": "d29c42eb-7100-4b7a-8257-c196dbcca1cd", "type": "catalog"}}, "id": "ID", "documents": [{"url": "URL", "type": "terms_and_conditions", "name": "Name", "id": "2b0bf220-079c-11ee-be56-0242ac120002", "attachment": {"id": "ID"}, "upload_url": "UploadURL"}]}], "created_by": "CreatedBy", "created_at": "2019-01-01T12:00:00.000Z", "is_restricted": true}`)
 				}))
 			})
-			It(`Invoke CreateDataProductVersion successfully`, func() {
+			It(`Invoke CreateDataProductDraft successfully`, func() {
 				dpxService, serviceErr := dpxv1.NewDpxV1(&dpxv1.DpxV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
@@ -1817,7 +2731,7 @@ var _ = Describe(`DpxV1`, func() {
 				Expect(dpxService).ToNot(BeNil())
 
 				// Invoke operation with nil options model (negative test)
-				result, response, operationErr := dpxService.CreateDataProductVersion(nil)
+				result, response, operationErr := dpxService.CreateDataProductDraft(nil)
 				Expect(operationErr).NotTo(BeNil())
 				Expect(response).To(BeNil())
 				Expect(result).To(BeNil())
@@ -1827,6 +2741,11 @@ var _ = Describe(`DpxV1`, func() {
 				containerReferenceModel.ID = core.StringPtr("d29c42eb-7100-4b7a-8257-c196dbcca1cd")
 				containerReferenceModel.Type = core.StringPtr("catalog")
 
+				// Construct an instance of the AssetReference model
+				assetReferenceModel := new(dpxv1.AssetReference)
+				assetReferenceModel.ID = core.StringPtr("2b0bf220-079c-11ee-be56-0242ac120002")
+				assetReferenceModel.Container = containerReferenceModel
+
 				// Construct an instance of the DataProductIdentity model
 				dataProductIdentityModel := new(dpxv1.DataProductIdentity)
 				dataProductIdentityModel.ID = core.StringPtr("b38df608-d34b-4d58-8136-ed25e6c6684e")
@@ -1872,42 +2791,40 @@ var _ = Describe(`DpxV1`, func() {
 				contractTermsDocumentModel.Name = core.StringPtr("testString")
 				contractTermsDocumentModel.ID = core.StringPtr("2b0bf220-079c-11ee-be56-0242ac120002")
 				contractTermsDocumentModel.Attachment = contractTermsDocumentAttachmentModel
-
-				// Construct an instance of the AssetReference model
-				assetReferenceModel := new(dpxv1.AssetReference)
-				assetReferenceModel.ID = core.StringPtr("2b0bf220-079c-11ee-be56-0242ac120002")
-				assetReferenceModel.Container = containerReferenceModel
+				contractTermsDocumentModel.UploadURL = core.StringPtr("testString")
 
 				// Construct an instance of the DataProductContractTerms model
 				dataProductContractTermsModel := new(dpxv1.DataProductContractTerms)
+				dataProductContractTermsModel.Asset = assetReferenceModel
 				dataProductContractTermsModel.ID = core.StringPtr("testString")
 				dataProductContractTermsModel.Documents = []dpxv1.ContractTermsDocument{*contractTermsDocumentModel}
-				dataProductContractTermsModel.Asset = assetReferenceModel
 
-				// Construct an instance of the CreateDataProductVersionOptions model
-				createDataProductVersionOptionsModel := new(dpxv1.CreateDataProductVersionOptions)
-				createDataProductVersionOptionsModel.Container = containerReferenceModel
-				createDataProductVersionOptionsModel.Version = core.StringPtr("testString")
-				createDataProductVersionOptionsModel.State = core.StringPtr("draft")
-				createDataProductVersionOptionsModel.DataProduct = dataProductIdentityModel
-				createDataProductVersionOptionsModel.Name = core.StringPtr("My New Data Product")
-				createDataProductVersionOptionsModel.Description = core.StringPtr("testString")
-				createDataProductVersionOptionsModel.Tags = []string{"testString"}
-				createDataProductVersionOptionsModel.UseCases = []dpxv1.UseCase{*useCaseModel}
-				createDataProductVersionOptionsModel.Domain = domainModel
-				createDataProductVersionOptionsModel.Type = []string{"data"}
-				createDataProductVersionOptionsModel.PartsOut = []dpxv1.DataProductPart{*dataProductPartModel}
-				createDataProductVersionOptionsModel.ContractTerms = []dpxv1.DataProductContractTerms{*dataProductContractTermsModel}
-				createDataProductVersionOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+				// Construct an instance of the CreateDataProductDraftOptions model
+				createDataProductDraftOptionsModel := new(dpxv1.CreateDataProductDraftOptions)
+				createDataProductDraftOptionsModel.DataProductID = core.StringPtr("b38df608-d34b-4d58-8136-ed25e6c6684e")
+				createDataProductDraftOptionsModel.Asset = assetReferenceModel
+				createDataProductDraftOptionsModel.Version = core.StringPtr("1.2.0")
+				createDataProductDraftOptionsModel.State = core.StringPtr("draft")
+				createDataProductDraftOptionsModel.DataProduct = dataProductIdentityModel
+				createDataProductDraftOptionsModel.Name = core.StringPtr("testString")
+				createDataProductDraftOptionsModel.Description = core.StringPtr("testString")
+				createDataProductDraftOptionsModel.Tags = []string{"testString"}
+				createDataProductDraftOptionsModel.UseCases = []dpxv1.UseCase{*useCaseModel}
+				createDataProductDraftOptionsModel.Domain = domainModel
+				createDataProductDraftOptionsModel.Types = []string{"data"}
+				createDataProductDraftOptionsModel.PartsOut = []dpxv1.DataProductPart{*dataProductPartModel}
+				createDataProductDraftOptionsModel.ContractTerms = []dpxv1.DataProductContractTerms{*dataProductContractTermsModel}
+				createDataProductDraftOptionsModel.IsRestricted = core.BoolPtr(true)
+				createDataProductDraftOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation with valid options model (positive test)
-				result, response, operationErr = dpxService.CreateDataProductVersion(createDataProductVersionOptionsModel)
+				result, response, operationErr = dpxService.CreateDataProductDraft(createDataProductDraftOptionsModel)
 				Expect(operationErr).To(BeNil())
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
 
 			})
-			It(`Invoke CreateDataProductVersion with error: Operation validation and request error`, func() {
+			It(`Invoke CreateDataProductDraft with error: Operation validation and request error`, func() {
 				dpxService, serviceErr := dpxv1.NewDpxV1(&dpxv1.DpxV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
@@ -1920,6 +2837,11 @@ var _ = Describe(`DpxV1`, func() {
 				containerReferenceModel.ID = core.StringPtr("d29c42eb-7100-4b7a-8257-c196dbcca1cd")
 				containerReferenceModel.Type = core.StringPtr("catalog")
 
+				// Construct an instance of the AssetReference model
+				assetReferenceModel := new(dpxv1.AssetReference)
+				assetReferenceModel.ID = core.StringPtr("2b0bf220-079c-11ee-be56-0242ac120002")
+				assetReferenceModel.Container = containerReferenceModel
+
 				// Construct an instance of the DataProductIdentity model
 				dataProductIdentityModel := new(dpxv1.DataProductIdentity)
 				dataProductIdentityModel.ID = core.StringPtr("b38df608-d34b-4d58-8136-ed25e6c6684e")
@@ -1965,45 +2887,43 @@ var _ = Describe(`DpxV1`, func() {
 				contractTermsDocumentModel.Name = core.StringPtr("testString")
 				contractTermsDocumentModel.ID = core.StringPtr("2b0bf220-079c-11ee-be56-0242ac120002")
 				contractTermsDocumentModel.Attachment = contractTermsDocumentAttachmentModel
-
-				// Construct an instance of the AssetReference model
-				assetReferenceModel := new(dpxv1.AssetReference)
-				assetReferenceModel.ID = core.StringPtr("2b0bf220-079c-11ee-be56-0242ac120002")
-				assetReferenceModel.Container = containerReferenceModel
+				contractTermsDocumentModel.UploadURL = core.StringPtr("testString")
 
 				// Construct an instance of the DataProductContractTerms model
 				dataProductContractTermsModel := new(dpxv1.DataProductContractTerms)
+				dataProductContractTermsModel.Asset = assetReferenceModel
 				dataProductContractTermsModel.ID = core.StringPtr("testString")
 				dataProductContractTermsModel.Documents = []dpxv1.ContractTermsDocument{*contractTermsDocumentModel}
-				dataProductContractTermsModel.Asset = assetReferenceModel
 
-				// Construct an instance of the CreateDataProductVersionOptions model
-				createDataProductVersionOptionsModel := new(dpxv1.CreateDataProductVersionOptions)
-				createDataProductVersionOptionsModel.Container = containerReferenceModel
-				createDataProductVersionOptionsModel.Version = core.StringPtr("testString")
-				createDataProductVersionOptionsModel.State = core.StringPtr("draft")
-				createDataProductVersionOptionsModel.DataProduct = dataProductIdentityModel
-				createDataProductVersionOptionsModel.Name = core.StringPtr("My New Data Product")
-				createDataProductVersionOptionsModel.Description = core.StringPtr("testString")
-				createDataProductVersionOptionsModel.Tags = []string{"testString"}
-				createDataProductVersionOptionsModel.UseCases = []dpxv1.UseCase{*useCaseModel}
-				createDataProductVersionOptionsModel.Domain = domainModel
-				createDataProductVersionOptionsModel.Type = []string{"data"}
-				createDataProductVersionOptionsModel.PartsOut = []dpxv1.DataProductPart{*dataProductPartModel}
-				createDataProductVersionOptionsModel.ContractTerms = []dpxv1.DataProductContractTerms{*dataProductContractTermsModel}
-				createDataProductVersionOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+				// Construct an instance of the CreateDataProductDraftOptions model
+				createDataProductDraftOptionsModel := new(dpxv1.CreateDataProductDraftOptions)
+				createDataProductDraftOptionsModel.DataProductID = core.StringPtr("b38df608-d34b-4d58-8136-ed25e6c6684e")
+				createDataProductDraftOptionsModel.Asset = assetReferenceModel
+				createDataProductDraftOptionsModel.Version = core.StringPtr("1.2.0")
+				createDataProductDraftOptionsModel.State = core.StringPtr("draft")
+				createDataProductDraftOptionsModel.DataProduct = dataProductIdentityModel
+				createDataProductDraftOptionsModel.Name = core.StringPtr("testString")
+				createDataProductDraftOptionsModel.Description = core.StringPtr("testString")
+				createDataProductDraftOptionsModel.Tags = []string{"testString"}
+				createDataProductDraftOptionsModel.UseCases = []dpxv1.UseCase{*useCaseModel}
+				createDataProductDraftOptionsModel.Domain = domainModel
+				createDataProductDraftOptionsModel.Types = []string{"data"}
+				createDataProductDraftOptionsModel.PartsOut = []dpxv1.DataProductPart{*dataProductPartModel}
+				createDataProductDraftOptionsModel.ContractTerms = []dpxv1.DataProductContractTerms{*dataProductContractTermsModel}
+				createDataProductDraftOptionsModel.IsRestricted = core.BoolPtr(true)
+				createDataProductDraftOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 				// Invoke operation with empty URL (negative test)
 				err := dpxService.SetServiceURL("")
 				Expect(err).To(BeNil())
-				result, response, operationErr := dpxService.CreateDataProductVersion(createDataProductVersionOptionsModel)
+				result, response, operationErr := dpxService.CreateDataProductDraft(createDataProductDraftOptionsModel)
 				Expect(operationErr).ToNot(BeNil())
 				Expect(operationErr.Error()).To(ContainSubstring(core.ERRORMSG_SERVICE_URL_MISSING))
 				Expect(response).To(BeNil())
 				Expect(result).To(BeNil())
-				// Construct a second instance of the CreateDataProductVersionOptions model with no property values
-				createDataProductVersionOptionsModelNew := new(dpxv1.CreateDataProductVersionOptions)
+				// Construct a second instance of the CreateDataProductDraftOptions model with no property values
+				createDataProductDraftOptionsModelNew := new(dpxv1.CreateDataProductDraftOptions)
 				// Invoke operation with invalid model (negative test)
-				result, response, operationErr = dpxService.CreateDataProductVersion(createDataProductVersionOptionsModelNew)
+				result, response, operationErr = dpxService.CreateDataProductDraft(createDataProductDraftOptionsModelNew)
 				Expect(operationErr).ToNot(BeNil())
 				Expect(response).To(BeNil())
 				Expect(result).To(BeNil())
@@ -2021,7 +2941,7 @@ var _ = Describe(`DpxV1`, func() {
 					res.WriteHeader(201)
 				}))
 			})
-			It(`Invoke CreateDataProductVersion successfully`, func() {
+			It(`Invoke CreateDataProductDraft successfully`, func() {
 				dpxService, serviceErr := dpxv1.NewDpxV1(&dpxv1.DpxV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
@@ -2033,6 +2953,11 @@ var _ = Describe(`DpxV1`, func() {
 				containerReferenceModel := new(dpxv1.ContainerReference)
 				containerReferenceModel.ID = core.StringPtr("d29c42eb-7100-4b7a-8257-c196dbcca1cd")
 				containerReferenceModel.Type = core.StringPtr("catalog")
+
+				// Construct an instance of the AssetReference model
+				assetReferenceModel := new(dpxv1.AssetReference)
+				assetReferenceModel.ID = core.StringPtr("2b0bf220-079c-11ee-be56-0242ac120002")
+				assetReferenceModel.Container = containerReferenceModel
 
 				// Construct an instance of the DataProductIdentity model
 				dataProductIdentityModel := new(dpxv1.DataProductIdentity)
@@ -2079,36 +3004,34 @@ var _ = Describe(`DpxV1`, func() {
 				contractTermsDocumentModel.Name = core.StringPtr("testString")
 				contractTermsDocumentModel.ID = core.StringPtr("2b0bf220-079c-11ee-be56-0242ac120002")
 				contractTermsDocumentModel.Attachment = contractTermsDocumentAttachmentModel
-
-				// Construct an instance of the AssetReference model
-				assetReferenceModel := new(dpxv1.AssetReference)
-				assetReferenceModel.ID = core.StringPtr("2b0bf220-079c-11ee-be56-0242ac120002")
-				assetReferenceModel.Container = containerReferenceModel
+				contractTermsDocumentModel.UploadURL = core.StringPtr("testString")
 
 				// Construct an instance of the DataProductContractTerms model
 				dataProductContractTermsModel := new(dpxv1.DataProductContractTerms)
+				dataProductContractTermsModel.Asset = assetReferenceModel
 				dataProductContractTermsModel.ID = core.StringPtr("testString")
 				dataProductContractTermsModel.Documents = []dpxv1.ContractTermsDocument{*contractTermsDocumentModel}
-				dataProductContractTermsModel.Asset = assetReferenceModel
 
-				// Construct an instance of the CreateDataProductVersionOptions model
-				createDataProductVersionOptionsModel := new(dpxv1.CreateDataProductVersionOptions)
-				createDataProductVersionOptionsModel.Container = containerReferenceModel
-				createDataProductVersionOptionsModel.Version = core.StringPtr("testString")
-				createDataProductVersionOptionsModel.State = core.StringPtr("draft")
-				createDataProductVersionOptionsModel.DataProduct = dataProductIdentityModel
-				createDataProductVersionOptionsModel.Name = core.StringPtr("My New Data Product")
-				createDataProductVersionOptionsModel.Description = core.StringPtr("testString")
-				createDataProductVersionOptionsModel.Tags = []string{"testString"}
-				createDataProductVersionOptionsModel.UseCases = []dpxv1.UseCase{*useCaseModel}
-				createDataProductVersionOptionsModel.Domain = domainModel
-				createDataProductVersionOptionsModel.Type = []string{"data"}
-				createDataProductVersionOptionsModel.PartsOut = []dpxv1.DataProductPart{*dataProductPartModel}
-				createDataProductVersionOptionsModel.ContractTerms = []dpxv1.DataProductContractTerms{*dataProductContractTermsModel}
-				createDataProductVersionOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+				// Construct an instance of the CreateDataProductDraftOptions model
+				createDataProductDraftOptionsModel := new(dpxv1.CreateDataProductDraftOptions)
+				createDataProductDraftOptionsModel.DataProductID = core.StringPtr("b38df608-d34b-4d58-8136-ed25e6c6684e")
+				createDataProductDraftOptionsModel.Asset = assetReferenceModel
+				createDataProductDraftOptionsModel.Version = core.StringPtr("1.2.0")
+				createDataProductDraftOptionsModel.State = core.StringPtr("draft")
+				createDataProductDraftOptionsModel.DataProduct = dataProductIdentityModel
+				createDataProductDraftOptionsModel.Name = core.StringPtr("testString")
+				createDataProductDraftOptionsModel.Description = core.StringPtr("testString")
+				createDataProductDraftOptionsModel.Tags = []string{"testString"}
+				createDataProductDraftOptionsModel.UseCases = []dpxv1.UseCase{*useCaseModel}
+				createDataProductDraftOptionsModel.Domain = domainModel
+				createDataProductDraftOptionsModel.Types = []string{"data"}
+				createDataProductDraftOptionsModel.PartsOut = []dpxv1.DataProductPart{*dataProductPartModel}
+				createDataProductDraftOptionsModel.ContractTerms = []dpxv1.DataProductContractTerms{*dataProductContractTermsModel}
+				createDataProductDraftOptionsModel.IsRestricted = core.BoolPtr(true)
+				createDataProductDraftOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation
-				result, response, operationErr := dpxService.CreateDataProductVersion(createDataProductVersionOptionsModel)
+				result, response, operationErr := dpxService.CreateDataProductDraft(createDataProductDraftOptionsModel)
 				Expect(operationErr).To(BeNil())
 				Expect(response).ToNot(BeNil())
 
@@ -2120,22 +3043,22 @@ var _ = Describe(`DpxV1`, func() {
 			})
 		})
 	})
-	Describe(`GetDataProductVersion(getDataProductVersionOptions *GetDataProductVersionOptions) - Operation response error`, func() {
-		getDataProductVersionPath := "/data_product_exchange/v1/data_product_versions/testString"
+	Describe(`CreateDraftContractTermsDocument(createDraftContractTermsDocumentOptions *CreateDraftContractTermsDocumentOptions) - Operation response error`, func() {
+		createDraftContractTermsDocumentPath := "/data_product_exchange/v1/data_products/b38df608-d34b-4d58-8136-ed25e6c6684e/drafts/2b0bf220-079c-11ee-be56-0242ac120002@d29c42eb-7100-4b7a-8257-c196dbcca1cd/contract_terms/598183cd-b910-4e8d-9a97-97097afda3c1@e4fe2f87-0e56-46dd-b3b8-e9af32309e82/documents"
 		Context(`Using mock server endpoint with invalid JSON response`, func() {
 			BeforeEach(func() {
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
 					// Verify the contents of the request
-					Expect(req.URL.EscapedPath()).To(Equal(getDataProductVersionPath))
-					Expect(req.Method).To(Equal("GET"))
+					Expect(req.URL.EscapedPath()).To(Equal(createDraftContractTermsDocumentPath))
+					Expect(req.Method).To(Equal("POST"))
 					res.Header().Set("Content-type", "application/json")
-					res.WriteHeader(200)
+					res.WriteHeader(201)
 					fmt.Fprint(res, `} this is not valid json {`)
 				}))
 			})
-			It(`Invoke GetDataProductVersion with error: Operation response processing error`, func() {
+			It(`Invoke CreateDraftContractTermsDocument with error: Operation response processing error`, func() {
 				dpxService, serviceErr := dpxv1.NewDpxV1(&dpxv1.DpxV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
@@ -2143,19 +3066,31 @@ var _ = Describe(`DpxV1`, func() {
 				Expect(serviceErr).To(BeNil())
 				Expect(dpxService).ToNot(BeNil())
 
-				// Construct an instance of the GetDataProductVersionOptions model
-				getDataProductVersionOptionsModel := new(dpxv1.GetDataProductVersionOptions)
-				getDataProductVersionOptionsModel.ID = core.StringPtr("testString")
-				getDataProductVersionOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+				// Construct an instance of the ContractTermsDocumentAttachment model
+				contractTermsDocumentAttachmentModel := new(dpxv1.ContractTermsDocumentAttachment)
+				contractTermsDocumentAttachmentModel.ID = core.StringPtr("testString")
+
+				// Construct an instance of the CreateDraftContractTermsDocumentOptions model
+				createDraftContractTermsDocumentOptionsModel := new(dpxv1.CreateDraftContractTermsDocumentOptions)
+				createDraftContractTermsDocumentOptionsModel.DataProductID = core.StringPtr("b38df608-d34b-4d58-8136-ed25e6c6684e")
+				createDraftContractTermsDocumentOptionsModel.DraftID = core.StringPtr("2b0bf220-079c-11ee-be56-0242ac120002@d29c42eb-7100-4b7a-8257-c196dbcca1cd")
+				createDraftContractTermsDocumentOptionsModel.ContractTermsID = core.StringPtr("598183cd-b910-4e8d-9a97-97097afda3c1@e4fe2f87-0e56-46dd-b3b8-e9af32309e82")
+				createDraftContractTermsDocumentOptionsModel.Type = core.StringPtr("terms_and_conditions")
+				createDraftContractTermsDocumentOptionsModel.Name = core.StringPtr("Terms and conditions document")
+				createDraftContractTermsDocumentOptionsModel.ID = core.StringPtr("b38df608-d34b-4d58-8136-ed25e6c6684e")
+				createDraftContractTermsDocumentOptionsModel.URL = core.StringPtr("testString")
+				createDraftContractTermsDocumentOptionsModel.Attachment = contractTermsDocumentAttachmentModel
+				createDraftContractTermsDocumentOptionsModel.UploadURL = core.StringPtr("testString")
+				createDraftContractTermsDocumentOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 				// Expect response parsing to fail since we are receiving a text/plain response
-				result, response, operationErr := dpxService.GetDataProductVersion(getDataProductVersionOptionsModel)
+				result, response, operationErr := dpxService.CreateDraftContractTermsDocument(createDraftContractTermsDocumentOptionsModel)
 				Expect(operationErr).ToNot(BeNil())
 				Expect(response).ToNot(BeNil())
 				Expect(result).To(BeNil())
 
 				// Enable retries and test again
 				dpxService.EnableRetries(0, 0)
-				result, response, operationErr = dpxService.GetDataProductVersion(getDataProductVersionOptionsModel)
+				result, response, operationErr = dpxService.CreateDraftContractTermsDocument(createDraftContractTermsDocumentOptionsModel)
 				Expect(operationErr).ToNot(BeNil())
 				Expect(response).ToNot(BeNil())
 				Expect(result).To(BeNil())
@@ -2165,27 +3100,43 @@ var _ = Describe(`DpxV1`, func() {
 			})
 		})
 	})
-	Describe(`GetDataProductVersion(getDataProductVersionOptions *GetDataProductVersionOptions)`, func() {
-		getDataProductVersionPath := "/data_product_exchange/v1/data_product_versions/testString"
+	Describe(`CreateDraftContractTermsDocument(createDraftContractTermsDocumentOptions *CreateDraftContractTermsDocumentOptions)`, func() {
+		createDraftContractTermsDocumentPath := "/data_product_exchange/v1/data_products/b38df608-d34b-4d58-8136-ed25e6c6684e/drafts/2b0bf220-079c-11ee-be56-0242ac120002@d29c42eb-7100-4b7a-8257-c196dbcca1cd/contract_terms/598183cd-b910-4e8d-9a97-97097afda3c1@e4fe2f87-0e56-46dd-b3b8-e9af32309e82/documents"
 		Context(`Using mock server endpoint with timeout`, func() {
 			BeforeEach(func() {
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
 					// Verify the contents of the request
-					Expect(req.URL.EscapedPath()).To(Equal(getDataProductVersionPath))
-					Expect(req.Method).To(Equal("GET"))
+					Expect(req.URL.EscapedPath()).To(Equal(createDraftContractTermsDocumentPath))
+					Expect(req.Method).To(Equal("POST"))
+
+					// For gzip-disabled operation, verify Content-Encoding is not set.
+					Expect(req.Header.Get("Content-Encoding")).To(BeEmpty())
+
+					// If there is a body, then make sure we can read it
+					bodyBuf := new(bytes.Buffer)
+					if req.Header.Get("Content-Encoding") == "gzip" {
+						body, err := core.NewGzipDecompressionReader(req.Body)
+						Expect(err).To(BeNil())
+						_, err = bodyBuf.ReadFrom(body)
+						Expect(err).To(BeNil())
+					} else {
+						_, err := bodyBuf.ReadFrom(req.Body)
+						Expect(err).To(BeNil())
+					}
+					fmt.Fprintf(GinkgoWriter, "  Request body: %s", bodyBuf.String())
 
 					// Sleep a short time to support a timeout test
 					time.Sleep(100 * time.Millisecond)
 
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
-					res.WriteHeader(200)
-					fmt.Fprintf(res, "%s", `{"version": "1.0.0", "state": "draft", "data_product": {"id": "b38df608-d34b-4d58-8136-ed25e6c6684e"}, "name": "My Data Product", "description": "This is a description of My Data Product.", "id": "2b0bf220-079c-11ee-be56-0242ac120002@d29c42eb-7100-4b7a-8257-c196dbcca1cd", "asset": {"id": "2b0bf220-079c-11ee-be56-0242ac120002", "container": {"id": "d29c42eb-7100-4b7a-8257-c196dbcca1cd", "type": "catalog"}}, "tags": ["Tags"], "use_cases": [{"id": "ID", "name": "Name", "container": {"id": "d29c42eb-7100-4b7a-8257-c196dbcca1cd", "type": "catalog"}}], "domain": {"id": "ID", "name": "Name", "container": {"id": "d29c42eb-7100-4b7a-8257-c196dbcca1cd", "type": "catalog"}}, "type": ["data"], "parts_out": [{"asset": {"id": "2b0bf220-079c-11ee-be56-0242ac120002", "container": {"id": "d29c42eb-7100-4b7a-8257-c196dbcca1cd", "type": "catalog"}, "type": "data_asset"}, "revision": 1, "updated_at": "2023-07-01T22:22:34.876Z", "delivery_methods": [{"id": "09cf5fcc-cb9d-4995-a8e4-16517b25229f", "container": {"id": "d29c42eb-7100-4b7a-8257-c196dbcca1cd", "type": "catalog"}}]}], "published_by": "PublishedBy", "published_at": "2019-01-01T12:00:00.000Z", "contract_terms": [{"id": "ID", "documents": [{"url": "URL", "type": "terms_and_conditions", "name": "Name", "id": "2b0bf220-079c-11ee-be56-0242ac120002", "attachment": {"id": "ID"}}], "asset": {"id": "2b0bf220-079c-11ee-be56-0242ac120002", "container": {"id": "d29c42eb-7100-4b7a-8257-c196dbcca1cd", "type": "catalog"}}}], "created_by": "CreatedBy", "created_at": "2019-01-01T12:00:00.000Z"}`)
+					res.WriteHeader(201)
+					fmt.Fprintf(res, "%s", `{"url": "URL", "type": "terms_and_conditions", "name": "Name", "id": "2b0bf220-079c-11ee-be56-0242ac120002", "attachment": {"id": "ID"}, "upload_url": "UploadURL"}`)
 				}))
 			})
-			It(`Invoke GetDataProductVersion successfully with retries`, func() {
+			It(`Invoke CreateDraftContractTermsDocument successfully with retries`, func() {
 				dpxService, serviceErr := dpxv1.NewDpxV1(&dpxv1.DpxV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
@@ -2194,21 +3145,33 @@ var _ = Describe(`DpxV1`, func() {
 				Expect(dpxService).ToNot(BeNil())
 				dpxService.EnableRetries(0, 0)
 
-				// Construct an instance of the GetDataProductVersionOptions model
-				getDataProductVersionOptionsModel := new(dpxv1.GetDataProductVersionOptions)
-				getDataProductVersionOptionsModel.ID = core.StringPtr("testString")
-				getDataProductVersionOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+				// Construct an instance of the ContractTermsDocumentAttachment model
+				contractTermsDocumentAttachmentModel := new(dpxv1.ContractTermsDocumentAttachment)
+				contractTermsDocumentAttachmentModel.ID = core.StringPtr("testString")
+
+				// Construct an instance of the CreateDraftContractTermsDocumentOptions model
+				createDraftContractTermsDocumentOptionsModel := new(dpxv1.CreateDraftContractTermsDocumentOptions)
+				createDraftContractTermsDocumentOptionsModel.DataProductID = core.StringPtr("b38df608-d34b-4d58-8136-ed25e6c6684e")
+				createDraftContractTermsDocumentOptionsModel.DraftID = core.StringPtr("2b0bf220-079c-11ee-be56-0242ac120002@d29c42eb-7100-4b7a-8257-c196dbcca1cd")
+				createDraftContractTermsDocumentOptionsModel.ContractTermsID = core.StringPtr("598183cd-b910-4e8d-9a97-97097afda3c1@e4fe2f87-0e56-46dd-b3b8-e9af32309e82")
+				createDraftContractTermsDocumentOptionsModel.Type = core.StringPtr("terms_and_conditions")
+				createDraftContractTermsDocumentOptionsModel.Name = core.StringPtr("Terms and conditions document")
+				createDraftContractTermsDocumentOptionsModel.ID = core.StringPtr("b38df608-d34b-4d58-8136-ed25e6c6684e")
+				createDraftContractTermsDocumentOptionsModel.URL = core.StringPtr("testString")
+				createDraftContractTermsDocumentOptionsModel.Attachment = contractTermsDocumentAttachmentModel
+				createDraftContractTermsDocumentOptionsModel.UploadURL = core.StringPtr("testString")
+				createDraftContractTermsDocumentOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation with a Context to test a timeout error
 				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
 				defer cancelFunc()
-				_, _, operationErr := dpxService.GetDataProductVersionWithContext(ctx, getDataProductVersionOptionsModel)
+				_, _, operationErr := dpxService.CreateDraftContractTermsDocumentWithContext(ctx, createDraftContractTermsDocumentOptionsModel)
 				Expect(operationErr).ToNot(BeNil())
 				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
 
 				// Disable retries and test again
 				dpxService.DisableRetries()
-				result, response, operationErr := dpxService.GetDataProductVersion(getDataProductVersionOptionsModel)
+				result, response, operationErr := dpxService.CreateDraftContractTermsDocument(createDraftContractTermsDocumentOptionsModel)
 				Expect(operationErr).To(BeNil())
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
@@ -2216,7 +3179,7 @@ var _ = Describe(`DpxV1`, func() {
 				// Re-test the timeout error with retries disabled
 				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
 				defer cancelFunc2()
-				_, _, operationErr = dpxService.GetDataProductVersionWithContext(ctx, getDataProductVersionOptionsModel)
+				_, _, operationErr = dpxService.CreateDraftContractTermsDocumentWithContext(ctx, createDraftContractTermsDocumentOptionsModel)
 				Expect(operationErr).ToNot(BeNil())
 				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
 			})
@@ -2230,16 +3193,32 @@ var _ = Describe(`DpxV1`, func() {
 					defer GinkgoRecover()
 
 					// Verify the contents of the request
-					Expect(req.URL.EscapedPath()).To(Equal(getDataProductVersionPath))
-					Expect(req.Method).To(Equal("GET"))
+					Expect(req.URL.EscapedPath()).To(Equal(createDraftContractTermsDocumentPath))
+					Expect(req.Method).To(Equal("POST"))
+
+					// For gzip-disabled operation, verify Content-Encoding is not set.
+					Expect(req.Header.Get("Content-Encoding")).To(BeEmpty())
+
+					// If there is a body, then make sure we can read it
+					bodyBuf := new(bytes.Buffer)
+					if req.Header.Get("Content-Encoding") == "gzip" {
+						body, err := core.NewGzipDecompressionReader(req.Body)
+						Expect(err).To(BeNil())
+						_, err = bodyBuf.ReadFrom(body)
+						Expect(err).To(BeNil())
+					} else {
+						_, err := bodyBuf.ReadFrom(req.Body)
+						Expect(err).To(BeNil())
+					}
+					fmt.Fprintf(GinkgoWriter, "  Request body: %s", bodyBuf.String())
 
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
-					res.WriteHeader(200)
-					fmt.Fprintf(res, "%s", `{"version": "1.0.0", "state": "draft", "data_product": {"id": "b38df608-d34b-4d58-8136-ed25e6c6684e"}, "name": "My Data Product", "description": "This is a description of My Data Product.", "id": "2b0bf220-079c-11ee-be56-0242ac120002@d29c42eb-7100-4b7a-8257-c196dbcca1cd", "asset": {"id": "2b0bf220-079c-11ee-be56-0242ac120002", "container": {"id": "d29c42eb-7100-4b7a-8257-c196dbcca1cd", "type": "catalog"}}, "tags": ["Tags"], "use_cases": [{"id": "ID", "name": "Name", "container": {"id": "d29c42eb-7100-4b7a-8257-c196dbcca1cd", "type": "catalog"}}], "domain": {"id": "ID", "name": "Name", "container": {"id": "d29c42eb-7100-4b7a-8257-c196dbcca1cd", "type": "catalog"}}, "type": ["data"], "parts_out": [{"asset": {"id": "2b0bf220-079c-11ee-be56-0242ac120002", "container": {"id": "d29c42eb-7100-4b7a-8257-c196dbcca1cd", "type": "catalog"}, "type": "data_asset"}, "revision": 1, "updated_at": "2023-07-01T22:22:34.876Z", "delivery_methods": [{"id": "09cf5fcc-cb9d-4995-a8e4-16517b25229f", "container": {"id": "d29c42eb-7100-4b7a-8257-c196dbcca1cd", "type": "catalog"}}]}], "published_by": "PublishedBy", "published_at": "2019-01-01T12:00:00.000Z", "contract_terms": [{"id": "ID", "documents": [{"url": "URL", "type": "terms_and_conditions", "name": "Name", "id": "2b0bf220-079c-11ee-be56-0242ac120002", "attachment": {"id": "ID"}}], "asset": {"id": "2b0bf220-079c-11ee-be56-0242ac120002", "container": {"id": "d29c42eb-7100-4b7a-8257-c196dbcca1cd", "type": "catalog"}}}], "created_by": "CreatedBy", "created_at": "2019-01-01T12:00:00.000Z"}`)
+					res.WriteHeader(201)
+					fmt.Fprintf(res, "%s", `{"url": "URL", "type": "terms_and_conditions", "name": "Name", "id": "2b0bf220-079c-11ee-be56-0242ac120002", "attachment": {"id": "ID"}, "upload_url": "UploadURL"}`)
 				}))
 			})
-			It(`Invoke GetDataProductVersion successfully`, func() {
+			It(`Invoke CreateDraftContractTermsDocument successfully`, func() {
 				dpxService, serviceErr := dpxv1.NewDpxV1(&dpxv1.DpxV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
@@ -2248,24 +3227,36 @@ var _ = Describe(`DpxV1`, func() {
 				Expect(dpxService).ToNot(BeNil())
 
 				// Invoke operation with nil options model (negative test)
-				result, response, operationErr := dpxService.GetDataProductVersion(nil)
+				result, response, operationErr := dpxService.CreateDraftContractTermsDocument(nil)
 				Expect(operationErr).NotTo(BeNil())
 				Expect(response).To(BeNil())
 				Expect(result).To(BeNil())
 
-				// Construct an instance of the GetDataProductVersionOptions model
-				getDataProductVersionOptionsModel := new(dpxv1.GetDataProductVersionOptions)
-				getDataProductVersionOptionsModel.ID = core.StringPtr("testString")
-				getDataProductVersionOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+				// Construct an instance of the ContractTermsDocumentAttachment model
+				contractTermsDocumentAttachmentModel := new(dpxv1.ContractTermsDocumentAttachment)
+				contractTermsDocumentAttachmentModel.ID = core.StringPtr("testString")
+
+				// Construct an instance of the CreateDraftContractTermsDocumentOptions model
+				createDraftContractTermsDocumentOptionsModel := new(dpxv1.CreateDraftContractTermsDocumentOptions)
+				createDraftContractTermsDocumentOptionsModel.DataProductID = core.StringPtr("b38df608-d34b-4d58-8136-ed25e6c6684e")
+				createDraftContractTermsDocumentOptionsModel.DraftID = core.StringPtr("2b0bf220-079c-11ee-be56-0242ac120002@d29c42eb-7100-4b7a-8257-c196dbcca1cd")
+				createDraftContractTermsDocumentOptionsModel.ContractTermsID = core.StringPtr("598183cd-b910-4e8d-9a97-97097afda3c1@e4fe2f87-0e56-46dd-b3b8-e9af32309e82")
+				createDraftContractTermsDocumentOptionsModel.Type = core.StringPtr("terms_and_conditions")
+				createDraftContractTermsDocumentOptionsModel.Name = core.StringPtr("Terms and conditions document")
+				createDraftContractTermsDocumentOptionsModel.ID = core.StringPtr("b38df608-d34b-4d58-8136-ed25e6c6684e")
+				createDraftContractTermsDocumentOptionsModel.URL = core.StringPtr("testString")
+				createDraftContractTermsDocumentOptionsModel.Attachment = contractTermsDocumentAttachmentModel
+				createDraftContractTermsDocumentOptionsModel.UploadURL = core.StringPtr("testString")
+				createDraftContractTermsDocumentOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation with valid options model (positive test)
-				result, response, operationErr = dpxService.GetDataProductVersion(getDataProductVersionOptionsModel)
+				result, response, operationErr = dpxService.CreateDraftContractTermsDocument(createDraftContractTermsDocumentOptionsModel)
 				Expect(operationErr).To(BeNil())
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
 
 			})
-			It(`Invoke GetDataProductVersion with error: Operation validation and request error`, func() {
+			It(`Invoke CreateDraftContractTermsDocument with error: Operation validation and request error`, func() {
 				dpxService, serviceErr := dpxv1.NewDpxV1(&dpxv1.DpxV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
@@ -2273,22 +3264,262 @@ var _ = Describe(`DpxV1`, func() {
 				Expect(serviceErr).To(BeNil())
 				Expect(dpxService).ToNot(BeNil())
 
-				// Construct an instance of the GetDataProductVersionOptions model
-				getDataProductVersionOptionsModel := new(dpxv1.GetDataProductVersionOptions)
-				getDataProductVersionOptionsModel.ID = core.StringPtr("testString")
-				getDataProductVersionOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+				// Construct an instance of the ContractTermsDocumentAttachment model
+				contractTermsDocumentAttachmentModel := new(dpxv1.ContractTermsDocumentAttachment)
+				contractTermsDocumentAttachmentModel.ID = core.StringPtr("testString")
+
+				// Construct an instance of the CreateDraftContractTermsDocumentOptions model
+				createDraftContractTermsDocumentOptionsModel := new(dpxv1.CreateDraftContractTermsDocumentOptions)
+				createDraftContractTermsDocumentOptionsModel.DataProductID = core.StringPtr("b38df608-d34b-4d58-8136-ed25e6c6684e")
+				createDraftContractTermsDocumentOptionsModel.DraftID = core.StringPtr("2b0bf220-079c-11ee-be56-0242ac120002@d29c42eb-7100-4b7a-8257-c196dbcca1cd")
+				createDraftContractTermsDocumentOptionsModel.ContractTermsID = core.StringPtr("598183cd-b910-4e8d-9a97-97097afda3c1@e4fe2f87-0e56-46dd-b3b8-e9af32309e82")
+				createDraftContractTermsDocumentOptionsModel.Type = core.StringPtr("terms_and_conditions")
+				createDraftContractTermsDocumentOptionsModel.Name = core.StringPtr("Terms and conditions document")
+				createDraftContractTermsDocumentOptionsModel.ID = core.StringPtr("b38df608-d34b-4d58-8136-ed25e6c6684e")
+				createDraftContractTermsDocumentOptionsModel.URL = core.StringPtr("testString")
+				createDraftContractTermsDocumentOptionsModel.Attachment = contractTermsDocumentAttachmentModel
+				createDraftContractTermsDocumentOptionsModel.UploadURL = core.StringPtr("testString")
+				createDraftContractTermsDocumentOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 				// Invoke operation with empty URL (negative test)
 				err := dpxService.SetServiceURL("")
 				Expect(err).To(BeNil())
-				result, response, operationErr := dpxService.GetDataProductVersion(getDataProductVersionOptionsModel)
+				result, response, operationErr := dpxService.CreateDraftContractTermsDocument(createDraftContractTermsDocumentOptionsModel)
 				Expect(operationErr).ToNot(BeNil())
 				Expect(operationErr.Error()).To(ContainSubstring(core.ERRORMSG_SERVICE_URL_MISSING))
 				Expect(response).To(BeNil())
 				Expect(result).To(BeNil())
-				// Construct a second instance of the GetDataProductVersionOptions model with no property values
-				getDataProductVersionOptionsModelNew := new(dpxv1.GetDataProductVersionOptions)
+				// Construct a second instance of the CreateDraftContractTermsDocumentOptions model with no property values
+				createDraftContractTermsDocumentOptionsModelNew := new(dpxv1.CreateDraftContractTermsDocumentOptions)
 				// Invoke operation with invalid model (negative test)
-				result, response, operationErr = dpxService.GetDataProductVersion(getDataProductVersionOptionsModelNew)
+				result, response, operationErr = dpxService.CreateDraftContractTermsDocument(createDraftContractTermsDocumentOptionsModelNew)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(response).To(BeNil())
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+		Context(`Using mock server endpoint with missing response body`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Set success status code with no respoonse body
+					res.WriteHeader(201)
+				}))
+			})
+			It(`Invoke CreateDraftContractTermsDocument successfully`, func() {
+				dpxService, serviceErr := dpxv1.NewDpxV1(&dpxv1.DpxV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(dpxService).ToNot(BeNil())
+
+				// Construct an instance of the ContractTermsDocumentAttachment model
+				contractTermsDocumentAttachmentModel := new(dpxv1.ContractTermsDocumentAttachment)
+				contractTermsDocumentAttachmentModel.ID = core.StringPtr("testString")
+
+				// Construct an instance of the CreateDraftContractTermsDocumentOptions model
+				createDraftContractTermsDocumentOptionsModel := new(dpxv1.CreateDraftContractTermsDocumentOptions)
+				createDraftContractTermsDocumentOptionsModel.DataProductID = core.StringPtr("b38df608-d34b-4d58-8136-ed25e6c6684e")
+				createDraftContractTermsDocumentOptionsModel.DraftID = core.StringPtr("2b0bf220-079c-11ee-be56-0242ac120002@d29c42eb-7100-4b7a-8257-c196dbcca1cd")
+				createDraftContractTermsDocumentOptionsModel.ContractTermsID = core.StringPtr("598183cd-b910-4e8d-9a97-97097afda3c1@e4fe2f87-0e56-46dd-b3b8-e9af32309e82")
+				createDraftContractTermsDocumentOptionsModel.Type = core.StringPtr("terms_and_conditions")
+				createDraftContractTermsDocumentOptionsModel.Name = core.StringPtr("Terms and conditions document")
+				createDraftContractTermsDocumentOptionsModel.ID = core.StringPtr("b38df608-d34b-4d58-8136-ed25e6c6684e")
+				createDraftContractTermsDocumentOptionsModel.URL = core.StringPtr("testString")
+				createDraftContractTermsDocumentOptionsModel.Attachment = contractTermsDocumentAttachmentModel
+				createDraftContractTermsDocumentOptionsModel.UploadURL = core.StringPtr("testString")
+				createDraftContractTermsDocumentOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation
+				result, response, operationErr := dpxService.CreateDraftContractTermsDocument(createDraftContractTermsDocumentOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+
+				// Verify a nil result
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+	})
+	Describe(`GetDataProductDraft(getDataProductDraftOptions *GetDataProductDraftOptions) - Operation response error`, func() {
+		getDataProductDraftPath := "/data_product_exchange/v1/data_products/b38df608-d34b-4d58-8136-ed25e6c6684e/drafts/2b0bf220-079c-11ee-be56-0242ac120002@d29c42eb-7100-4b7a-8257-c196dbcca1cd"
+		Context(`Using mock server endpoint with invalid JSON response`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(getDataProductDraftPath))
+					Expect(req.Method).To(Equal("GET"))
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprint(res, `} this is not valid json {`)
+				}))
+			})
+			It(`Invoke GetDataProductDraft with error: Operation response processing error`, func() {
+				dpxService, serviceErr := dpxv1.NewDpxV1(&dpxv1.DpxV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(dpxService).ToNot(BeNil())
+
+				// Construct an instance of the GetDataProductDraftOptions model
+				getDataProductDraftOptionsModel := new(dpxv1.GetDataProductDraftOptions)
+				getDataProductDraftOptionsModel.DataProductID = core.StringPtr("b38df608-d34b-4d58-8136-ed25e6c6684e")
+				getDataProductDraftOptionsModel.DraftID = core.StringPtr("2b0bf220-079c-11ee-be56-0242ac120002@d29c42eb-7100-4b7a-8257-c196dbcca1cd")
+				getDataProductDraftOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+				// Expect response parsing to fail since we are receiving a text/plain response
+				result, response, operationErr := dpxService.GetDataProductDraft(getDataProductDraftOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).To(BeNil())
+
+				// Enable retries and test again
+				dpxService.EnableRetries(0, 0)
+				result, response, operationErr = dpxService.GetDataProductDraft(getDataProductDraftOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+	})
+	Describe(`GetDataProductDraft(getDataProductDraftOptions *GetDataProductDraftOptions)`, func() {
+		getDataProductDraftPath := "/data_product_exchange/v1/data_products/b38df608-d34b-4d58-8136-ed25e6c6684e/drafts/2b0bf220-079c-11ee-be56-0242ac120002@d29c42eb-7100-4b7a-8257-c196dbcca1cd"
+		Context(`Using mock server endpoint with timeout`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(getDataProductDraftPath))
+					Expect(req.Method).To(Equal("GET"))
+
+					// Sleep a short time to support a timeout test
+					time.Sleep(100 * time.Millisecond)
+
+					// Set mock response
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprintf(res, "%s", `{"version": "1.0.0", "state": "draft", "data_product": {"id": "b38df608-d34b-4d58-8136-ed25e6c6684e"}, "name": "My Data Product", "description": "This is a description of My Data Product.", "id": "2b0bf220-079c-11ee-be56-0242ac120002@d29c42eb-7100-4b7a-8257-c196dbcca1cd", "asset": {"id": "2b0bf220-079c-11ee-be56-0242ac120002", "container": {"id": "d29c42eb-7100-4b7a-8257-c196dbcca1cd", "type": "catalog"}}, "tags": ["Tags"], "use_cases": [{"id": "ID", "name": "Name", "container": {"id": "d29c42eb-7100-4b7a-8257-c196dbcca1cd", "type": "catalog"}}], "domain": {"id": "ID", "name": "Name", "container": {"id": "d29c42eb-7100-4b7a-8257-c196dbcca1cd", "type": "catalog"}}, "types": ["data"], "parts_out": [{"asset": {"id": "2b0bf220-079c-11ee-be56-0242ac120002", "container": {"id": "d29c42eb-7100-4b7a-8257-c196dbcca1cd", "type": "catalog"}, "type": "data_asset"}, "revision": 1, "updated_at": "2023-07-01T22:22:34.876Z", "delivery_methods": [{"id": "09cf5fcc-cb9d-4995-a8e4-16517b25229f", "container": {"id": "d29c42eb-7100-4b7a-8257-c196dbcca1cd", "type": "catalog"}}]}], "published_by": "PublishedBy", "published_at": "2019-01-01T12:00:00.000Z", "contract_terms": [{"asset": {"id": "2b0bf220-079c-11ee-be56-0242ac120002", "container": {"id": "d29c42eb-7100-4b7a-8257-c196dbcca1cd", "type": "catalog"}}, "id": "ID", "documents": [{"url": "URL", "type": "terms_and_conditions", "name": "Name", "id": "2b0bf220-079c-11ee-be56-0242ac120002", "attachment": {"id": "ID"}, "upload_url": "UploadURL"}]}], "created_by": "CreatedBy", "created_at": "2019-01-01T12:00:00.000Z", "is_restricted": true}`)
+				}))
+			})
+			It(`Invoke GetDataProductDraft successfully with retries`, func() {
+				dpxService, serviceErr := dpxv1.NewDpxV1(&dpxv1.DpxV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(dpxService).ToNot(BeNil())
+				dpxService.EnableRetries(0, 0)
+
+				// Construct an instance of the GetDataProductDraftOptions model
+				getDataProductDraftOptionsModel := new(dpxv1.GetDataProductDraftOptions)
+				getDataProductDraftOptionsModel.DataProductID = core.StringPtr("b38df608-d34b-4d58-8136-ed25e6c6684e")
+				getDataProductDraftOptionsModel.DraftID = core.StringPtr("2b0bf220-079c-11ee-be56-0242ac120002@d29c42eb-7100-4b7a-8257-c196dbcca1cd")
+				getDataProductDraftOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with a Context to test a timeout error
+				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc()
+				_, _, operationErr := dpxService.GetDataProductDraftWithContext(ctx, getDataProductDraftOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+
+				// Disable retries and test again
+				dpxService.DisableRetries()
+				result, response, operationErr := dpxService.GetDataProductDraft(getDataProductDraftOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+
+				// Re-test the timeout error with retries disabled
+				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc2()
+				_, _, operationErr = dpxService.GetDataProductDraftWithContext(ctx, getDataProductDraftOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(getDataProductDraftPath))
+					Expect(req.Method).To(Equal("GET"))
+
+					// Set mock response
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprintf(res, "%s", `{"version": "1.0.0", "state": "draft", "data_product": {"id": "b38df608-d34b-4d58-8136-ed25e6c6684e"}, "name": "My Data Product", "description": "This is a description of My Data Product.", "id": "2b0bf220-079c-11ee-be56-0242ac120002@d29c42eb-7100-4b7a-8257-c196dbcca1cd", "asset": {"id": "2b0bf220-079c-11ee-be56-0242ac120002", "container": {"id": "d29c42eb-7100-4b7a-8257-c196dbcca1cd", "type": "catalog"}}, "tags": ["Tags"], "use_cases": [{"id": "ID", "name": "Name", "container": {"id": "d29c42eb-7100-4b7a-8257-c196dbcca1cd", "type": "catalog"}}], "domain": {"id": "ID", "name": "Name", "container": {"id": "d29c42eb-7100-4b7a-8257-c196dbcca1cd", "type": "catalog"}}, "types": ["data"], "parts_out": [{"asset": {"id": "2b0bf220-079c-11ee-be56-0242ac120002", "container": {"id": "d29c42eb-7100-4b7a-8257-c196dbcca1cd", "type": "catalog"}, "type": "data_asset"}, "revision": 1, "updated_at": "2023-07-01T22:22:34.876Z", "delivery_methods": [{"id": "09cf5fcc-cb9d-4995-a8e4-16517b25229f", "container": {"id": "d29c42eb-7100-4b7a-8257-c196dbcca1cd", "type": "catalog"}}]}], "published_by": "PublishedBy", "published_at": "2019-01-01T12:00:00.000Z", "contract_terms": [{"asset": {"id": "2b0bf220-079c-11ee-be56-0242ac120002", "container": {"id": "d29c42eb-7100-4b7a-8257-c196dbcca1cd", "type": "catalog"}}, "id": "ID", "documents": [{"url": "URL", "type": "terms_and_conditions", "name": "Name", "id": "2b0bf220-079c-11ee-be56-0242ac120002", "attachment": {"id": "ID"}, "upload_url": "UploadURL"}]}], "created_by": "CreatedBy", "created_at": "2019-01-01T12:00:00.000Z", "is_restricted": true}`)
+				}))
+			})
+			It(`Invoke GetDataProductDraft successfully`, func() {
+				dpxService, serviceErr := dpxv1.NewDpxV1(&dpxv1.DpxV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(dpxService).ToNot(BeNil())
+
+				// Invoke operation with nil options model (negative test)
+				result, response, operationErr := dpxService.GetDataProductDraft(nil)
+				Expect(operationErr).NotTo(BeNil())
+				Expect(response).To(BeNil())
+				Expect(result).To(BeNil())
+
+				// Construct an instance of the GetDataProductDraftOptions model
+				getDataProductDraftOptionsModel := new(dpxv1.GetDataProductDraftOptions)
+				getDataProductDraftOptionsModel.DataProductID = core.StringPtr("b38df608-d34b-4d58-8136-ed25e6c6684e")
+				getDataProductDraftOptionsModel.DraftID = core.StringPtr("2b0bf220-079c-11ee-be56-0242ac120002@d29c42eb-7100-4b7a-8257-c196dbcca1cd")
+				getDataProductDraftOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with valid options model (positive test)
+				result, response, operationErr = dpxService.GetDataProductDraft(getDataProductDraftOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+
+			})
+			It(`Invoke GetDataProductDraft with error: Operation validation and request error`, func() {
+				dpxService, serviceErr := dpxv1.NewDpxV1(&dpxv1.DpxV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(dpxService).ToNot(BeNil())
+
+				// Construct an instance of the GetDataProductDraftOptions model
+				getDataProductDraftOptionsModel := new(dpxv1.GetDataProductDraftOptions)
+				getDataProductDraftOptionsModel.DataProductID = core.StringPtr("b38df608-d34b-4d58-8136-ed25e6c6684e")
+				getDataProductDraftOptionsModel.DraftID = core.StringPtr("2b0bf220-079c-11ee-be56-0242ac120002@d29c42eb-7100-4b7a-8257-c196dbcca1cd")
+				getDataProductDraftOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+				// Invoke operation with empty URL (negative test)
+				err := dpxService.SetServiceURL("")
+				Expect(err).To(BeNil())
+				result, response, operationErr := dpxService.GetDataProductDraft(getDataProductDraftOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring(core.ERRORMSG_SERVICE_URL_MISSING))
+				Expect(response).To(BeNil())
+				Expect(result).To(BeNil())
+				// Construct a second instance of the GetDataProductDraftOptions model with no property values
+				getDataProductDraftOptionsModelNew := new(dpxv1.GetDataProductDraftOptions)
+				// Invoke operation with invalid model (negative test)
+				result, response, operationErr = dpxService.GetDataProductDraft(getDataProductDraftOptionsModelNew)
 				Expect(operationErr).ToNot(BeNil())
 				Expect(response).To(BeNil())
 				Expect(result).To(BeNil())
@@ -2306,7 +3537,7 @@ var _ = Describe(`DpxV1`, func() {
 					res.WriteHeader(200)
 				}))
 			})
-			It(`Invoke GetDataProductVersion successfully`, func() {
+			It(`Invoke GetDataProductDraft successfully`, func() {
 				dpxService, serviceErr := dpxv1.NewDpxV1(&dpxv1.DpxV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
@@ -2314,13 +3545,14 @@ var _ = Describe(`DpxV1`, func() {
 				Expect(serviceErr).To(BeNil())
 				Expect(dpxService).ToNot(BeNil())
 
-				// Construct an instance of the GetDataProductVersionOptions model
-				getDataProductVersionOptionsModel := new(dpxv1.GetDataProductVersionOptions)
-				getDataProductVersionOptionsModel.ID = core.StringPtr("testString")
-				getDataProductVersionOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+				// Construct an instance of the GetDataProductDraftOptions model
+				getDataProductDraftOptionsModel := new(dpxv1.GetDataProductDraftOptions)
+				getDataProductDraftOptionsModel.DataProductID = core.StringPtr("b38df608-d34b-4d58-8136-ed25e6c6684e")
+				getDataProductDraftOptionsModel.DraftID = core.StringPtr("2b0bf220-079c-11ee-be56-0242ac120002@d29c42eb-7100-4b7a-8257-c196dbcca1cd")
+				getDataProductDraftOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation
-				result, response, operationErr := dpxService.GetDataProductVersion(getDataProductVersionOptionsModel)
+				result, response, operationErr := dpxService.GetDataProductDraft(getDataProductDraftOptionsModel)
 				Expect(operationErr).To(BeNil())
 				Expect(response).ToNot(BeNil())
 
@@ -2332,21 +3564,21 @@ var _ = Describe(`DpxV1`, func() {
 			})
 		})
 	})
-	Describe(`DeleteDataProductVersion(deleteDataProductVersionOptions *DeleteDataProductVersionOptions)`, func() {
-		deleteDataProductVersionPath := "/data_product_exchange/v1/data_product_versions/testString"
+	Describe(`DeleteDataProductDraft(deleteDataProductDraftOptions *DeleteDataProductDraftOptions)`, func() {
+		deleteDataProductDraftPath := "/data_product_exchange/v1/data_products/b38df608-d34b-4d58-8136-ed25e6c6684e/drafts/2b0bf220-079c-11ee-be56-0242ac120002@d29c42eb-7100-4b7a-8257-c196dbcca1cd"
 		Context(`Using mock server endpoint`, func() {
 			BeforeEach(func() {
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
 					// Verify the contents of the request
-					Expect(req.URL.EscapedPath()).To(Equal(deleteDataProductVersionPath))
+					Expect(req.URL.EscapedPath()).To(Equal(deleteDataProductDraftPath))
 					Expect(req.Method).To(Equal("DELETE"))
 
 					res.WriteHeader(204)
 				}))
 			})
-			It(`Invoke DeleteDataProductVersion successfully`, func() {
+			It(`Invoke DeleteDataProductDraft successfully`, func() {
 				dpxService, serviceErr := dpxv1.NewDpxV1(&dpxv1.DpxV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
@@ -2355,21 +3587,22 @@ var _ = Describe(`DpxV1`, func() {
 				Expect(dpxService).ToNot(BeNil())
 
 				// Invoke operation with nil options model (negative test)
-				response, operationErr := dpxService.DeleteDataProductVersion(nil)
+				response, operationErr := dpxService.DeleteDataProductDraft(nil)
 				Expect(operationErr).NotTo(BeNil())
 				Expect(response).To(BeNil())
 
-				// Construct an instance of the DeleteDataProductVersionOptions model
-				deleteDataProductVersionOptionsModel := new(dpxv1.DeleteDataProductVersionOptions)
-				deleteDataProductVersionOptionsModel.ID = core.StringPtr("testString")
-				deleteDataProductVersionOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+				// Construct an instance of the DeleteDataProductDraftOptions model
+				deleteDataProductDraftOptionsModel := new(dpxv1.DeleteDataProductDraftOptions)
+				deleteDataProductDraftOptionsModel.DataProductID = core.StringPtr("b38df608-d34b-4d58-8136-ed25e6c6684e")
+				deleteDataProductDraftOptionsModel.DraftID = core.StringPtr("2b0bf220-079c-11ee-be56-0242ac120002@d29c42eb-7100-4b7a-8257-c196dbcca1cd")
+				deleteDataProductDraftOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation with valid options model (positive test)
-				response, operationErr = dpxService.DeleteDataProductVersion(deleteDataProductVersionOptionsModel)
+				response, operationErr = dpxService.DeleteDataProductDraft(deleteDataProductDraftOptionsModel)
 				Expect(operationErr).To(BeNil())
 				Expect(response).ToNot(BeNil())
 			})
-			It(`Invoke DeleteDataProductVersion with error: Operation validation and request error`, func() {
+			It(`Invoke DeleteDataProductDraft with error: Operation validation and request error`, func() {
 				dpxService, serviceErr := dpxv1.NewDpxV1(&dpxv1.DpxV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
@@ -2377,21 +3610,22 @@ var _ = Describe(`DpxV1`, func() {
 				Expect(serviceErr).To(BeNil())
 				Expect(dpxService).ToNot(BeNil())
 
-				// Construct an instance of the DeleteDataProductVersionOptions model
-				deleteDataProductVersionOptionsModel := new(dpxv1.DeleteDataProductVersionOptions)
-				deleteDataProductVersionOptionsModel.ID = core.StringPtr("testString")
-				deleteDataProductVersionOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+				// Construct an instance of the DeleteDataProductDraftOptions model
+				deleteDataProductDraftOptionsModel := new(dpxv1.DeleteDataProductDraftOptions)
+				deleteDataProductDraftOptionsModel.DataProductID = core.StringPtr("b38df608-d34b-4d58-8136-ed25e6c6684e")
+				deleteDataProductDraftOptionsModel.DraftID = core.StringPtr("2b0bf220-079c-11ee-be56-0242ac120002@d29c42eb-7100-4b7a-8257-c196dbcca1cd")
+				deleteDataProductDraftOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 				// Invoke operation with empty URL (negative test)
 				err := dpxService.SetServiceURL("")
 				Expect(err).To(BeNil())
-				response, operationErr := dpxService.DeleteDataProductVersion(deleteDataProductVersionOptionsModel)
+				response, operationErr := dpxService.DeleteDataProductDraft(deleteDataProductDraftOptionsModel)
 				Expect(operationErr).ToNot(BeNil())
 				Expect(operationErr.Error()).To(ContainSubstring(core.ERRORMSG_SERVICE_URL_MISSING))
 				Expect(response).To(BeNil())
-				// Construct a second instance of the DeleteDataProductVersionOptions model with no property values
-				deleteDataProductVersionOptionsModelNew := new(dpxv1.DeleteDataProductVersionOptions)
+				// Construct a second instance of the DeleteDataProductDraftOptions model with no property values
+				deleteDataProductDraftOptionsModelNew := new(dpxv1.DeleteDataProductDraftOptions)
 				// Invoke operation with invalid model (negative test)
-				response, operationErr = dpxService.DeleteDataProductVersion(deleteDataProductVersionOptionsModelNew)
+				response, operationErr = dpxService.DeleteDataProductDraft(deleteDataProductDraftOptionsModelNew)
 				Expect(operationErr).ToNot(BeNil())
 				Expect(response).To(BeNil())
 			})
@@ -2400,22 +3634,22 @@ var _ = Describe(`DpxV1`, func() {
 			})
 		})
 	})
-	Describe(`UpdateDataProductVersion(updateDataProductVersionOptions *UpdateDataProductVersionOptions) - Operation response error`, func() {
-		updateDataProductVersionPath := "/data_product_exchange/v1/data_product_versions/testString"
+	Describe(`UpdateDataProductDraft(updateDataProductDraftOptions *UpdateDataProductDraftOptions) - Operation response error`, func() {
+		updateDataProductDraftPath := "/data_product_exchange/v1/data_products/b38df608-d34b-4d58-8136-ed25e6c6684e/drafts/2b0bf220-079c-11ee-be56-0242ac120002@d29c42eb-7100-4b7a-8257-c196dbcca1cd"
 		Context(`Using mock server endpoint with invalid JSON response`, func() {
 			BeforeEach(func() {
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
 					// Verify the contents of the request
-					Expect(req.URL.EscapedPath()).To(Equal(updateDataProductVersionPath))
+					Expect(req.URL.EscapedPath()).To(Equal(updateDataProductDraftPath))
 					Expect(req.Method).To(Equal("PATCH"))
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
 					fmt.Fprint(res, `} this is not valid json {`)
 				}))
 			})
-			It(`Invoke UpdateDataProductVersion with error: Operation response processing error`, func() {
+			It(`Invoke UpdateDataProductDraft with error: Operation response processing error`, func() {
 				dpxService, serviceErr := dpxv1.NewDpxV1(&dpxv1.DpxV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
@@ -2428,22 +3662,23 @@ var _ = Describe(`DpxV1`, func() {
 				jsonPatchOperationModel.Op = core.StringPtr("add")
 				jsonPatchOperationModel.Path = core.StringPtr("testString")
 				jsonPatchOperationModel.From = core.StringPtr("testString")
-				jsonPatchOperationModel.Value = core.StringPtr("testString")
+				jsonPatchOperationModel.Value = "testString"
 
-				// Construct an instance of the UpdateDataProductVersionOptions model
-				updateDataProductVersionOptionsModel := new(dpxv1.UpdateDataProductVersionOptions)
-				updateDataProductVersionOptionsModel.ID = core.StringPtr("testString")
-				updateDataProductVersionOptionsModel.JSONPatchInstructions = []dpxv1.JSONPatchOperation{*jsonPatchOperationModel}
-				updateDataProductVersionOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+				// Construct an instance of the UpdateDataProductDraftOptions model
+				updateDataProductDraftOptionsModel := new(dpxv1.UpdateDataProductDraftOptions)
+				updateDataProductDraftOptionsModel.DataProductID = core.StringPtr("b38df608-d34b-4d58-8136-ed25e6c6684e")
+				updateDataProductDraftOptionsModel.DraftID = core.StringPtr("2b0bf220-079c-11ee-be56-0242ac120002@d29c42eb-7100-4b7a-8257-c196dbcca1cd")
+				updateDataProductDraftOptionsModel.JSONPatchInstructions = []dpxv1.JSONPatchOperation{*jsonPatchOperationModel}
+				updateDataProductDraftOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 				// Expect response parsing to fail since we are receiving a text/plain response
-				result, response, operationErr := dpxService.UpdateDataProductVersion(updateDataProductVersionOptionsModel)
+				result, response, operationErr := dpxService.UpdateDataProductDraft(updateDataProductDraftOptionsModel)
 				Expect(operationErr).ToNot(BeNil())
 				Expect(response).ToNot(BeNil())
 				Expect(result).To(BeNil())
 
 				// Enable retries and test again
 				dpxService.EnableRetries(0, 0)
-				result, response, operationErr = dpxService.UpdateDataProductVersion(updateDataProductVersionOptionsModel)
+				result, response, operationErr = dpxService.UpdateDataProductDraft(updateDataProductDraftOptionsModel)
 				Expect(operationErr).ToNot(BeNil())
 				Expect(response).ToNot(BeNil())
 				Expect(result).To(BeNil())
@@ -2453,96 +3688,15 @@ var _ = Describe(`DpxV1`, func() {
 			})
 		})
 	})
-	Describe(`UpdateDataProductVersion(updateDataProductVersionOptions *UpdateDataProductVersionOptions)`, func() {
-		updateDataProductVersionPath := "/data_product_exchange/v1/data_product_versions/testString"
+	Describe(`UpdateDataProductDraft(updateDataProductDraftOptions *UpdateDataProductDraftOptions)`, func() {
+		updateDataProductDraftPath := "/data_product_exchange/v1/data_products/b38df608-d34b-4d58-8136-ed25e6c6684e/drafts/2b0bf220-079c-11ee-be56-0242ac120002@d29c42eb-7100-4b7a-8257-c196dbcca1cd"
 		Context(`Using mock server endpoint with timeout`, func() {
 			BeforeEach(func() {
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
 					// Verify the contents of the request
-					Expect(req.URL.EscapedPath()).To(Equal(updateDataProductVersionPath))
-					Expect(req.Method).To(Equal("PATCH"))
-
-					// For gzip-disabled operation, verify Content-Encoding is not set.
-					Expect(req.Header.Get("Content-Encoding")).To(BeEmpty())
-
-					// If there is a body, then make sure we can read it
-					bodyBuf := new(bytes.Buffer)
-					if req.Header.Get("Content-Encoding") == "gzip" {
-						body, err := core.NewGzipDecompressionReader(req.Body)
-						Expect(err).To(BeNil())
-						_, err = bodyBuf.ReadFrom(body)
-						Expect(err).To(BeNil())
-					} else {
-						_, err := bodyBuf.ReadFrom(req.Body)
-						Expect(err).To(BeNil())
-					}
-					fmt.Fprintf(GinkgoWriter, "  Request body: %s", bodyBuf.String())
-
-					// Sleep a short time to support a timeout test
-					time.Sleep(100 * time.Millisecond)
-
-					// Set mock response
-					res.Header().Set("Content-type", "application/json")
-					res.WriteHeader(200)
-					fmt.Fprintf(res, "%s", `{"version": "1.0.0", "state": "draft", "data_product": {"id": "b38df608-d34b-4d58-8136-ed25e6c6684e"}, "name": "My Data Product", "description": "This is a description of My Data Product.", "id": "2b0bf220-079c-11ee-be56-0242ac120002@d29c42eb-7100-4b7a-8257-c196dbcca1cd", "asset": {"id": "2b0bf220-079c-11ee-be56-0242ac120002", "container": {"id": "d29c42eb-7100-4b7a-8257-c196dbcca1cd", "type": "catalog"}}, "tags": ["Tags"], "use_cases": [{"id": "ID", "name": "Name", "container": {"id": "d29c42eb-7100-4b7a-8257-c196dbcca1cd", "type": "catalog"}}], "domain": {"id": "ID", "name": "Name", "container": {"id": "d29c42eb-7100-4b7a-8257-c196dbcca1cd", "type": "catalog"}}, "type": ["data"], "parts_out": [{"asset": {"id": "2b0bf220-079c-11ee-be56-0242ac120002", "container": {"id": "d29c42eb-7100-4b7a-8257-c196dbcca1cd", "type": "catalog"}, "type": "data_asset"}, "revision": 1, "updated_at": "2023-07-01T22:22:34.876Z", "delivery_methods": [{"id": "09cf5fcc-cb9d-4995-a8e4-16517b25229f", "container": {"id": "d29c42eb-7100-4b7a-8257-c196dbcca1cd", "type": "catalog"}}]}], "published_by": "PublishedBy", "published_at": "2019-01-01T12:00:00.000Z", "contract_terms": [{"id": "ID", "documents": [{"url": "URL", "type": "terms_and_conditions", "name": "Name", "id": "2b0bf220-079c-11ee-be56-0242ac120002", "attachment": {"id": "ID"}}], "asset": {"id": "2b0bf220-079c-11ee-be56-0242ac120002", "container": {"id": "d29c42eb-7100-4b7a-8257-c196dbcca1cd", "type": "catalog"}}}], "created_by": "CreatedBy", "created_at": "2019-01-01T12:00:00.000Z"}`)
-				}))
-			})
-			It(`Invoke UpdateDataProductVersion successfully with retries`, func() {
-				dpxService, serviceErr := dpxv1.NewDpxV1(&dpxv1.DpxV1Options{
-					URL:           testServer.URL,
-					Authenticator: &core.NoAuthAuthenticator{},
-				})
-				Expect(serviceErr).To(BeNil())
-				Expect(dpxService).ToNot(BeNil())
-				dpxService.EnableRetries(0, 0)
-
-				// Construct an instance of the JSONPatchOperation model
-				jsonPatchOperationModel := new(dpxv1.JSONPatchOperation)
-				jsonPatchOperationModel.Op = core.StringPtr("add")
-				jsonPatchOperationModel.Path = core.StringPtr("testString")
-				jsonPatchOperationModel.From = core.StringPtr("testString")
-				jsonPatchOperationModel.Value = core.StringPtr("testString")
-
-				// Construct an instance of the UpdateDataProductVersionOptions model
-				updateDataProductVersionOptionsModel := new(dpxv1.UpdateDataProductVersionOptions)
-				updateDataProductVersionOptionsModel.ID = core.StringPtr("testString")
-				updateDataProductVersionOptionsModel.JSONPatchInstructions = []dpxv1.JSONPatchOperation{*jsonPatchOperationModel}
-				updateDataProductVersionOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
-
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				_, _, operationErr := dpxService.UpdateDataProductVersionWithContext(ctx, updateDataProductVersionOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-
-				// Disable retries and test again
-				dpxService.DisableRetries()
-				result, response, operationErr := dpxService.UpdateDataProductVersion(updateDataProductVersionOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				_, _, operationErr = dpxService.UpdateDataProductVersionWithContext(ctx, updateDataProductVersionOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-			})
-			AfterEach(func() {
-				testServer.Close()
-			})
-		})
-		Context(`Using mock server endpoint`, func() {
-			BeforeEach(func() {
-				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
-					defer GinkgoRecover()
-
-					// Verify the contents of the request
-					Expect(req.URL.EscapedPath()).To(Equal(updateDataProductVersionPath))
+					Expect(req.URL.EscapedPath()).To(Equal(updateDataProductDraftPath))
 					Expect(req.Method).To(Equal("PATCH"))
 
 					// For gzip-disabled operation, verify Content-Encoding is not set.
@@ -2561,197 +3715,16 @@ var _ = Describe(`DpxV1`, func() {
 					}
 					fmt.Fprintf(GinkgoWriter, "  Request body: %s", bodyBuf.String())
 
-					// Set mock response
-					res.Header().Set("Content-type", "application/json")
-					res.WriteHeader(200)
-					fmt.Fprintf(res, "%s", `{"version": "1.0.0", "state": "draft", "data_product": {"id": "b38df608-d34b-4d58-8136-ed25e6c6684e"}, "name": "My Data Product", "description": "This is a description of My Data Product.", "id": "2b0bf220-079c-11ee-be56-0242ac120002@d29c42eb-7100-4b7a-8257-c196dbcca1cd", "asset": {"id": "2b0bf220-079c-11ee-be56-0242ac120002", "container": {"id": "d29c42eb-7100-4b7a-8257-c196dbcca1cd", "type": "catalog"}}, "tags": ["Tags"], "use_cases": [{"id": "ID", "name": "Name", "container": {"id": "d29c42eb-7100-4b7a-8257-c196dbcca1cd", "type": "catalog"}}], "domain": {"id": "ID", "name": "Name", "container": {"id": "d29c42eb-7100-4b7a-8257-c196dbcca1cd", "type": "catalog"}}, "type": ["data"], "parts_out": [{"asset": {"id": "2b0bf220-079c-11ee-be56-0242ac120002", "container": {"id": "d29c42eb-7100-4b7a-8257-c196dbcca1cd", "type": "catalog"}, "type": "data_asset"}, "revision": 1, "updated_at": "2023-07-01T22:22:34.876Z", "delivery_methods": [{"id": "09cf5fcc-cb9d-4995-a8e4-16517b25229f", "container": {"id": "d29c42eb-7100-4b7a-8257-c196dbcca1cd", "type": "catalog"}}]}], "published_by": "PublishedBy", "published_at": "2019-01-01T12:00:00.000Z", "contract_terms": [{"id": "ID", "documents": [{"url": "URL", "type": "terms_and_conditions", "name": "Name", "id": "2b0bf220-079c-11ee-be56-0242ac120002", "attachment": {"id": "ID"}}], "asset": {"id": "2b0bf220-079c-11ee-be56-0242ac120002", "container": {"id": "d29c42eb-7100-4b7a-8257-c196dbcca1cd", "type": "catalog"}}}], "created_by": "CreatedBy", "created_at": "2019-01-01T12:00:00.000Z"}`)
-				}))
-			})
-			It(`Invoke UpdateDataProductVersion successfully`, func() {
-				dpxService, serviceErr := dpxv1.NewDpxV1(&dpxv1.DpxV1Options{
-					URL:           testServer.URL,
-					Authenticator: &core.NoAuthAuthenticator{},
-				})
-				Expect(serviceErr).To(BeNil())
-				Expect(dpxService).ToNot(BeNil())
-
-				// Invoke operation with nil options model (negative test)
-				result, response, operationErr := dpxService.UpdateDataProductVersion(nil)
-				Expect(operationErr).NotTo(BeNil())
-				Expect(response).To(BeNil())
-				Expect(result).To(BeNil())
-
-				// Construct an instance of the JSONPatchOperation model
-				jsonPatchOperationModel := new(dpxv1.JSONPatchOperation)
-				jsonPatchOperationModel.Op = core.StringPtr("add")
-				jsonPatchOperationModel.Path = core.StringPtr("testString")
-				jsonPatchOperationModel.From = core.StringPtr("testString")
-				jsonPatchOperationModel.Value = core.StringPtr("testString")
-
-				// Construct an instance of the UpdateDataProductVersionOptions model
-				updateDataProductVersionOptionsModel := new(dpxv1.UpdateDataProductVersionOptions)
-				updateDataProductVersionOptionsModel.ID = core.StringPtr("testString")
-				updateDataProductVersionOptionsModel.JSONPatchInstructions = []dpxv1.JSONPatchOperation{*jsonPatchOperationModel}
-				updateDataProductVersionOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
-
-				// Invoke operation with valid options model (positive test)
-				result, response, operationErr = dpxService.UpdateDataProductVersion(updateDataProductVersionOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-			})
-			It(`Invoke UpdateDataProductVersion with error: Operation validation and request error`, func() {
-				dpxService, serviceErr := dpxv1.NewDpxV1(&dpxv1.DpxV1Options{
-					URL:           testServer.URL,
-					Authenticator: &core.NoAuthAuthenticator{},
-				})
-				Expect(serviceErr).To(BeNil())
-				Expect(dpxService).ToNot(BeNil())
-
-				// Construct an instance of the JSONPatchOperation model
-				jsonPatchOperationModel := new(dpxv1.JSONPatchOperation)
-				jsonPatchOperationModel.Op = core.StringPtr("add")
-				jsonPatchOperationModel.Path = core.StringPtr("testString")
-				jsonPatchOperationModel.From = core.StringPtr("testString")
-				jsonPatchOperationModel.Value = core.StringPtr("testString")
-
-				// Construct an instance of the UpdateDataProductVersionOptions model
-				updateDataProductVersionOptionsModel := new(dpxv1.UpdateDataProductVersionOptions)
-				updateDataProductVersionOptionsModel.ID = core.StringPtr("testString")
-				updateDataProductVersionOptionsModel.JSONPatchInstructions = []dpxv1.JSONPatchOperation{*jsonPatchOperationModel}
-				updateDataProductVersionOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
-				// Invoke operation with empty URL (negative test)
-				err := dpxService.SetServiceURL("")
-				Expect(err).To(BeNil())
-				result, response, operationErr := dpxService.UpdateDataProductVersion(updateDataProductVersionOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring(core.ERRORMSG_SERVICE_URL_MISSING))
-				Expect(response).To(BeNil())
-				Expect(result).To(BeNil())
-				// Construct a second instance of the UpdateDataProductVersionOptions model with no property values
-				updateDataProductVersionOptionsModelNew := new(dpxv1.UpdateDataProductVersionOptions)
-				// Invoke operation with invalid model (negative test)
-				result, response, operationErr = dpxService.UpdateDataProductVersion(updateDataProductVersionOptionsModelNew)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(response).To(BeNil())
-				Expect(result).To(BeNil())
-			})
-			AfterEach(func() {
-				testServer.Close()
-			})
-		})
-		Context(`Using mock server endpoint with missing response body`, func() {
-			BeforeEach(func() {
-				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
-					defer GinkgoRecover()
-
-					// Set success status code with no respoonse body
-					res.WriteHeader(200)
-				}))
-			})
-			It(`Invoke UpdateDataProductVersion successfully`, func() {
-				dpxService, serviceErr := dpxv1.NewDpxV1(&dpxv1.DpxV1Options{
-					URL:           testServer.URL,
-					Authenticator: &core.NoAuthAuthenticator{},
-				})
-				Expect(serviceErr).To(BeNil())
-				Expect(dpxService).ToNot(BeNil())
-
-				// Construct an instance of the JSONPatchOperation model
-				jsonPatchOperationModel := new(dpxv1.JSONPatchOperation)
-				jsonPatchOperationModel.Op = core.StringPtr("add")
-				jsonPatchOperationModel.Path = core.StringPtr("testString")
-				jsonPatchOperationModel.From = core.StringPtr("testString")
-				jsonPatchOperationModel.Value = core.StringPtr("testString")
-
-				// Construct an instance of the UpdateDataProductVersionOptions model
-				updateDataProductVersionOptionsModel := new(dpxv1.UpdateDataProductVersionOptions)
-				updateDataProductVersionOptionsModel.ID = core.StringPtr("testString")
-				updateDataProductVersionOptionsModel.JSONPatchInstructions = []dpxv1.JSONPatchOperation{*jsonPatchOperationModel}
-				updateDataProductVersionOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
-
-				// Invoke operation
-				result, response, operationErr := dpxService.UpdateDataProductVersion(updateDataProductVersionOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-
-				// Verify a nil result
-				Expect(result).To(BeNil())
-			})
-			AfterEach(func() {
-				testServer.Close()
-			})
-		})
-	})
-	Describe(`CompleteContractTermsDocument(completeContractTermsDocumentOptions *CompleteContractTermsDocumentOptions) - Operation response error`, func() {
-		completeContractTermsDocumentPath := "/data_product_exchange/v1/data_product_versions/testString/contract_terms/testString/documents/testString/complete"
-		Context(`Using mock server endpoint with invalid JSON response`, func() {
-			BeforeEach(func() {
-				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
-					defer GinkgoRecover()
-
-					// Verify the contents of the request
-					Expect(req.URL.EscapedPath()).To(Equal(completeContractTermsDocumentPath))
-					Expect(req.Method).To(Equal("POST"))
-					res.Header().Set("Content-type", "application/json")
-					res.WriteHeader(200)
-					fmt.Fprint(res, `} this is not valid json {`)
-				}))
-			})
-			It(`Invoke CompleteContractTermsDocument with error: Operation response processing error`, func() {
-				dpxService, serviceErr := dpxv1.NewDpxV1(&dpxv1.DpxV1Options{
-					URL:           testServer.URL,
-					Authenticator: &core.NoAuthAuthenticator{},
-				})
-				Expect(serviceErr).To(BeNil())
-				Expect(dpxService).ToNot(BeNil())
-
-				// Construct an instance of the CompleteContractTermsDocumentOptions model
-				completeContractTermsDocumentOptionsModel := new(dpxv1.CompleteContractTermsDocumentOptions)
-				completeContractTermsDocumentOptionsModel.DataProductVersionID = core.StringPtr("testString")
-				completeContractTermsDocumentOptionsModel.ContractTermsID = core.StringPtr("testString")
-				completeContractTermsDocumentOptionsModel.DocumentID = core.StringPtr("testString")
-				completeContractTermsDocumentOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
-				// Expect response parsing to fail since we are receiving a text/plain response
-				result, response, operationErr := dpxService.CompleteContractTermsDocument(completeContractTermsDocumentOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).To(BeNil())
-
-				// Enable retries and test again
-				dpxService.EnableRetries(0, 0)
-				result, response, operationErr = dpxService.CompleteContractTermsDocument(completeContractTermsDocumentOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).To(BeNil())
-			})
-			AfterEach(func() {
-				testServer.Close()
-			})
-		})
-	})
-	Describe(`CompleteContractTermsDocument(completeContractTermsDocumentOptions *CompleteContractTermsDocumentOptions)`, func() {
-		completeContractTermsDocumentPath := "/data_product_exchange/v1/data_product_versions/testString/contract_terms/testString/documents/testString/complete"
-		Context(`Using mock server endpoint with timeout`, func() {
-			BeforeEach(func() {
-				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
-					defer GinkgoRecover()
-
-					// Verify the contents of the request
-					Expect(req.URL.EscapedPath()).To(Equal(completeContractTermsDocumentPath))
-					Expect(req.Method).To(Equal("POST"))
-
 					// Sleep a short time to support a timeout test
 					time.Sleep(100 * time.Millisecond)
 
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
-					fmt.Fprintf(res, "%s", `{"url": "URL", "type": "terms_and_conditions", "name": "Name", "id": "2b0bf220-079c-11ee-be56-0242ac120002", "attachment": {"id": "ID"}}`)
+					fmt.Fprintf(res, "%s", `{"version": "1.0.0", "state": "draft", "data_product": {"id": "b38df608-d34b-4d58-8136-ed25e6c6684e"}, "name": "My Data Product", "description": "This is a description of My Data Product.", "id": "2b0bf220-079c-11ee-be56-0242ac120002@d29c42eb-7100-4b7a-8257-c196dbcca1cd", "asset": {"id": "2b0bf220-079c-11ee-be56-0242ac120002", "container": {"id": "d29c42eb-7100-4b7a-8257-c196dbcca1cd", "type": "catalog"}}, "tags": ["Tags"], "use_cases": [{"id": "ID", "name": "Name", "container": {"id": "d29c42eb-7100-4b7a-8257-c196dbcca1cd", "type": "catalog"}}], "domain": {"id": "ID", "name": "Name", "container": {"id": "d29c42eb-7100-4b7a-8257-c196dbcca1cd", "type": "catalog"}}, "types": ["data"], "parts_out": [{"asset": {"id": "2b0bf220-079c-11ee-be56-0242ac120002", "container": {"id": "d29c42eb-7100-4b7a-8257-c196dbcca1cd", "type": "catalog"}, "type": "data_asset"}, "revision": 1, "updated_at": "2023-07-01T22:22:34.876Z", "delivery_methods": [{"id": "09cf5fcc-cb9d-4995-a8e4-16517b25229f", "container": {"id": "d29c42eb-7100-4b7a-8257-c196dbcca1cd", "type": "catalog"}}]}], "published_by": "PublishedBy", "published_at": "2019-01-01T12:00:00.000Z", "contract_terms": [{"asset": {"id": "2b0bf220-079c-11ee-be56-0242ac120002", "container": {"id": "d29c42eb-7100-4b7a-8257-c196dbcca1cd", "type": "catalog"}}, "id": "ID", "documents": [{"url": "URL", "type": "terms_and_conditions", "name": "Name", "id": "2b0bf220-079c-11ee-be56-0242ac120002", "attachment": {"id": "ID"}, "upload_url": "UploadURL"}]}], "created_by": "CreatedBy", "created_at": "2019-01-01T12:00:00.000Z", "is_restricted": true}`)
 				}))
 			})
-			It(`Invoke CompleteContractTermsDocument successfully with retries`, func() {
+			It(`Invoke UpdateDataProductDraft successfully with retries`, func() {
 				dpxService, serviceErr := dpxv1.NewDpxV1(&dpxv1.DpxV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
@@ -2760,23 +3733,30 @@ var _ = Describe(`DpxV1`, func() {
 				Expect(dpxService).ToNot(BeNil())
 				dpxService.EnableRetries(0, 0)
 
-				// Construct an instance of the CompleteContractTermsDocumentOptions model
-				completeContractTermsDocumentOptionsModel := new(dpxv1.CompleteContractTermsDocumentOptions)
-				completeContractTermsDocumentOptionsModel.DataProductVersionID = core.StringPtr("testString")
-				completeContractTermsDocumentOptionsModel.ContractTermsID = core.StringPtr("testString")
-				completeContractTermsDocumentOptionsModel.DocumentID = core.StringPtr("testString")
-				completeContractTermsDocumentOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+				// Construct an instance of the JSONPatchOperation model
+				jsonPatchOperationModel := new(dpxv1.JSONPatchOperation)
+				jsonPatchOperationModel.Op = core.StringPtr("add")
+				jsonPatchOperationModel.Path = core.StringPtr("testString")
+				jsonPatchOperationModel.From = core.StringPtr("testString")
+				jsonPatchOperationModel.Value = "testString"
+
+				// Construct an instance of the UpdateDataProductDraftOptions model
+				updateDataProductDraftOptionsModel := new(dpxv1.UpdateDataProductDraftOptions)
+				updateDataProductDraftOptionsModel.DataProductID = core.StringPtr("b38df608-d34b-4d58-8136-ed25e6c6684e")
+				updateDataProductDraftOptionsModel.DraftID = core.StringPtr("2b0bf220-079c-11ee-be56-0242ac120002@d29c42eb-7100-4b7a-8257-c196dbcca1cd")
+				updateDataProductDraftOptionsModel.JSONPatchInstructions = []dpxv1.JSONPatchOperation{*jsonPatchOperationModel}
+				updateDataProductDraftOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation with a Context to test a timeout error
 				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
 				defer cancelFunc()
-				_, _, operationErr := dpxService.CompleteContractTermsDocumentWithContext(ctx, completeContractTermsDocumentOptionsModel)
+				_, _, operationErr := dpxService.UpdateDataProductDraftWithContext(ctx, updateDataProductDraftOptionsModel)
 				Expect(operationErr).ToNot(BeNil())
 				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
 
 				// Disable retries and test again
 				dpxService.DisableRetries()
-				result, response, operationErr := dpxService.CompleteContractTermsDocument(completeContractTermsDocumentOptionsModel)
+				result, response, operationErr := dpxService.UpdateDataProductDraft(updateDataProductDraftOptionsModel)
 				Expect(operationErr).To(BeNil())
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
@@ -2784,7 +3764,7 @@ var _ = Describe(`DpxV1`, func() {
 				// Re-test the timeout error with retries disabled
 				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
 				defer cancelFunc2()
-				_, _, operationErr = dpxService.CompleteContractTermsDocumentWithContext(ctx, completeContractTermsDocumentOptionsModel)
+				_, _, operationErr = dpxService.UpdateDataProductDraftWithContext(ctx, updateDataProductDraftOptionsModel)
 				Expect(operationErr).ToNot(BeNil())
 				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
 			})
@@ -2798,262 +3778,8 @@ var _ = Describe(`DpxV1`, func() {
 					defer GinkgoRecover()
 
 					// Verify the contents of the request
-					Expect(req.URL.EscapedPath()).To(Equal(completeContractTermsDocumentPath))
-					Expect(req.Method).To(Equal("POST"))
-
-					// Set mock response
-					res.Header().Set("Content-type", "application/json")
-					res.WriteHeader(200)
-					fmt.Fprintf(res, "%s", `{"url": "URL", "type": "terms_and_conditions", "name": "Name", "id": "2b0bf220-079c-11ee-be56-0242ac120002", "attachment": {"id": "ID"}}`)
-				}))
-			})
-			It(`Invoke CompleteContractTermsDocument successfully`, func() {
-				dpxService, serviceErr := dpxv1.NewDpxV1(&dpxv1.DpxV1Options{
-					URL:           testServer.URL,
-					Authenticator: &core.NoAuthAuthenticator{},
-				})
-				Expect(serviceErr).To(BeNil())
-				Expect(dpxService).ToNot(BeNil())
-
-				// Invoke operation with nil options model (negative test)
-				result, response, operationErr := dpxService.CompleteContractTermsDocument(nil)
-				Expect(operationErr).NotTo(BeNil())
-				Expect(response).To(BeNil())
-				Expect(result).To(BeNil())
-
-				// Construct an instance of the CompleteContractTermsDocumentOptions model
-				completeContractTermsDocumentOptionsModel := new(dpxv1.CompleteContractTermsDocumentOptions)
-				completeContractTermsDocumentOptionsModel.DataProductVersionID = core.StringPtr("testString")
-				completeContractTermsDocumentOptionsModel.ContractTermsID = core.StringPtr("testString")
-				completeContractTermsDocumentOptionsModel.DocumentID = core.StringPtr("testString")
-				completeContractTermsDocumentOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
-
-				// Invoke operation with valid options model (positive test)
-				result, response, operationErr = dpxService.CompleteContractTermsDocument(completeContractTermsDocumentOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-			})
-			It(`Invoke CompleteContractTermsDocument with error: Operation validation and request error`, func() {
-				dpxService, serviceErr := dpxv1.NewDpxV1(&dpxv1.DpxV1Options{
-					URL:           testServer.URL,
-					Authenticator: &core.NoAuthAuthenticator{},
-				})
-				Expect(serviceErr).To(BeNil())
-				Expect(dpxService).ToNot(BeNil())
-
-				// Construct an instance of the CompleteContractTermsDocumentOptions model
-				completeContractTermsDocumentOptionsModel := new(dpxv1.CompleteContractTermsDocumentOptions)
-				completeContractTermsDocumentOptionsModel.DataProductVersionID = core.StringPtr("testString")
-				completeContractTermsDocumentOptionsModel.ContractTermsID = core.StringPtr("testString")
-				completeContractTermsDocumentOptionsModel.DocumentID = core.StringPtr("testString")
-				completeContractTermsDocumentOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
-				// Invoke operation with empty URL (negative test)
-				err := dpxService.SetServiceURL("")
-				Expect(err).To(BeNil())
-				result, response, operationErr := dpxService.CompleteContractTermsDocument(completeContractTermsDocumentOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring(core.ERRORMSG_SERVICE_URL_MISSING))
-				Expect(response).To(BeNil())
-				Expect(result).To(BeNil())
-				// Construct a second instance of the CompleteContractTermsDocumentOptions model with no property values
-				completeContractTermsDocumentOptionsModelNew := new(dpxv1.CompleteContractTermsDocumentOptions)
-				// Invoke operation with invalid model (negative test)
-				result, response, operationErr = dpxService.CompleteContractTermsDocument(completeContractTermsDocumentOptionsModelNew)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(response).To(BeNil())
-				Expect(result).To(BeNil())
-			})
-			AfterEach(func() {
-				testServer.Close()
-			})
-		})
-		Context(`Using mock server endpoint with missing response body`, func() {
-			BeforeEach(func() {
-				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
-					defer GinkgoRecover()
-
-					// Set success status code with no respoonse body
-					res.WriteHeader(200)
-				}))
-			})
-			It(`Invoke CompleteContractTermsDocument successfully`, func() {
-				dpxService, serviceErr := dpxv1.NewDpxV1(&dpxv1.DpxV1Options{
-					URL:           testServer.URL,
-					Authenticator: &core.NoAuthAuthenticator{},
-				})
-				Expect(serviceErr).To(BeNil())
-				Expect(dpxService).ToNot(BeNil())
-
-				// Construct an instance of the CompleteContractTermsDocumentOptions model
-				completeContractTermsDocumentOptionsModel := new(dpxv1.CompleteContractTermsDocumentOptions)
-				completeContractTermsDocumentOptionsModel.DataProductVersionID = core.StringPtr("testString")
-				completeContractTermsDocumentOptionsModel.ContractTermsID = core.StringPtr("testString")
-				completeContractTermsDocumentOptionsModel.DocumentID = core.StringPtr("testString")
-				completeContractTermsDocumentOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
-
-				// Invoke operation
-				result, response, operationErr := dpxService.CompleteContractTermsDocument(completeContractTermsDocumentOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-
-				// Verify a nil result
-				Expect(result).To(BeNil())
-			})
-			AfterEach(func() {
-				testServer.Close()
-			})
-		})
-	})
-	Describe(`CreateContractTermsDocument(createContractTermsDocumentOptions *CreateContractTermsDocumentOptions) - Operation response error`, func() {
-		createContractTermsDocumentPath := "/data_product_exchange/v1/data_product_versions/testString/contract_terms/testString/documents"
-		Context(`Using mock server endpoint with invalid JSON response`, func() {
-			BeforeEach(func() {
-				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
-					defer GinkgoRecover()
-
-					// Verify the contents of the request
-					Expect(req.URL.EscapedPath()).To(Equal(createContractTermsDocumentPath))
-					Expect(req.Method).To(Equal("POST"))
-					res.Header().Set("Content-type", "application/json")
-					res.WriteHeader(201)
-					fmt.Fprint(res, `} this is not valid json {`)
-				}))
-			})
-			It(`Invoke CreateContractTermsDocument with error: Operation response processing error`, func() {
-				dpxService, serviceErr := dpxv1.NewDpxV1(&dpxv1.DpxV1Options{
-					URL:           testServer.URL,
-					Authenticator: &core.NoAuthAuthenticator{},
-				})
-				Expect(serviceErr).To(BeNil())
-				Expect(dpxService).ToNot(BeNil())
-
-				// Construct an instance of the ContractTermsDocumentAttachment model
-				contractTermsDocumentAttachmentModel := new(dpxv1.ContractTermsDocumentAttachment)
-				contractTermsDocumentAttachmentModel.ID = core.StringPtr("testString")
-
-				// Construct an instance of the CreateContractTermsDocumentOptions model
-				createContractTermsDocumentOptionsModel := new(dpxv1.CreateContractTermsDocumentOptions)
-				createContractTermsDocumentOptionsModel.DataProductVersionID = core.StringPtr("testString")
-				createContractTermsDocumentOptionsModel.ContractTermsID = core.StringPtr("testString")
-				createContractTermsDocumentOptionsModel.Type = core.StringPtr("terms_and_conditions")
-				createContractTermsDocumentOptionsModel.Name = core.StringPtr("Terms and conditions document")
-				createContractTermsDocumentOptionsModel.ID = core.StringPtr("testString")
-				createContractTermsDocumentOptionsModel.URL = core.StringPtr("testString")
-				createContractTermsDocumentOptionsModel.Attachment = contractTermsDocumentAttachmentModel
-				createContractTermsDocumentOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
-				// Expect response parsing to fail since we are receiving a text/plain response
-				result, response, operationErr := dpxService.CreateContractTermsDocument(createContractTermsDocumentOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).To(BeNil())
-
-				// Enable retries and test again
-				dpxService.EnableRetries(0, 0)
-				result, response, operationErr = dpxService.CreateContractTermsDocument(createContractTermsDocumentOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).To(BeNil())
-			})
-			AfterEach(func() {
-				testServer.Close()
-			})
-		})
-	})
-	Describe(`CreateContractTermsDocument(createContractTermsDocumentOptions *CreateContractTermsDocumentOptions)`, func() {
-		createContractTermsDocumentPath := "/data_product_exchange/v1/data_product_versions/testString/contract_terms/testString/documents"
-		Context(`Using mock server endpoint with timeout`, func() {
-			BeforeEach(func() {
-				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
-					defer GinkgoRecover()
-
-					// Verify the contents of the request
-					Expect(req.URL.EscapedPath()).To(Equal(createContractTermsDocumentPath))
-					Expect(req.Method).To(Equal("POST"))
-
-					// For gzip-disabled operation, verify Content-Encoding is not set.
-					Expect(req.Header.Get("Content-Encoding")).To(BeEmpty())
-
-					// If there is a body, then make sure we can read it
-					bodyBuf := new(bytes.Buffer)
-					if req.Header.Get("Content-Encoding") == "gzip" {
-						body, err := core.NewGzipDecompressionReader(req.Body)
-						Expect(err).To(BeNil())
-						_, err = bodyBuf.ReadFrom(body)
-						Expect(err).To(BeNil())
-					} else {
-						_, err := bodyBuf.ReadFrom(req.Body)
-						Expect(err).To(BeNil())
-					}
-					fmt.Fprintf(GinkgoWriter, "  Request body: %s", bodyBuf.String())
-
-					// Sleep a short time to support a timeout test
-					time.Sleep(100 * time.Millisecond)
-
-					// Set mock response
-					res.Header().Set("Content-type", "application/json")
-					res.WriteHeader(201)
-					fmt.Fprintf(res, "%s", `{"url": "URL", "type": "terms_and_conditions", "name": "Name", "id": "2b0bf220-079c-11ee-be56-0242ac120002", "attachment": {"id": "ID"}}`)
-				}))
-			})
-			It(`Invoke CreateContractTermsDocument successfully with retries`, func() {
-				dpxService, serviceErr := dpxv1.NewDpxV1(&dpxv1.DpxV1Options{
-					URL:           testServer.URL,
-					Authenticator: &core.NoAuthAuthenticator{},
-				})
-				Expect(serviceErr).To(BeNil())
-				Expect(dpxService).ToNot(BeNil())
-				dpxService.EnableRetries(0, 0)
-
-				// Construct an instance of the ContractTermsDocumentAttachment model
-				contractTermsDocumentAttachmentModel := new(dpxv1.ContractTermsDocumentAttachment)
-				contractTermsDocumentAttachmentModel.ID = core.StringPtr("testString")
-
-				// Construct an instance of the CreateContractTermsDocumentOptions model
-				createContractTermsDocumentOptionsModel := new(dpxv1.CreateContractTermsDocumentOptions)
-				createContractTermsDocumentOptionsModel.DataProductVersionID = core.StringPtr("testString")
-				createContractTermsDocumentOptionsModel.ContractTermsID = core.StringPtr("testString")
-				createContractTermsDocumentOptionsModel.Type = core.StringPtr("terms_and_conditions")
-				createContractTermsDocumentOptionsModel.Name = core.StringPtr("Terms and conditions document")
-				createContractTermsDocumentOptionsModel.ID = core.StringPtr("testString")
-				createContractTermsDocumentOptionsModel.URL = core.StringPtr("testString")
-				createContractTermsDocumentOptionsModel.Attachment = contractTermsDocumentAttachmentModel
-				createContractTermsDocumentOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
-
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				_, _, operationErr := dpxService.CreateContractTermsDocumentWithContext(ctx, createContractTermsDocumentOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-
-				// Disable retries and test again
-				dpxService.DisableRetries()
-				result, response, operationErr := dpxService.CreateContractTermsDocument(createContractTermsDocumentOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				_, _, operationErr = dpxService.CreateContractTermsDocumentWithContext(ctx, createContractTermsDocumentOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-			})
-			AfterEach(func() {
-				testServer.Close()
-			})
-		})
-		Context(`Using mock server endpoint`, func() {
-			BeforeEach(func() {
-				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
-					defer GinkgoRecover()
-
-					// Verify the contents of the request
-					Expect(req.URL.EscapedPath()).To(Equal(createContractTermsDocumentPath))
-					Expect(req.Method).To(Equal("POST"))
+					Expect(req.URL.EscapedPath()).To(Equal(updateDataProductDraftPath))
+					Expect(req.Method).To(Equal("PATCH"))
 
 					// For gzip-disabled operation, verify Content-Encoding is not set.
 					Expect(req.Header.Get("Content-Encoding")).To(BeEmpty())
@@ -3073,11 +3799,11 @@ var _ = Describe(`DpxV1`, func() {
 
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
-					res.WriteHeader(201)
-					fmt.Fprintf(res, "%s", `{"url": "URL", "type": "terms_and_conditions", "name": "Name", "id": "2b0bf220-079c-11ee-be56-0242ac120002", "attachment": {"id": "ID"}}`)
+					res.WriteHeader(200)
+					fmt.Fprintf(res, "%s", `{"version": "1.0.0", "state": "draft", "data_product": {"id": "b38df608-d34b-4d58-8136-ed25e6c6684e"}, "name": "My Data Product", "description": "This is a description of My Data Product.", "id": "2b0bf220-079c-11ee-be56-0242ac120002@d29c42eb-7100-4b7a-8257-c196dbcca1cd", "asset": {"id": "2b0bf220-079c-11ee-be56-0242ac120002", "container": {"id": "d29c42eb-7100-4b7a-8257-c196dbcca1cd", "type": "catalog"}}, "tags": ["Tags"], "use_cases": [{"id": "ID", "name": "Name", "container": {"id": "d29c42eb-7100-4b7a-8257-c196dbcca1cd", "type": "catalog"}}], "domain": {"id": "ID", "name": "Name", "container": {"id": "d29c42eb-7100-4b7a-8257-c196dbcca1cd", "type": "catalog"}}, "types": ["data"], "parts_out": [{"asset": {"id": "2b0bf220-079c-11ee-be56-0242ac120002", "container": {"id": "d29c42eb-7100-4b7a-8257-c196dbcca1cd", "type": "catalog"}, "type": "data_asset"}, "revision": 1, "updated_at": "2023-07-01T22:22:34.876Z", "delivery_methods": [{"id": "09cf5fcc-cb9d-4995-a8e4-16517b25229f", "container": {"id": "d29c42eb-7100-4b7a-8257-c196dbcca1cd", "type": "catalog"}}]}], "published_by": "PublishedBy", "published_at": "2019-01-01T12:00:00.000Z", "contract_terms": [{"asset": {"id": "2b0bf220-079c-11ee-be56-0242ac120002", "container": {"id": "d29c42eb-7100-4b7a-8257-c196dbcca1cd", "type": "catalog"}}, "id": "ID", "documents": [{"url": "URL", "type": "terms_and_conditions", "name": "Name", "id": "2b0bf220-079c-11ee-be56-0242ac120002", "attachment": {"id": "ID"}, "upload_url": "UploadURL"}]}], "created_by": "CreatedBy", "created_at": "2019-01-01T12:00:00.000Z", "is_restricted": true}`)
 				}))
 			})
-			It(`Invoke CreateContractTermsDocument successfully`, func() {
+			It(`Invoke UpdateDataProductDraft successfully`, func() {
 				dpxService, serviceErr := dpxv1.NewDpxV1(&dpxv1.DpxV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
@@ -3086,34 +3812,33 @@ var _ = Describe(`DpxV1`, func() {
 				Expect(dpxService).ToNot(BeNil())
 
 				// Invoke operation with nil options model (negative test)
-				result, response, operationErr := dpxService.CreateContractTermsDocument(nil)
+				result, response, operationErr := dpxService.UpdateDataProductDraft(nil)
 				Expect(operationErr).NotTo(BeNil())
 				Expect(response).To(BeNil())
 				Expect(result).To(BeNil())
 
-				// Construct an instance of the ContractTermsDocumentAttachment model
-				contractTermsDocumentAttachmentModel := new(dpxv1.ContractTermsDocumentAttachment)
-				contractTermsDocumentAttachmentModel.ID = core.StringPtr("testString")
+				// Construct an instance of the JSONPatchOperation model
+				jsonPatchOperationModel := new(dpxv1.JSONPatchOperation)
+				jsonPatchOperationModel.Op = core.StringPtr("add")
+				jsonPatchOperationModel.Path = core.StringPtr("testString")
+				jsonPatchOperationModel.From = core.StringPtr("testString")
+				jsonPatchOperationModel.Value = "testString"
 
-				// Construct an instance of the CreateContractTermsDocumentOptions model
-				createContractTermsDocumentOptionsModel := new(dpxv1.CreateContractTermsDocumentOptions)
-				createContractTermsDocumentOptionsModel.DataProductVersionID = core.StringPtr("testString")
-				createContractTermsDocumentOptionsModel.ContractTermsID = core.StringPtr("testString")
-				createContractTermsDocumentOptionsModel.Type = core.StringPtr("terms_and_conditions")
-				createContractTermsDocumentOptionsModel.Name = core.StringPtr("Terms and conditions document")
-				createContractTermsDocumentOptionsModel.ID = core.StringPtr("testString")
-				createContractTermsDocumentOptionsModel.URL = core.StringPtr("testString")
-				createContractTermsDocumentOptionsModel.Attachment = contractTermsDocumentAttachmentModel
-				createContractTermsDocumentOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+				// Construct an instance of the UpdateDataProductDraftOptions model
+				updateDataProductDraftOptionsModel := new(dpxv1.UpdateDataProductDraftOptions)
+				updateDataProductDraftOptionsModel.DataProductID = core.StringPtr("b38df608-d34b-4d58-8136-ed25e6c6684e")
+				updateDataProductDraftOptionsModel.DraftID = core.StringPtr("2b0bf220-079c-11ee-be56-0242ac120002@d29c42eb-7100-4b7a-8257-c196dbcca1cd")
+				updateDataProductDraftOptionsModel.JSONPatchInstructions = []dpxv1.JSONPatchOperation{*jsonPatchOperationModel}
+				updateDataProductDraftOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation with valid options model (positive test)
-				result, response, operationErr = dpxService.CreateContractTermsDocument(createContractTermsDocumentOptionsModel)
+				result, response, operationErr = dpxService.UpdateDataProductDraft(updateDataProductDraftOptionsModel)
 				Expect(operationErr).To(BeNil())
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
 
 			})
-			It(`Invoke CreateContractTermsDocument with error: Operation validation and request error`, func() {
+			It(`Invoke UpdateDataProductDraft with error: Operation validation and request error`, func() {
 				dpxService, serviceErr := dpxv1.NewDpxV1(&dpxv1.DpxV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
@@ -3121,32 +3846,31 @@ var _ = Describe(`DpxV1`, func() {
 				Expect(serviceErr).To(BeNil())
 				Expect(dpxService).ToNot(BeNil())
 
-				// Construct an instance of the ContractTermsDocumentAttachment model
-				contractTermsDocumentAttachmentModel := new(dpxv1.ContractTermsDocumentAttachment)
-				contractTermsDocumentAttachmentModel.ID = core.StringPtr("testString")
+				// Construct an instance of the JSONPatchOperation model
+				jsonPatchOperationModel := new(dpxv1.JSONPatchOperation)
+				jsonPatchOperationModel.Op = core.StringPtr("add")
+				jsonPatchOperationModel.Path = core.StringPtr("testString")
+				jsonPatchOperationModel.From = core.StringPtr("testString")
+				jsonPatchOperationModel.Value = "testString"
 
-				// Construct an instance of the CreateContractTermsDocumentOptions model
-				createContractTermsDocumentOptionsModel := new(dpxv1.CreateContractTermsDocumentOptions)
-				createContractTermsDocumentOptionsModel.DataProductVersionID = core.StringPtr("testString")
-				createContractTermsDocumentOptionsModel.ContractTermsID = core.StringPtr("testString")
-				createContractTermsDocumentOptionsModel.Type = core.StringPtr("terms_and_conditions")
-				createContractTermsDocumentOptionsModel.Name = core.StringPtr("Terms and conditions document")
-				createContractTermsDocumentOptionsModel.ID = core.StringPtr("testString")
-				createContractTermsDocumentOptionsModel.URL = core.StringPtr("testString")
-				createContractTermsDocumentOptionsModel.Attachment = contractTermsDocumentAttachmentModel
-				createContractTermsDocumentOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+				// Construct an instance of the UpdateDataProductDraftOptions model
+				updateDataProductDraftOptionsModel := new(dpxv1.UpdateDataProductDraftOptions)
+				updateDataProductDraftOptionsModel.DataProductID = core.StringPtr("b38df608-d34b-4d58-8136-ed25e6c6684e")
+				updateDataProductDraftOptionsModel.DraftID = core.StringPtr("2b0bf220-079c-11ee-be56-0242ac120002@d29c42eb-7100-4b7a-8257-c196dbcca1cd")
+				updateDataProductDraftOptionsModel.JSONPatchInstructions = []dpxv1.JSONPatchOperation{*jsonPatchOperationModel}
+				updateDataProductDraftOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 				// Invoke operation with empty URL (negative test)
 				err := dpxService.SetServiceURL("")
 				Expect(err).To(BeNil())
-				result, response, operationErr := dpxService.CreateContractTermsDocument(createContractTermsDocumentOptionsModel)
+				result, response, operationErr := dpxService.UpdateDataProductDraft(updateDataProductDraftOptionsModel)
 				Expect(operationErr).ToNot(BeNil())
 				Expect(operationErr.Error()).To(ContainSubstring(core.ERRORMSG_SERVICE_URL_MISSING))
 				Expect(response).To(BeNil())
 				Expect(result).To(BeNil())
-				// Construct a second instance of the CreateContractTermsDocumentOptions model with no property values
-				createContractTermsDocumentOptionsModelNew := new(dpxv1.CreateContractTermsDocumentOptions)
+				// Construct a second instance of the UpdateDataProductDraftOptions model with no property values
+				updateDataProductDraftOptionsModelNew := new(dpxv1.UpdateDataProductDraftOptions)
 				// Invoke operation with invalid model (negative test)
-				result, response, operationErr = dpxService.CreateContractTermsDocument(createContractTermsDocumentOptionsModelNew)
+				result, response, operationErr = dpxService.UpdateDataProductDraft(updateDataProductDraftOptionsModelNew)
 				Expect(operationErr).ToNot(BeNil())
 				Expect(response).To(BeNil())
 				Expect(result).To(BeNil())
@@ -3161,10 +3885,10 @@ var _ = Describe(`DpxV1`, func() {
 					defer GinkgoRecover()
 
 					// Set success status code with no respoonse body
-					res.WriteHeader(201)
+					res.WriteHeader(200)
 				}))
 			})
-			It(`Invoke CreateContractTermsDocument successfully`, func() {
+			It(`Invoke UpdateDataProductDraft successfully`, func() {
 				dpxService, serviceErr := dpxv1.NewDpxV1(&dpxv1.DpxV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
@@ -3172,23 +3896,22 @@ var _ = Describe(`DpxV1`, func() {
 				Expect(serviceErr).To(BeNil())
 				Expect(dpxService).ToNot(BeNil())
 
-				// Construct an instance of the ContractTermsDocumentAttachment model
-				contractTermsDocumentAttachmentModel := new(dpxv1.ContractTermsDocumentAttachment)
-				contractTermsDocumentAttachmentModel.ID = core.StringPtr("testString")
+				// Construct an instance of the JSONPatchOperation model
+				jsonPatchOperationModel := new(dpxv1.JSONPatchOperation)
+				jsonPatchOperationModel.Op = core.StringPtr("add")
+				jsonPatchOperationModel.Path = core.StringPtr("testString")
+				jsonPatchOperationModel.From = core.StringPtr("testString")
+				jsonPatchOperationModel.Value = "testString"
 
-				// Construct an instance of the CreateContractTermsDocumentOptions model
-				createContractTermsDocumentOptionsModel := new(dpxv1.CreateContractTermsDocumentOptions)
-				createContractTermsDocumentOptionsModel.DataProductVersionID = core.StringPtr("testString")
-				createContractTermsDocumentOptionsModel.ContractTermsID = core.StringPtr("testString")
-				createContractTermsDocumentOptionsModel.Type = core.StringPtr("terms_and_conditions")
-				createContractTermsDocumentOptionsModel.Name = core.StringPtr("Terms and conditions document")
-				createContractTermsDocumentOptionsModel.ID = core.StringPtr("testString")
-				createContractTermsDocumentOptionsModel.URL = core.StringPtr("testString")
-				createContractTermsDocumentOptionsModel.Attachment = contractTermsDocumentAttachmentModel
-				createContractTermsDocumentOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+				// Construct an instance of the UpdateDataProductDraftOptions model
+				updateDataProductDraftOptionsModel := new(dpxv1.UpdateDataProductDraftOptions)
+				updateDataProductDraftOptionsModel.DataProductID = core.StringPtr("b38df608-d34b-4d58-8136-ed25e6c6684e")
+				updateDataProductDraftOptionsModel.DraftID = core.StringPtr("2b0bf220-079c-11ee-be56-0242ac120002@d29c42eb-7100-4b7a-8257-c196dbcca1cd")
+				updateDataProductDraftOptionsModel.JSONPatchInstructions = []dpxv1.JSONPatchOperation{*jsonPatchOperationModel}
+				updateDataProductDraftOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation
-				result, response, operationErr := dpxService.CreateContractTermsDocument(createContractTermsDocumentOptionsModel)
+				result, response, operationErr := dpxService.UpdateDataProductDraft(updateDataProductDraftOptionsModel)
 				Expect(operationErr).To(BeNil())
 				Expect(response).ToNot(BeNil())
 
@@ -3200,22 +3923,22 @@ var _ = Describe(`DpxV1`, func() {
 			})
 		})
 	})
-	Describe(`GetContractTermsDocument(getContractTermsDocumentOptions *GetContractTermsDocumentOptions) - Operation response error`, func() {
-		getContractTermsDocumentPath := "/data_product_exchange/v1/data_product_versions/testString/contract_terms/testString/documents/testString"
+	Describe(`GetDraftContractTermsDocument(getDraftContractTermsDocumentOptions *GetDraftContractTermsDocumentOptions) - Operation response error`, func() {
+		getDraftContractTermsDocumentPath := "/data_product_exchange/v1/data_products/b38df608-d34b-4d58-8136-ed25e6c6684e/drafts/2b0bf220-079c-11ee-be56-0242ac120002@d29c42eb-7100-4b7a-8257-c196dbcca1cd/contract_terms/598183cd-b910-4e8d-9a97-97097afda3c1@e4fe2f87-0e56-46dd-b3b8-e9af32309e82/documents/testString"
 		Context(`Using mock server endpoint with invalid JSON response`, func() {
 			BeforeEach(func() {
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
 					// Verify the contents of the request
-					Expect(req.URL.EscapedPath()).To(Equal(getContractTermsDocumentPath))
+					Expect(req.URL.EscapedPath()).To(Equal(getDraftContractTermsDocumentPath))
 					Expect(req.Method).To(Equal("GET"))
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
 					fmt.Fprint(res, `} this is not valid json {`)
 				}))
 			})
-			It(`Invoke GetContractTermsDocument with error: Operation response processing error`, func() {
+			It(`Invoke GetDraftContractTermsDocument with error: Operation response processing error`, func() {
 				dpxService, serviceErr := dpxv1.NewDpxV1(&dpxv1.DpxV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
@@ -3223,21 +3946,22 @@ var _ = Describe(`DpxV1`, func() {
 				Expect(serviceErr).To(BeNil())
 				Expect(dpxService).ToNot(BeNil())
 
-				// Construct an instance of the GetContractTermsDocumentOptions model
-				getContractTermsDocumentOptionsModel := new(dpxv1.GetContractTermsDocumentOptions)
-				getContractTermsDocumentOptionsModel.DataProductVersionID = core.StringPtr("testString")
-				getContractTermsDocumentOptionsModel.ContractTermsID = core.StringPtr("testString")
-				getContractTermsDocumentOptionsModel.DocumentID = core.StringPtr("testString")
-				getContractTermsDocumentOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+				// Construct an instance of the GetDraftContractTermsDocumentOptions model
+				getDraftContractTermsDocumentOptionsModel := new(dpxv1.GetDraftContractTermsDocumentOptions)
+				getDraftContractTermsDocumentOptionsModel.DataProductID = core.StringPtr("b38df608-d34b-4d58-8136-ed25e6c6684e")
+				getDraftContractTermsDocumentOptionsModel.DraftID = core.StringPtr("2b0bf220-079c-11ee-be56-0242ac120002@d29c42eb-7100-4b7a-8257-c196dbcca1cd")
+				getDraftContractTermsDocumentOptionsModel.ContractTermsID = core.StringPtr("598183cd-b910-4e8d-9a97-97097afda3c1@e4fe2f87-0e56-46dd-b3b8-e9af32309e82")
+				getDraftContractTermsDocumentOptionsModel.DocumentID = core.StringPtr("testString")
+				getDraftContractTermsDocumentOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 				// Expect response parsing to fail since we are receiving a text/plain response
-				result, response, operationErr := dpxService.GetContractTermsDocument(getContractTermsDocumentOptionsModel)
+				result, response, operationErr := dpxService.GetDraftContractTermsDocument(getDraftContractTermsDocumentOptionsModel)
 				Expect(operationErr).ToNot(BeNil())
 				Expect(response).ToNot(BeNil())
 				Expect(result).To(BeNil())
 
 				// Enable retries and test again
 				dpxService.EnableRetries(0, 0)
-				result, response, operationErr = dpxService.GetContractTermsDocument(getContractTermsDocumentOptionsModel)
+				result, response, operationErr = dpxService.GetDraftContractTermsDocument(getDraftContractTermsDocumentOptionsModel)
 				Expect(operationErr).ToNot(BeNil())
 				Expect(response).ToNot(BeNil())
 				Expect(result).To(BeNil())
@@ -3247,15 +3971,15 @@ var _ = Describe(`DpxV1`, func() {
 			})
 		})
 	})
-	Describe(`GetContractTermsDocument(getContractTermsDocumentOptions *GetContractTermsDocumentOptions)`, func() {
-		getContractTermsDocumentPath := "/data_product_exchange/v1/data_product_versions/testString/contract_terms/testString/documents/testString"
+	Describe(`GetDraftContractTermsDocument(getDraftContractTermsDocumentOptions *GetDraftContractTermsDocumentOptions)`, func() {
+		getDraftContractTermsDocumentPath := "/data_product_exchange/v1/data_products/b38df608-d34b-4d58-8136-ed25e6c6684e/drafts/2b0bf220-079c-11ee-be56-0242ac120002@d29c42eb-7100-4b7a-8257-c196dbcca1cd/contract_terms/598183cd-b910-4e8d-9a97-97097afda3c1@e4fe2f87-0e56-46dd-b3b8-e9af32309e82/documents/testString"
 		Context(`Using mock server endpoint with timeout`, func() {
 			BeforeEach(func() {
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
 					// Verify the contents of the request
-					Expect(req.URL.EscapedPath()).To(Equal(getContractTermsDocumentPath))
+					Expect(req.URL.EscapedPath()).To(Equal(getDraftContractTermsDocumentPath))
 					Expect(req.Method).To(Equal("GET"))
 
 					// Sleep a short time to support a timeout test
@@ -3264,10 +3988,10 @@ var _ = Describe(`DpxV1`, func() {
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
-					fmt.Fprintf(res, "%s", `{"url": "URL", "type": "terms_and_conditions", "name": "Name", "id": "2b0bf220-079c-11ee-be56-0242ac120002", "attachment": {"id": "ID"}}`)
+					fmt.Fprintf(res, "%s", `{"url": "URL", "type": "terms_and_conditions", "name": "Name", "id": "2b0bf220-079c-11ee-be56-0242ac120002", "attachment": {"id": "ID"}, "upload_url": "UploadURL"}`)
 				}))
 			})
-			It(`Invoke GetContractTermsDocument successfully with retries`, func() {
+			It(`Invoke GetDraftContractTermsDocument successfully with retries`, func() {
 				dpxService, serviceErr := dpxv1.NewDpxV1(&dpxv1.DpxV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
@@ -3276,23 +4000,24 @@ var _ = Describe(`DpxV1`, func() {
 				Expect(dpxService).ToNot(BeNil())
 				dpxService.EnableRetries(0, 0)
 
-				// Construct an instance of the GetContractTermsDocumentOptions model
-				getContractTermsDocumentOptionsModel := new(dpxv1.GetContractTermsDocumentOptions)
-				getContractTermsDocumentOptionsModel.DataProductVersionID = core.StringPtr("testString")
-				getContractTermsDocumentOptionsModel.ContractTermsID = core.StringPtr("testString")
-				getContractTermsDocumentOptionsModel.DocumentID = core.StringPtr("testString")
-				getContractTermsDocumentOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+				// Construct an instance of the GetDraftContractTermsDocumentOptions model
+				getDraftContractTermsDocumentOptionsModel := new(dpxv1.GetDraftContractTermsDocumentOptions)
+				getDraftContractTermsDocumentOptionsModel.DataProductID = core.StringPtr("b38df608-d34b-4d58-8136-ed25e6c6684e")
+				getDraftContractTermsDocumentOptionsModel.DraftID = core.StringPtr("2b0bf220-079c-11ee-be56-0242ac120002@d29c42eb-7100-4b7a-8257-c196dbcca1cd")
+				getDraftContractTermsDocumentOptionsModel.ContractTermsID = core.StringPtr("598183cd-b910-4e8d-9a97-97097afda3c1@e4fe2f87-0e56-46dd-b3b8-e9af32309e82")
+				getDraftContractTermsDocumentOptionsModel.DocumentID = core.StringPtr("testString")
+				getDraftContractTermsDocumentOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation with a Context to test a timeout error
 				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
 				defer cancelFunc()
-				_, _, operationErr := dpxService.GetContractTermsDocumentWithContext(ctx, getContractTermsDocumentOptionsModel)
+				_, _, operationErr := dpxService.GetDraftContractTermsDocumentWithContext(ctx, getDraftContractTermsDocumentOptionsModel)
 				Expect(operationErr).ToNot(BeNil())
 				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
 
 				// Disable retries and test again
 				dpxService.DisableRetries()
-				result, response, operationErr := dpxService.GetContractTermsDocument(getContractTermsDocumentOptionsModel)
+				result, response, operationErr := dpxService.GetDraftContractTermsDocument(getDraftContractTermsDocumentOptionsModel)
 				Expect(operationErr).To(BeNil())
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
@@ -3300,7 +4025,7 @@ var _ = Describe(`DpxV1`, func() {
 				// Re-test the timeout error with retries disabled
 				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
 				defer cancelFunc2()
-				_, _, operationErr = dpxService.GetContractTermsDocumentWithContext(ctx, getContractTermsDocumentOptionsModel)
+				_, _, operationErr = dpxService.GetDraftContractTermsDocumentWithContext(ctx, getDraftContractTermsDocumentOptionsModel)
 				Expect(operationErr).ToNot(BeNil())
 				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
 			})
@@ -3314,16 +4039,16 @@ var _ = Describe(`DpxV1`, func() {
 					defer GinkgoRecover()
 
 					// Verify the contents of the request
-					Expect(req.URL.EscapedPath()).To(Equal(getContractTermsDocumentPath))
+					Expect(req.URL.EscapedPath()).To(Equal(getDraftContractTermsDocumentPath))
 					Expect(req.Method).To(Equal("GET"))
 
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
-					fmt.Fprintf(res, "%s", `{"url": "URL", "type": "terms_and_conditions", "name": "Name", "id": "2b0bf220-079c-11ee-be56-0242ac120002", "attachment": {"id": "ID"}}`)
+					fmt.Fprintf(res, "%s", `{"url": "URL", "type": "terms_and_conditions", "name": "Name", "id": "2b0bf220-079c-11ee-be56-0242ac120002", "attachment": {"id": "ID"}, "upload_url": "UploadURL"}`)
 				}))
 			})
-			It(`Invoke GetContractTermsDocument successfully`, func() {
+			It(`Invoke GetDraftContractTermsDocument successfully`, func() {
 				dpxService, serviceErr := dpxv1.NewDpxV1(&dpxv1.DpxV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
@@ -3332,26 +4057,27 @@ var _ = Describe(`DpxV1`, func() {
 				Expect(dpxService).ToNot(BeNil())
 
 				// Invoke operation with nil options model (negative test)
-				result, response, operationErr := dpxService.GetContractTermsDocument(nil)
+				result, response, operationErr := dpxService.GetDraftContractTermsDocument(nil)
 				Expect(operationErr).NotTo(BeNil())
 				Expect(response).To(BeNil())
 				Expect(result).To(BeNil())
 
-				// Construct an instance of the GetContractTermsDocumentOptions model
-				getContractTermsDocumentOptionsModel := new(dpxv1.GetContractTermsDocumentOptions)
-				getContractTermsDocumentOptionsModel.DataProductVersionID = core.StringPtr("testString")
-				getContractTermsDocumentOptionsModel.ContractTermsID = core.StringPtr("testString")
-				getContractTermsDocumentOptionsModel.DocumentID = core.StringPtr("testString")
-				getContractTermsDocumentOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+				// Construct an instance of the GetDraftContractTermsDocumentOptions model
+				getDraftContractTermsDocumentOptionsModel := new(dpxv1.GetDraftContractTermsDocumentOptions)
+				getDraftContractTermsDocumentOptionsModel.DataProductID = core.StringPtr("b38df608-d34b-4d58-8136-ed25e6c6684e")
+				getDraftContractTermsDocumentOptionsModel.DraftID = core.StringPtr("2b0bf220-079c-11ee-be56-0242ac120002@d29c42eb-7100-4b7a-8257-c196dbcca1cd")
+				getDraftContractTermsDocumentOptionsModel.ContractTermsID = core.StringPtr("598183cd-b910-4e8d-9a97-97097afda3c1@e4fe2f87-0e56-46dd-b3b8-e9af32309e82")
+				getDraftContractTermsDocumentOptionsModel.DocumentID = core.StringPtr("testString")
+				getDraftContractTermsDocumentOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation with valid options model (positive test)
-				result, response, operationErr = dpxService.GetContractTermsDocument(getContractTermsDocumentOptionsModel)
+				result, response, operationErr = dpxService.GetDraftContractTermsDocument(getDraftContractTermsDocumentOptionsModel)
 				Expect(operationErr).To(BeNil())
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
 
 			})
-			It(`Invoke GetContractTermsDocument with error: Operation validation and request error`, func() {
+			It(`Invoke GetDraftContractTermsDocument with error: Operation validation and request error`, func() {
 				dpxService, serviceErr := dpxv1.NewDpxV1(&dpxv1.DpxV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
@@ -3359,24 +4085,25 @@ var _ = Describe(`DpxV1`, func() {
 				Expect(serviceErr).To(BeNil())
 				Expect(dpxService).ToNot(BeNil())
 
-				// Construct an instance of the GetContractTermsDocumentOptions model
-				getContractTermsDocumentOptionsModel := new(dpxv1.GetContractTermsDocumentOptions)
-				getContractTermsDocumentOptionsModel.DataProductVersionID = core.StringPtr("testString")
-				getContractTermsDocumentOptionsModel.ContractTermsID = core.StringPtr("testString")
-				getContractTermsDocumentOptionsModel.DocumentID = core.StringPtr("testString")
-				getContractTermsDocumentOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+				// Construct an instance of the GetDraftContractTermsDocumentOptions model
+				getDraftContractTermsDocumentOptionsModel := new(dpxv1.GetDraftContractTermsDocumentOptions)
+				getDraftContractTermsDocumentOptionsModel.DataProductID = core.StringPtr("b38df608-d34b-4d58-8136-ed25e6c6684e")
+				getDraftContractTermsDocumentOptionsModel.DraftID = core.StringPtr("2b0bf220-079c-11ee-be56-0242ac120002@d29c42eb-7100-4b7a-8257-c196dbcca1cd")
+				getDraftContractTermsDocumentOptionsModel.ContractTermsID = core.StringPtr("598183cd-b910-4e8d-9a97-97097afda3c1@e4fe2f87-0e56-46dd-b3b8-e9af32309e82")
+				getDraftContractTermsDocumentOptionsModel.DocumentID = core.StringPtr("testString")
+				getDraftContractTermsDocumentOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 				// Invoke operation with empty URL (negative test)
 				err := dpxService.SetServiceURL("")
 				Expect(err).To(BeNil())
-				result, response, operationErr := dpxService.GetContractTermsDocument(getContractTermsDocumentOptionsModel)
+				result, response, operationErr := dpxService.GetDraftContractTermsDocument(getDraftContractTermsDocumentOptionsModel)
 				Expect(operationErr).ToNot(BeNil())
 				Expect(operationErr.Error()).To(ContainSubstring(core.ERRORMSG_SERVICE_URL_MISSING))
 				Expect(response).To(BeNil())
 				Expect(result).To(BeNil())
-				// Construct a second instance of the GetContractTermsDocumentOptions model with no property values
-				getContractTermsDocumentOptionsModelNew := new(dpxv1.GetContractTermsDocumentOptions)
+				// Construct a second instance of the GetDraftContractTermsDocumentOptions model with no property values
+				getDraftContractTermsDocumentOptionsModelNew := new(dpxv1.GetDraftContractTermsDocumentOptions)
 				// Invoke operation with invalid model (negative test)
-				result, response, operationErr = dpxService.GetContractTermsDocument(getContractTermsDocumentOptionsModelNew)
+				result, response, operationErr = dpxService.GetDraftContractTermsDocument(getDraftContractTermsDocumentOptionsModelNew)
 				Expect(operationErr).ToNot(BeNil())
 				Expect(response).To(BeNil())
 				Expect(result).To(BeNil())
@@ -3394,7 +4121,7 @@ var _ = Describe(`DpxV1`, func() {
 					res.WriteHeader(200)
 				}))
 			})
-			It(`Invoke GetContractTermsDocument successfully`, func() {
+			It(`Invoke GetDraftContractTermsDocument successfully`, func() {
 				dpxService, serviceErr := dpxv1.NewDpxV1(&dpxv1.DpxV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
@@ -3402,15 +4129,16 @@ var _ = Describe(`DpxV1`, func() {
 				Expect(serviceErr).To(BeNil())
 				Expect(dpxService).ToNot(BeNil())
 
-				// Construct an instance of the GetContractTermsDocumentOptions model
-				getContractTermsDocumentOptionsModel := new(dpxv1.GetContractTermsDocumentOptions)
-				getContractTermsDocumentOptionsModel.DataProductVersionID = core.StringPtr("testString")
-				getContractTermsDocumentOptionsModel.ContractTermsID = core.StringPtr("testString")
-				getContractTermsDocumentOptionsModel.DocumentID = core.StringPtr("testString")
-				getContractTermsDocumentOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+				// Construct an instance of the GetDraftContractTermsDocumentOptions model
+				getDraftContractTermsDocumentOptionsModel := new(dpxv1.GetDraftContractTermsDocumentOptions)
+				getDraftContractTermsDocumentOptionsModel.DataProductID = core.StringPtr("b38df608-d34b-4d58-8136-ed25e6c6684e")
+				getDraftContractTermsDocumentOptionsModel.DraftID = core.StringPtr("2b0bf220-079c-11ee-be56-0242ac120002@d29c42eb-7100-4b7a-8257-c196dbcca1cd")
+				getDraftContractTermsDocumentOptionsModel.ContractTermsID = core.StringPtr("598183cd-b910-4e8d-9a97-97097afda3c1@e4fe2f87-0e56-46dd-b3b8-e9af32309e82")
+				getDraftContractTermsDocumentOptionsModel.DocumentID = core.StringPtr("testString")
+				getDraftContractTermsDocumentOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation
-				result, response, operationErr := dpxService.GetContractTermsDocument(getContractTermsDocumentOptionsModel)
+				result, response, operationErr := dpxService.GetDraftContractTermsDocument(getDraftContractTermsDocumentOptionsModel)
 				Expect(operationErr).To(BeNil())
 				Expect(response).ToNot(BeNil())
 
@@ -3422,21 +4150,21 @@ var _ = Describe(`DpxV1`, func() {
 			})
 		})
 	})
-	Describe(`DeleteContractTermsDocument(deleteContractTermsDocumentOptions *DeleteContractTermsDocumentOptions)`, func() {
-		deleteContractTermsDocumentPath := "/data_product_exchange/v1/data_product_versions/testString/contract_terms/testString/documents/testString"
+	Describe(`DeleteDraftContractTermsDocument(deleteDraftContractTermsDocumentOptions *DeleteDraftContractTermsDocumentOptions)`, func() {
+		deleteDraftContractTermsDocumentPath := "/data_product_exchange/v1/data_products/b38df608-d34b-4d58-8136-ed25e6c6684e/drafts/2b0bf220-079c-11ee-be56-0242ac120002@d29c42eb-7100-4b7a-8257-c196dbcca1cd/contract_terms/598183cd-b910-4e8d-9a97-97097afda3c1@e4fe2f87-0e56-46dd-b3b8-e9af32309e82/documents/testString"
 		Context(`Using mock server endpoint`, func() {
 			BeforeEach(func() {
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
 					// Verify the contents of the request
-					Expect(req.URL.EscapedPath()).To(Equal(deleteContractTermsDocumentPath))
+					Expect(req.URL.EscapedPath()).To(Equal(deleteDraftContractTermsDocumentPath))
 					Expect(req.Method).To(Equal("DELETE"))
 
 					res.WriteHeader(204)
 				}))
 			})
-			It(`Invoke DeleteContractTermsDocument successfully`, func() {
+			It(`Invoke DeleteDraftContractTermsDocument successfully`, func() {
 				dpxService, serviceErr := dpxv1.NewDpxV1(&dpxv1.DpxV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
@@ -3445,23 +4173,24 @@ var _ = Describe(`DpxV1`, func() {
 				Expect(dpxService).ToNot(BeNil())
 
 				// Invoke operation with nil options model (negative test)
-				response, operationErr := dpxService.DeleteContractTermsDocument(nil)
+				response, operationErr := dpxService.DeleteDraftContractTermsDocument(nil)
 				Expect(operationErr).NotTo(BeNil())
 				Expect(response).To(BeNil())
 
-				// Construct an instance of the DeleteContractTermsDocumentOptions model
-				deleteContractTermsDocumentOptionsModel := new(dpxv1.DeleteContractTermsDocumentOptions)
-				deleteContractTermsDocumentOptionsModel.DataProductVersionID = core.StringPtr("testString")
-				deleteContractTermsDocumentOptionsModel.ContractTermsID = core.StringPtr("testString")
-				deleteContractTermsDocumentOptionsModel.DocumentID = core.StringPtr("testString")
-				deleteContractTermsDocumentOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+				// Construct an instance of the DeleteDraftContractTermsDocumentOptions model
+				deleteDraftContractTermsDocumentOptionsModel := new(dpxv1.DeleteDraftContractTermsDocumentOptions)
+				deleteDraftContractTermsDocumentOptionsModel.DataProductID = core.StringPtr("b38df608-d34b-4d58-8136-ed25e6c6684e")
+				deleteDraftContractTermsDocumentOptionsModel.DraftID = core.StringPtr("2b0bf220-079c-11ee-be56-0242ac120002@d29c42eb-7100-4b7a-8257-c196dbcca1cd")
+				deleteDraftContractTermsDocumentOptionsModel.ContractTermsID = core.StringPtr("598183cd-b910-4e8d-9a97-97097afda3c1@e4fe2f87-0e56-46dd-b3b8-e9af32309e82")
+				deleteDraftContractTermsDocumentOptionsModel.DocumentID = core.StringPtr("testString")
+				deleteDraftContractTermsDocumentOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation with valid options model (positive test)
-				response, operationErr = dpxService.DeleteContractTermsDocument(deleteContractTermsDocumentOptionsModel)
+				response, operationErr = dpxService.DeleteDraftContractTermsDocument(deleteDraftContractTermsDocumentOptionsModel)
 				Expect(operationErr).To(BeNil())
 				Expect(response).ToNot(BeNil())
 			})
-			It(`Invoke DeleteContractTermsDocument with error: Operation validation and request error`, func() {
+			It(`Invoke DeleteDraftContractTermsDocument with error: Operation validation and request error`, func() {
 				dpxService, serviceErr := dpxv1.NewDpxV1(&dpxv1.DpxV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
@@ -3469,23 +4198,24 @@ var _ = Describe(`DpxV1`, func() {
 				Expect(serviceErr).To(BeNil())
 				Expect(dpxService).ToNot(BeNil())
 
-				// Construct an instance of the DeleteContractTermsDocumentOptions model
-				deleteContractTermsDocumentOptionsModel := new(dpxv1.DeleteContractTermsDocumentOptions)
-				deleteContractTermsDocumentOptionsModel.DataProductVersionID = core.StringPtr("testString")
-				deleteContractTermsDocumentOptionsModel.ContractTermsID = core.StringPtr("testString")
-				deleteContractTermsDocumentOptionsModel.DocumentID = core.StringPtr("testString")
-				deleteContractTermsDocumentOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+				// Construct an instance of the DeleteDraftContractTermsDocumentOptions model
+				deleteDraftContractTermsDocumentOptionsModel := new(dpxv1.DeleteDraftContractTermsDocumentOptions)
+				deleteDraftContractTermsDocumentOptionsModel.DataProductID = core.StringPtr("b38df608-d34b-4d58-8136-ed25e6c6684e")
+				deleteDraftContractTermsDocumentOptionsModel.DraftID = core.StringPtr("2b0bf220-079c-11ee-be56-0242ac120002@d29c42eb-7100-4b7a-8257-c196dbcca1cd")
+				deleteDraftContractTermsDocumentOptionsModel.ContractTermsID = core.StringPtr("598183cd-b910-4e8d-9a97-97097afda3c1@e4fe2f87-0e56-46dd-b3b8-e9af32309e82")
+				deleteDraftContractTermsDocumentOptionsModel.DocumentID = core.StringPtr("testString")
+				deleteDraftContractTermsDocumentOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 				// Invoke operation with empty URL (negative test)
 				err := dpxService.SetServiceURL("")
 				Expect(err).To(BeNil())
-				response, operationErr := dpxService.DeleteContractTermsDocument(deleteContractTermsDocumentOptionsModel)
+				response, operationErr := dpxService.DeleteDraftContractTermsDocument(deleteDraftContractTermsDocumentOptionsModel)
 				Expect(operationErr).ToNot(BeNil())
 				Expect(operationErr.Error()).To(ContainSubstring(core.ERRORMSG_SERVICE_URL_MISSING))
 				Expect(response).To(BeNil())
-				// Construct a second instance of the DeleteContractTermsDocumentOptions model with no property values
-				deleteContractTermsDocumentOptionsModelNew := new(dpxv1.DeleteContractTermsDocumentOptions)
+				// Construct a second instance of the DeleteDraftContractTermsDocumentOptions model with no property values
+				deleteDraftContractTermsDocumentOptionsModelNew := new(dpxv1.DeleteDraftContractTermsDocumentOptions)
 				// Invoke operation with invalid model (negative test)
-				response, operationErr = dpxService.DeleteContractTermsDocument(deleteContractTermsDocumentOptionsModelNew)
+				response, operationErr = dpxService.DeleteDraftContractTermsDocument(deleteDraftContractTermsDocumentOptionsModelNew)
 				Expect(operationErr).ToNot(BeNil())
 				Expect(response).To(BeNil())
 			})
@@ -3494,22 +4224,22 @@ var _ = Describe(`DpxV1`, func() {
 			})
 		})
 	})
-	Describe(`UpdateContractTermsDocument(updateContractTermsDocumentOptions *UpdateContractTermsDocumentOptions) - Operation response error`, func() {
-		updateContractTermsDocumentPath := "/data_product_exchange/v1/data_product_versions/testString/contract_terms/testString/documents/testString"
+	Describe(`UpdateDraftContractTermsDocument(updateDraftContractTermsDocumentOptions *UpdateDraftContractTermsDocumentOptions) - Operation response error`, func() {
+		updateDraftContractTermsDocumentPath := "/data_product_exchange/v1/data_products/b38df608-d34b-4d58-8136-ed25e6c6684e/drafts/2b0bf220-079c-11ee-be56-0242ac120002@d29c42eb-7100-4b7a-8257-c196dbcca1cd/contract_terms/598183cd-b910-4e8d-9a97-97097afda3c1@e4fe2f87-0e56-46dd-b3b8-e9af32309e82/documents/testString"
 		Context(`Using mock server endpoint with invalid JSON response`, func() {
 			BeforeEach(func() {
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
 					// Verify the contents of the request
-					Expect(req.URL.EscapedPath()).To(Equal(updateContractTermsDocumentPath))
+					Expect(req.URL.EscapedPath()).To(Equal(updateDraftContractTermsDocumentPath))
 					Expect(req.Method).To(Equal("PATCH"))
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
 					fmt.Fprint(res, `} this is not valid json {`)
 				}))
 			})
-			It(`Invoke UpdateContractTermsDocument with error: Operation response processing error`, func() {
+			It(`Invoke UpdateDraftContractTermsDocument with error: Operation response processing error`, func() {
 				dpxService, serviceErr := dpxv1.NewDpxV1(&dpxv1.DpxV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
@@ -3522,24 +4252,25 @@ var _ = Describe(`DpxV1`, func() {
 				jsonPatchOperationModel.Op = core.StringPtr("add")
 				jsonPatchOperationModel.Path = core.StringPtr("testString")
 				jsonPatchOperationModel.From = core.StringPtr("testString")
-				jsonPatchOperationModel.Value = core.StringPtr("testString")
+				jsonPatchOperationModel.Value = "testString"
 
-				// Construct an instance of the UpdateContractTermsDocumentOptions model
-				updateContractTermsDocumentOptionsModel := new(dpxv1.UpdateContractTermsDocumentOptions)
-				updateContractTermsDocumentOptionsModel.DataProductVersionID = core.StringPtr("testString")
-				updateContractTermsDocumentOptionsModel.ContractTermsID = core.StringPtr("testString")
-				updateContractTermsDocumentOptionsModel.DocumentID = core.StringPtr("testString")
-				updateContractTermsDocumentOptionsModel.JSONPatchInstructions = []dpxv1.JSONPatchOperation{*jsonPatchOperationModel}
-				updateContractTermsDocumentOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+				// Construct an instance of the UpdateDraftContractTermsDocumentOptions model
+				updateDraftContractTermsDocumentOptionsModel := new(dpxv1.UpdateDraftContractTermsDocumentOptions)
+				updateDraftContractTermsDocumentOptionsModel.DataProductID = core.StringPtr("b38df608-d34b-4d58-8136-ed25e6c6684e")
+				updateDraftContractTermsDocumentOptionsModel.DraftID = core.StringPtr("2b0bf220-079c-11ee-be56-0242ac120002@d29c42eb-7100-4b7a-8257-c196dbcca1cd")
+				updateDraftContractTermsDocumentOptionsModel.ContractTermsID = core.StringPtr("598183cd-b910-4e8d-9a97-97097afda3c1@e4fe2f87-0e56-46dd-b3b8-e9af32309e82")
+				updateDraftContractTermsDocumentOptionsModel.DocumentID = core.StringPtr("testString")
+				updateDraftContractTermsDocumentOptionsModel.JSONPatchInstructions = []dpxv1.JSONPatchOperation{*jsonPatchOperationModel}
+				updateDraftContractTermsDocumentOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 				// Expect response parsing to fail since we are receiving a text/plain response
-				result, response, operationErr := dpxService.UpdateContractTermsDocument(updateContractTermsDocumentOptionsModel)
+				result, response, operationErr := dpxService.UpdateDraftContractTermsDocument(updateDraftContractTermsDocumentOptionsModel)
 				Expect(operationErr).ToNot(BeNil())
 				Expect(response).ToNot(BeNil())
 				Expect(result).To(BeNil())
 
 				// Enable retries and test again
 				dpxService.EnableRetries(0, 0)
-				result, response, operationErr = dpxService.UpdateContractTermsDocument(updateContractTermsDocumentOptionsModel)
+				result, response, operationErr = dpxService.UpdateDraftContractTermsDocument(updateDraftContractTermsDocumentOptionsModel)
 				Expect(operationErr).ToNot(BeNil())
 				Expect(response).ToNot(BeNil())
 				Expect(result).To(BeNil())
@@ -3549,15 +4280,15 @@ var _ = Describe(`DpxV1`, func() {
 			})
 		})
 	})
-	Describe(`UpdateContractTermsDocument(updateContractTermsDocumentOptions *UpdateContractTermsDocumentOptions)`, func() {
-		updateContractTermsDocumentPath := "/data_product_exchange/v1/data_product_versions/testString/contract_terms/testString/documents/testString"
+	Describe(`UpdateDraftContractTermsDocument(updateDraftContractTermsDocumentOptions *UpdateDraftContractTermsDocumentOptions)`, func() {
+		updateDraftContractTermsDocumentPath := "/data_product_exchange/v1/data_products/b38df608-d34b-4d58-8136-ed25e6c6684e/drafts/2b0bf220-079c-11ee-be56-0242ac120002@d29c42eb-7100-4b7a-8257-c196dbcca1cd/contract_terms/598183cd-b910-4e8d-9a97-97097afda3c1@e4fe2f87-0e56-46dd-b3b8-e9af32309e82/documents/testString"
 		Context(`Using mock server endpoint with timeout`, func() {
 			BeforeEach(func() {
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
 					// Verify the contents of the request
-					Expect(req.URL.EscapedPath()).To(Equal(updateContractTermsDocumentPath))
+					Expect(req.URL.EscapedPath()).To(Equal(updateDraftContractTermsDocumentPath))
 					Expect(req.Method).To(Equal("PATCH"))
 
 					// For gzip-disabled operation, verify Content-Encoding is not set.
@@ -3582,10 +4313,10 @@ var _ = Describe(`DpxV1`, func() {
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
-					fmt.Fprintf(res, "%s", `{"url": "URL", "type": "terms_and_conditions", "name": "Name", "id": "2b0bf220-079c-11ee-be56-0242ac120002", "attachment": {"id": "ID"}}`)
+					fmt.Fprintf(res, "%s", `{"url": "URL", "type": "terms_and_conditions", "name": "Name", "id": "2b0bf220-079c-11ee-be56-0242ac120002", "attachment": {"id": "ID"}, "upload_url": "UploadURL"}`)
 				}))
 			})
-			It(`Invoke UpdateContractTermsDocument successfully with retries`, func() {
+			It(`Invoke UpdateDraftContractTermsDocument successfully with retries`, func() {
 				dpxService, serviceErr := dpxv1.NewDpxV1(&dpxv1.DpxV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
@@ -3599,26 +4330,27 @@ var _ = Describe(`DpxV1`, func() {
 				jsonPatchOperationModel.Op = core.StringPtr("add")
 				jsonPatchOperationModel.Path = core.StringPtr("testString")
 				jsonPatchOperationModel.From = core.StringPtr("testString")
-				jsonPatchOperationModel.Value = core.StringPtr("testString")
+				jsonPatchOperationModel.Value = "testString"
 
-				// Construct an instance of the UpdateContractTermsDocumentOptions model
-				updateContractTermsDocumentOptionsModel := new(dpxv1.UpdateContractTermsDocumentOptions)
-				updateContractTermsDocumentOptionsModel.DataProductVersionID = core.StringPtr("testString")
-				updateContractTermsDocumentOptionsModel.ContractTermsID = core.StringPtr("testString")
-				updateContractTermsDocumentOptionsModel.DocumentID = core.StringPtr("testString")
-				updateContractTermsDocumentOptionsModel.JSONPatchInstructions = []dpxv1.JSONPatchOperation{*jsonPatchOperationModel}
-				updateContractTermsDocumentOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+				// Construct an instance of the UpdateDraftContractTermsDocumentOptions model
+				updateDraftContractTermsDocumentOptionsModel := new(dpxv1.UpdateDraftContractTermsDocumentOptions)
+				updateDraftContractTermsDocumentOptionsModel.DataProductID = core.StringPtr("b38df608-d34b-4d58-8136-ed25e6c6684e")
+				updateDraftContractTermsDocumentOptionsModel.DraftID = core.StringPtr("2b0bf220-079c-11ee-be56-0242ac120002@d29c42eb-7100-4b7a-8257-c196dbcca1cd")
+				updateDraftContractTermsDocumentOptionsModel.ContractTermsID = core.StringPtr("598183cd-b910-4e8d-9a97-97097afda3c1@e4fe2f87-0e56-46dd-b3b8-e9af32309e82")
+				updateDraftContractTermsDocumentOptionsModel.DocumentID = core.StringPtr("testString")
+				updateDraftContractTermsDocumentOptionsModel.JSONPatchInstructions = []dpxv1.JSONPatchOperation{*jsonPatchOperationModel}
+				updateDraftContractTermsDocumentOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation with a Context to test a timeout error
 				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
 				defer cancelFunc()
-				_, _, operationErr := dpxService.UpdateContractTermsDocumentWithContext(ctx, updateContractTermsDocumentOptionsModel)
+				_, _, operationErr := dpxService.UpdateDraftContractTermsDocumentWithContext(ctx, updateDraftContractTermsDocumentOptionsModel)
 				Expect(operationErr).ToNot(BeNil())
 				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
 
 				// Disable retries and test again
 				dpxService.DisableRetries()
-				result, response, operationErr := dpxService.UpdateContractTermsDocument(updateContractTermsDocumentOptionsModel)
+				result, response, operationErr := dpxService.UpdateDraftContractTermsDocument(updateDraftContractTermsDocumentOptionsModel)
 				Expect(operationErr).To(BeNil())
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
@@ -3626,7 +4358,7 @@ var _ = Describe(`DpxV1`, func() {
 				// Re-test the timeout error with retries disabled
 				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
 				defer cancelFunc2()
-				_, _, operationErr = dpxService.UpdateContractTermsDocumentWithContext(ctx, updateContractTermsDocumentOptionsModel)
+				_, _, operationErr = dpxService.UpdateDraftContractTermsDocumentWithContext(ctx, updateDraftContractTermsDocumentOptionsModel)
 				Expect(operationErr).ToNot(BeNil())
 				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
 			})
@@ -3640,7 +4372,7 @@ var _ = Describe(`DpxV1`, func() {
 					defer GinkgoRecover()
 
 					// Verify the contents of the request
-					Expect(req.URL.EscapedPath()).To(Equal(updateContractTermsDocumentPath))
+					Expect(req.URL.EscapedPath()).To(Equal(updateDraftContractTermsDocumentPath))
 					Expect(req.Method).To(Equal("PATCH"))
 
 					// For gzip-disabled operation, verify Content-Encoding is not set.
@@ -3662,10 +4394,10 @@ var _ = Describe(`DpxV1`, func() {
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
-					fmt.Fprintf(res, "%s", `{"url": "URL", "type": "terms_and_conditions", "name": "Name", "id": "2b0bf220-079c-11ee-be56-0242ac120002", "attachment": {"id": "ID"}}`)
+					fmt.Fprintf(res, "%s", `{"url": "URL", "type": "terms_and_conditions", "name": "Name", "id": "2b0bf220-079c-11ee-be56-0242ac120002", "attachment": {"id": "ID"}, "upload_url": "UploadURL"}`)
 				}))
 			})
-			It(`Invoke UpdateContractTermsDocument successfully`, func() {
+			It(`Invoke UpdateDraftContractTermsDocument successfully`, func() {
 				dpxService, serviceErr := dpxv1.NewDpxV1(&dpxv1.DpxV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
@@ -3674,7 +4406,7 @@ var _ = Describe(`DpxV1`, func() {
 				Expect(dpxService).ToNot(BeNil())
 
 				// Invoke operation with nil options model (negative test)
-				result, response, operationErr := dpxService.UpdateContractTermsDocument(nil)
+				result, response, operationErr := dpxService.UpdateDraftContractTermsDocument(nil)
 				Expect(operationErr).NotTo(BeNil())
 				Expect(response).To(BeNil())
 				Expect(result).To(BeNil())
@@ -3684,24 +4416,25 @@ var _ = Describe(`DpxV1`, func() {
 				jsonPatchOperationModel.Op = core.StringPtr("add")
 				jsonPatchOperationModel.Path = core.StringPtr("testString")
 				jsonPatchOperationModel.From = core.StringPtr("testString")
-				jsonPatchOperationModel.Value = core.StringPtr("testString")
+				jsonPatchOperationModel.Value = "testString"
 
-				// Construct an instance of the UpdateContractTermsDocumentOptions model
-				updateContractTermsDocumentOptionsModel := new(dpxv1.UpdateContractTermsDocumentOptions)
-				updateContractTermsDocumentOptionsModel.DataProductVersionID = core.StringPtr("testString")
-				updateContractTermsDocumentOptionsModel.ContractTermsID = core.StringPtr("testString")
-				updateContractTermsDocumentOptionsModel.DocumentID = core.StringPtr("testString")
-				updateContractTermsDocumentOptionsModel.JSONPatchInstructions = []dpxv1.JSONPatchOperation{*jsonPatchOperationModel}
-				updateContractTermsDocumentOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+				// Construct an instance of the UpdateDraftContractTermsDocumentOptions model
+				updateDraftContractTermsDocumentOptionsModel := new(dpxv1.UpdateDraftContractTermsDocumentOptions)
+				updateDraftContractTermsDocumentOptionsModel.DataProductID = core.StringPtr("b38df608-d34b-4d58-8136-ed25e6c6684e")
+				updateDraftContractTermsDocumentOptionsModel.DraftID = core.StringPtr("2b0bf220-079c-11ee-be56-0242ac120002@d29c42eb-7100-4b7a-8257-c196dbcca1cd")
+				updateDraftContractTermsDocumentOptionsModel.ContractTermsID = core.StringPtr("598183cd-b910-4e8d-9a97-97097afda3c1@e4fe2f87-0e56-46dd-b3b8-e9af32309e82")
+				updateDraftContractTermsDocumentOptionsModel.DocumentID = core.StringPtr("testString")
+				updateDraftContractTermsDocumentOptionsModel.JSONPatchInstructions = []dpxv1.JSONPatchOperation{*jsonPatchOperationModel}
+				updateDraftContractTermsDocumentOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation with valid options model (positive test)
-				result, response, operationErr = dpxService.UpdateContractTermsDocument(updateContractTermsDocumentOptionsModel)
+				result, response, operationErr = dpxService.UpdateDraftContractTermsDocument(updateDraftContractTermsDocumentOptionsModel)
 				Expect(operationErr).To(BeNil())
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
 
 			})
-			It(`Invoke UpdateContractTermsDocument with error: Operation validation and request error`, func() {
+			It(`Invoke UpdateDraftContractTermsDocument with error: Operation validation and request error`, func() {
 				dpxService, serviceErr := dpxv1.NewDpxV1(&dpxv1.DpxV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
@@ -3714,27 +4447,28 @@ var _ = Describe(`DpxV1`, func() {
 				jsonPatchOperationModel.Op = core.StringPtr("add")
 				jsonPatchOperationModel.Path = core.StringPtr("testString")
 				jsonPatchOperationModel.From = core.StringPtr("testString")
-				jsonPatchOperationModel.Value = core.StringPtr("testString")
+				jsonPatchOperationModel.Value = "testString"
 
-				// Construct an instance of the UpdateContractTermsDocumentOptions model
-				updateContractTermsDocumentOptionsModel := new(dpxv1.UpdateContractTermsDocumentOptions)
-				updateContractTermsDocumentOptionsModel.DataProductVersionID = core.StringPtr("testString")
-				updateContractTermsDocumentOptionsModel.ContractTermsID = core.StringPtr("testString")
-				updateContractTermsDocumentOptionsModel.DocumentID = core.StringPtr("testString")
-				updateContractTermsDocumentOptionsModel.JSONPatchInstructions = []dpxv1.JSONPatchOperation{*jsonPatchOperationModel}
-				updateContractTermsDocumentOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+				// Construct an instance of the UpdateDraftContractTermsDocumentOptions model
+				updateDraftContractTermsDocumentOptionsModel := new(dpxv1.UpdateDraftContractTermsDocumentOptions)
+				updateDraftContractTermsDocumentOptionsModel.DataProductID = core.StringPtr("b38df608-d34b-4d58-8136-ed25e6c6684e")
+				updateDraftContractTermsDocumentOptionsModel.DraftID = core.StringPtr("2b0bf220-079c-11ee-be56-0242ac120002@d29c42eb-7100-4b7a-8257-c196dbcca1cd")
+				updateDraftContractTermsDocumentOptionsModel.ContractTermsID = core.StringPtr("598183cd-b910-4e8d-9a97-97097afda3c1@e4fe2f87-0e56-46dd-b3b8-e9af32309e82")
+				updateDraftContractTermsDocumentOptionsModel.DocumentID = core.StringPtr("testString")
+				updateDraftContractTermsDocumentOptionsModel.JSONPatchInstructions = []dpxv1.JSONPatchOperation{*jsonPatchOperationModel}
+				updateDraftContractTermsDocumentOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 				// Invoke operation with empty URL (negative test)
 				err := dpxService.SetServiceURL("")
 				Expect(err).To(BeNil())
-				result, response, operationErr := dpxService.UpdateContractTermsDocument(updateContractTermsDocumentOptionsModel)
+				result, response, operationErr := dpxService.UpdateDraftContractTermsDocument(updateDraftContractTermsDocumentOptionsModel)
 				Expect(operationErr).ToNot(BeNil())
 				Expect(operationErr.Error()).To(ContainSubstring(core.ERRORMSG_SERVICE_URL_MISSING))
 				Expect(response).To(BeNil())
 				Expect(result).To(BeNil())
-				// Construct a second instance of the UpdateContractTermsDocumentOptions model with no property values
-				updateContractTermsDocumentOptionsModelNew := new(dpxv1.UpdateContractTermsDocumentOptions)
+				// Construct a second instance of the UpdateDraftContractTermsDocumentOptions model with no property values
+				updateDraftContractTermsDocumentOptionsModelNew := new(dpxv1.UpdateDraftContractTermsDocumentOptions)
 				// Invoke operation with invalid model (negative test)
-				result, response, operationErr = dpxService.UpdateContractTermsDocument(updateContractTermsDocumentOptionsModelNew)
+				result, response, operationErr = dpxService.UpdateDraftContractTermsDocument(updateDraftContractTermsDocumentOptionsModelNew)
 				Expect(operationErr).ToNot(BeNil())
 				Expect(response).To(BeNil())
 				Expect(result).To(BeNil())
@@ -3752,7 +4486,7 @@ var _ = Describe(`DpxV1`, func() {
 					res.WriteHeader(200)
 				}))
 			})
-			It(`Invoke UpdateContractTermsDocument successfully`, func() {
+			It(`Invoke UpdateDraftContractTermsDocument successfully`, func() {
 				dpxService, serviceErr := dpxv1.NewDpxV1(&dpxv1.DpxV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
@@ -3765,18 +4499,1532 @@ var _ = Describe(`DpxV1`, func() {
 				jsonPatchOperationModel.Op = core.StringPtr("add")
 				jsonPatchOperationModel.Path = core.StringPtr("testString")
 				jsonPatchOperationModel.From = core.StringPtr("testString")
-				jsonPatchOperationModel.Value = core.StringPtr("testString")
+				jsonPatchOperationModel.Value = "testString"
 
-				// Construct an instance of the UpdateContractTermsDocumentOptions model
-				updateContractTermsDocumentOptionsModel := new(dpxv1.UpdateContractTermsDocumentOptions)
-				updateContractTermsDocumentOptionsModel.DataProductVersionID = core.StringPtr("testString")
-				updateContractTermsDocumentOptionsModel.ContractTermsID = core.StringPtr("testString")
-				updateContractTermsDocumentOptionsModel.DocumentID = core.StringPtr("testString")
-				updateContractTermsDocumentOptionsModel.JSONPatchInstructions = []dpxv1.JSONPatchOperation{*jsonPatchOperationModel}
-				updateContractTermsDocumentOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+				// Construct an instance of the UpdateDraftContractTermsDocumentOptions model
+				updateDraftContractTermsDocumentOptionsModel := new(dpxv1.UpdateDraftContractTermsDocumentOptions)
+				updateDraftContractTermsDocumentOptionsModel.DataProductID = core.StringPtr("b38df608-d34b-4d58-8136-ed25e6c6684e")
+				updateDraftContractTermsDocumentOptionsModel.DraftID = core.StringPtr("2b0bf220-079c-11ee-be56-0242ac120002@d29c42eb-7100-4b7a-8257-c196dbcca1cd")
+				updateDraftContractTermsDocumentOptionsModel.ContractTermsID = core.StringPtr("598183cd-b910-4e8d-9a97-97097afda3c1@e4fe2f87-0e56-46dd-b3b8-e9af32309e82")
+				updateDraftContractTermsDocumentOptionsModel.DocumentID = core.StringPtr("testString")
+				updateDraftContractTermsDocumentOptionsModel.JSONPatchInstructions = []dpxv1.JSONPatchOperation{*jsonPatchOperationModel}
+				updateDraftContractTermsDocumentOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation
-				result, response, operationErr := dpxService.UpdateContractTermsDocument(updateContractTermsDocumentOptionsModel)
+				result, response, operationErr := dpxService.UpdateDraftContractTermsDocument(updateDraftContractTermsDocumentOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+
+				// Verify a nil result
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+	})
+	Describe(`PublishDataProductDraft(publishDataProductDraftOptions *PublishDataProductDraftOptions) - Operation response error`, func() {
+		publishDataProductDraftPath := "/data_product_exchange/v1/data_products/b38df608-d34b-4d58-8136-ed25e6c6684e/drafts/2b0bf220-079c-11ee-be56-0242ac120002@d29c42eb-7100-4b7a-8257-c196dbcca1cd/publish"
+		Context(`Using mock server endpoint with invalid JSON response`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(publishDataProductDraftPath))
+					Expect(req.Method).To(Equal("POST"))
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprint(res, `} this is not valid json {`)
+				}))
+			})
+			It(`Invoke PublishDataProductDraft with error: Operation response processing error`, func() {
+				dpxService, serviceErr := dpxv1.NewDpxV1(&dpxv1.DpxV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(dpxService).ToNot(BeNil())
+
+				// Construct an instance of the PublishDataProductDraftOptions model
+				publishDataProductDraftOptionsModel := new(dpxv1.PublishDataProductDraftOptions)
+				publishDataProductDraftOptionsModel.DataProductID = core.StringPtr("b38df608-d34b-4d58-8136-ed25e6c6684e")
+				publishDataProductDraftOptionsModel.DraftID = core.StringPtr("2b0bf220-079c-11ee-be56-0242ac120002@d29c42eb-7100-4b7a-8257-c196dbcca1cd")
+				publishDataProductDraftOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+				// Expect response parsing to fail since we are receiving a text/plain response
+				result, response, operationErr := dpxService.PublishDataProductDraft(publishDataProductDraftOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).To(BeNil())
+
+				// Enable retries and test again
+				dpxService.EnableRetries(0, 0)
+				result, response, operationErr = dpxService.PublishDataProductDraft(publishDataProductDraftOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+	})
+	Describe(`PublishDataProductDraft(publishDataProductDraftOptions *PublishDataProductDraftOptions)`, func() {
+		publishDataProductDraftPath := "/data_product_exchange/v1/data_products/b38df608-d34b-4d58-8136-ed25e6c6684e/drafts/2b0bf220-079c-11ee-be56-0242ac120002@d29c42eb-7100-4b7a-8257-c196dbcca1cd/publish"
+		Context(`Using mock server endpoint with timeout`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(publishDataProductDraftPath))
+					Expect(req.Method).To(Equal("POST"))
+
+					// Sleep a short time to support a timeout test
+					time.Sleep(100 * time.Millisecond)
+
+					// Set mock response
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprintf(res, "%s", `{"version": "1.0.0", "state": "draft", "data_product": {"id": "b38df608-d34b-4d58-8136-ed25e6c6684e"}, "name": "My Data Product", "description": "This is a description of My Data Product.", "id": "2b0bf220-079c-11ee-be56-0242ac120002@d29c42eb-7100-4b7a-8257-c196dbcca1cd", "asset": {"id": "2b0bf220-079c-11ee-be56-0242ac120002", "container": {"id": "d29c42eb-7100-4b7a-8257-c196dbcca1cd", "type": "catalog"}}, "tags": ["Tags"], "use_cases": [{"id": "ID", "name": "Name", "container": {"id": "d29c42eb-7100-4b7a-8257-c196dbcca1cd", "type": "catalog"}}], "domain": {"id": "ID", "name": "Name", "container": {"id": "d29c42eb-7100-4b7a-8257-c196dbcca1cd", "type": "catalog"}}, "types": ["data"], "parts_out": [{"asset": {"id": "2b0bf220-079c-11ee-be56-0242ac120002", "container": {"id": "d29c42eb-7100-4b7a-8257-c196dbcca1cd", "type": "catalog"}, "type": "data_asset"}, "revision": 1, "updated_at": "2023-07-01T22:22:34.876Z", "delivery_methods": [{"id": "09cf5fcc-cb9d-4995-a8e4-16517b25229f", "container": {"id": "d29c42eb-7100-4b7a-8257-c196dbcca1cd", "type": "catalog"}}]}], "published_by": "PublishedBy", "published_at": "2019-01-01T12:00:00.000Z", "contract_terms": [{"asset": {"id": "2b0bf220-079c-11ee-be56-0242ac120002", "container": {"id": "d29c42eb-7100-4b7a-8257-c196dbcca1cd", "type": "catalog"}}, "id": "ID", "documents": [{"url": "URL", "type": "terms_and_conditions", "name": "Name", "id": "2b0bf220-079c-11ee-be56-0242ac120002", "attachment": {"id": "ID"}, "upload_url": "UploadURL"}]}], "created_by": "CreatedBy", "created_at": "2019-01-01T12:00:00.000Z", "is_restricted": true}`)
+				}))
+			})
+			It(`Invoke PublishDataProductDraft successfully with retries`, func() {
+				dpxService, serviceErr := dpxv1.NewDpxV1(&dpxv1.DpxV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(dpxService).ToNot(BeNil())
+				dpxService.EnableRetries(0, 0)
+
+				// Construct an instance of the PublishDataProductDraftOptions model
+				publishDataProductDraftOptionsModel := new(dpxv1.PublishDataProductDraftOptions)
+				publishDataProductDraftOptionsModel.DataProductID = core.StringPtr("b38df608-d34b-4d58-8136-ed25e6c6684e")
+				publishDataProductDraftOptionsModel.DraftID = core.StringPtr("2b0bf220-079c-11ee-be56-0242ac120002@d29c42eb-7100-4b7a-8257-c196dbcca1cd")
+				publishDataProductDraftOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with a Context to test a timeout error
+				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc()
+				_, _, operationErr := dpxService.PublishDataProductDraftWithContext(ctx, publishDataProductDraftOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+
+				// Disable retries and test again
+				dpxService.DisableRetries()
+				result, response, operationErr := dpxService.PublishDataProductDraft(publishDataProductDraftOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+
+				// Re-test the timeout error with retries disabled
+				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc2()
+				_, _, operationErr = dpxService.PublishDataProductDraftWithContext(ctx, publishDataProductDraftOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(publishDataProductDraftPath))
+					Expect(req.Method).To(Equal("POST"))
+
+					// Set mock response
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprintf(res, "%s", `{"version": "1.0.0", "state": "draft", "data_product": {"id": "b38df608-d34b-4d58-8136-ed25e6c6684e"}, "name": "My Data Product", "description": "This is a description of My Data Product.", "id": "2b0bf220-079c-11ee-be56-0242ac120002@d29c42eb-7100-4b7a-8257-c196dbcca1cd", "asset": {"id": "2b0bf220-079c-11ee-be56-0242ac120002", "container": {"id": "d29c42eb-7100-4b7a-8257-c196dbcca1cd", "type": "catalog"}}, "tags": ["Tags"], "use_cases": [{"id": "ID", "name": "Name", "container": {"id": "d29c42eb-7100-4b7a-8257-c196dbcca1cd", "type": "catalog"}}], "domain": {"id": "ID", "name": "Name", "container": {"id": "d29c42eb-7100-4b7a-8257-c196dbcca1cd", "type": "catalog"}}, "types": ["data"], "parts_out": [{"asset": {"id": "2b0bf220-079c-11ee-be56-0242ac120002", "container": {"id": "d29c42eb-7100-4b7a-8257-c196dbcca1cd", "type": "catalog"}, "type": "data_asset"}, "revision": 1, "updated_at": "2023-07-01T22:22:34.876Z", "delivery_methods": [{"id": "09cf5fcc-cb9d-4995-a8e4-16517b25229f", "container": {"id": "d29c42eb-7100-4b7a-8257-c196dbcca1cd", "type": "catalog"}}]}], "published_by": "PublishedBy", "published_at": "2019-01-01T12:00:00.000Z", "contract_terms": [{"asset": {"id": "2b0bf220-079c-11ee-be56-0242ac120002", "container": {"id": "d29c42eb-7100-4b7a-8257-c196dbcca1cd", "type": "catalog"}}, "id": "ID", "documents": [{"url": "URL", "type": "terms_and_conditions", "name": "Name", "id": "2b0bf220-079c-11ee-be56-0242ac120002", "attachment": {"id": "ID"}, "upload_url": "UploadURL"}]}], "created_by": "CreatedBy", "created_at": "2019-01-01T12:00:00.000Z", "is_restricted": true}`)
+				}))
+			})
+			It(`Invoke PublishDataProductDraft successfully`, func() {
+				dpxService, serviceErr := dpxv1.NewDpxV1(&dpxv1.DpxV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(dpxService).ToNot(BeNil())
+
+				// Invoke operation with nil options model (negative test)
+				result, response, operationErr := dpxService.PublishDataProductDraft(nil)
+				Expect(operationErr).NotTo(BeNil())
+				Expect(response).To(BeNil())
+				Expect(result).To(BeNil())
+
+				// Construct an instance of the PublishDataProductDraftOptions model
+				publishDataProductDraftOptionsModel := new(dpxv1.PublishDataProductDraftOptions)
+				publishDataProductDraftOptionsModel.DataProductID = core.StringPtr("b38df608-d34b-4d58-8136-ed25e6c6684e")
+				publishDataProductDraftOptionsModel.DraftID = core.StringPtr("2b0bf220-079c-11ee-be56-0242ac120002@d29c42eb-7100-4b7a-8257-c196dbcca1cd")
+				publishDataProductDraftOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with valid options model (positive test)
+				result, response, operationErr = dpxService.PublishDataProductDraft(publishDataProductDraftOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+
+			})
+			It(`Invoke PublishDataProductDraft with error: Operation validation and request error`, func() {
+				dpxService, serviceErr := dpxv1.NewDpxV1(&dpxv1.DpxV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(dpxService).ToNot(BeNil())
+
+				// Construct an instance of the PublishDataProductDraftOptions model
+				publishDataProductDraftOptionsModel := new(dpxv1.PublishDataProductDraftOptions)
+				publishDataProductDraftOptionsModel.DataProductID = core.StringPtr("b38df608-d34b-4d58-8136-ed25e6c6684e")
+				publishDataProductDraftOptionsModel.DraftID = core.StringPtr("2b0bf220-079c-11ee-be56-0242ac120002@d29c42eb-7100-4b7a-8257-c196dbcca1cd")
+				publishDataProductDraftOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+				// Invoke operation with empty URL (negative test)
+				err := dpxService.SetServiceURL("")
+				Expect(err).To(BeNil())
+				result, response, operationErr := dpxService.PublishDataProductDraft(publishDataProductDraftOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring(core.ERRORMSG_SERVICE_URL_MISSING))
+				Expect(response).To(BeNil())
+				Expect(result).To(BeNil())
+				// Construct a second instance of the PublishDataProductDraftOptions model with no property values
+				publishDataProductDraftOptionsModelNew := new(dpxv1.PublishDataProductDraftOptions)
+				// Invoke operation with invalid model (negative test)
+				result, response, operationErr = dpxService.PublishDataProductDraft(publishDataProductDraftOptionsModelNew)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(response).To(BeNil())
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+		Context(`Using mock server endpoint with missing response body`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Set success status code with no respoonse body
+					res.WriteHeader(200)
+				}))
+			})
+			It(`Invoke PublishDataProductDraft successfully`, func() {
+				dpxService, serviceErr := dpxv1.NewDpxV1(&dpxv1.DpxV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(dpxService).ToNot(BeNil())
+
+				// Construct an instance of the PublishDataProductDraftOptions model
+				publishDataProductDraftOptionsModel := new(dpxv1.PublishDataProductDraftOptions)
+				publishDataProductDraftOptionsModel.DataProductID = core.StringPtr("b38df608-d34b-4d58-8136-ed25e6c6684e")
+				publishDataProductDraftOptionsModel.DraftID = core.StringPtr("2b0bf220-079c-11ee-be56-0242ac120002@d29c42eb-7100-4b7a-8257-c196dbcca1cd")
+				publishDataProductDraftOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation
+				result, response, operationErr := dpxService.PublishDataProductDraft(publishDataProductDraftOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+
+				// Verify a nil result
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+	})
+	Describe(`GetDataProductRelease(getDataProductReleaseOptions *GetDataProductReleaseOptions) - Operation response error`, func() {
+		getDataProductReleasePath := "/data_product_exchange/v1/data_products/b38df608-d34b-4d58-8136-ed25e6c6684e/releases/2b0bf220-079c-11ee-be56-0242ac120002@d29c42eb-7100-4b7a-8257-c196dbcca1cd"
+		Context(`Using mock server endpoint with invalid JSON response`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(getDataProductReleasePath))
+					Expect(req.Method).To(Equal("GET"))
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprint(res, `} this is not valid json {`)
+				}))
+			})
+			It(`Invoke GetDataProductRelease with error: Operation response processing error`, func() {
+				dpxService, serviceErr := dpxv1.NewDpxV1(&dpxv1.DpxV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(dpxService).ToNot(BeNil())
+
+				// Construct an instance of the GetDataProductReleaseOptions model
+				getDataProductReleaseOptionsModel := new(dpxv1.GetDataProductReleaseOptions)
+				getDataProductReleaseOptionsModel.DataProductID = core.StringPtr("b38df608-d34b-4d58-8136-ed25e6c6684e")
+				getDataProductReleaseOptionsModel.ReleaseID = core.StringPtr("2b0bf220-079c-11ee-be56-0242ac120002@d29c42eb-7100-4b7a-8257-c196dbcca1cd")
+				getDataProductReleaseOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+				// Expect response parsing to fail since we are receiving a text/plain response
+				result, response, operationErr := dpxService.GetDataProductRelease(getDataProductReleaseOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).To(BeNil())
+
+				// Enable retries and test again
+				dpxService.EnableRetries(0, 0)
+				result, response, operationErr = dpxService.GetDataProductRelease(getDataProductReleaseOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+	})
+	Describe(`GetDataProductRelease(getDataProductReleaseOptions *GetDataProductReleaseOptions)`, func() {
+		getDataProductReleasePath := "/data_product_exchange/v1/data_products/b38df608-d34b-4d58-8136-ed25e6c6684e/releases/2b0bf220-079c-11ee-be56-0242ac120002@d29c42eb-7100-4b7a-8257-c196dbcca1cd"
+		Context(`Using mock server endpoint with timeout`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(getDataProductReleasePath))
+					Expect(req.Method).To(Equal("GET"))
+
+					// Sleep a short time to support a timeout test
+					time.Sleep(100 * time.Millisecond)
+
+					// Set mock response
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprintf(res, "%s", `{"version": "1.0.0", "state": "draft", "data_product": {"id": "b38df608-d34b-4d58-8136-ed25e6c6684e"}, "name": "My Data Product", "description": "This is a description of My Data Product.", "id": "2b0bf220-079c-11ee-be56-0242ac120002@d29c42eb-7100-4b7a-8257-c196dbcca1cd", "asset": {"id": "2b0bf220-079c-11ee-be56-0242ac120002", "container": {"id": "d29c42eb-7100-4b7a-8257-c196dbcca1cd", "type": "catalog"}}, "tags": ["Tags"], "use_cases": [{"id": "ID", "name": "Name", "container": {"id": "d29c42eb-7100-4b7a-8257-c196dbcca1cd", "type": "catalog"}}], "domain": {"id": "ID", "name": "Name", "container": {"id": "d29c42eb-7100-4b7a-8257-c196dbcca1cd", "type": "catalog"}}, "types": ["data"], "parts_out": [{"asset": {"id": "2b0bf220-079c-11ee-be56-0242ac120002", "container": {"id": "d29c42eb-7100-4b7a-8257-c196dbcca1cd", "type": "catalog"}, "type": "data_asset"}, "revision": 1, "updated_at": "2023-07-01T22:22:34.876Z", "delivery_methods": [{"id": "09cf5fcc-cb9d-4995-a8e4-16517b25229f", "container": {"id": "d29c42eb-7100-4b7a-8257-c196dbcca1cd", "type": "catalog"}}]}], "published_by": "PublishedBy", "published_at": "2019-01-01T12:00:00.000Z", "contract_terms": [{"asset": {"id": "2b0bf220-079c-11ee-be56-0242ac120002", "container": {"id": "d29c42eb-7100-4b7a-8257-c196dbcca1cd", "type": "catalog"}}, "id": "ID", "documents": [{"url": "URL", "type": "terms_and_conditions", "name": "Name", "id": "2b0bf220-079c-11ee-be56-0242ac120002", "attachment": {"id": "ID"}, "upload_url": "UploadURL"}]}], "created_by": "CreatedBy", "created_at": "2019-01-01T12:00:00.000Z", "is_restricted": true}`)
+				}))
+			})
+			It(`Invoke GetDataProductRelease successfully with retries`, func() {
+				dpxService, serviceErr := dpxv1.NewDpxV1(&dpxv1.DpxV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(dpxService).ToNot(BeNil())
+				dpxService.EnableRetries(0, 0)
+
+				// Construct an instance of the GetDataProductReleaseOptions model
+				getDataProductReleaseOptionsModel := new(dpxv1.GetDataProductReleaseOptions)
+				getDataProductReleaseOptionsModel.DataProductID = core.StringPtr("b38df608-d34b-4d58-8136-ed25e6c6684e")
+				getDataProductReleaseOptionsModel.ReleaseID = core.StringPtr("2b0bf220-079c-11ee-be56-0242ac120002@d29c42eb-7100-4b7a-8257-c196dbcca1cd")
+				getDataProductReleaseOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with a Context to test a timeout error
+				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc()
+				_, _, operationErr := dpxService.GetDataProductReleaseWithContext(ctx, getDataProductReleaseOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+
+				// Disable retries and test again
+				dpxService.DisableRetries()
+				result, response, operationErr := dpxService.GetDataProductRelease(getDataProductReleaseOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+
+				// Re-test the timeout error with retries disabled
+				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc2()
+				_, _, operationErr = dpxService.GetDataProductReleaseWithContext(ctx, getDataProductReleaseOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(getDataProductReleasePath))
+					Expect(req.Method).To(Equal("GET"))
+
+					// Set mock response
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprintf(res, "%s", `{"version": "1.0.0", "state": "draft", "data_product": {"id": "b38df608-d34b-4d58-8136-ed25e6c6684e"}, "name": "My Data Product", "description": "This is a description of My Data Product.", "id": "2b0bf220-079c-11ee-be56-0242ac120002@d29c42eb-7100-4b7a-8257-c196dbcca1cd", "asset": {"id": "2b0bf220-079c-11ee-be56-0242ac120002", "container": {"id": "d29c42eb-7100-4b7a-8257-c196dbcca1cd", "type": "catalog"}}, "tags": ["Tags"], "use_cases": [{"id": "ID", "name": "Name", "container": {"id": "d29c42eb-7100-4b7a-8257-c196dbcca1cd", "type": "catalog"}}], "domain": {"id": "ID", "name": "Name", "container": {"id": "d29c42eb-7100-4b7a-8257-c196dbcca1cd", "type": "catalog"}}, "types": ["data"], "parts_out": [{"asset": {"id": "2b0bf220-079c-11ee-be56-0242ac120002", "container": {"id": "d29c42eb-7100-4b7a-8257-c196dbcca1cd", "type": "catalog"}, "type": "data_asset"}, "revision": 1, "updated_at": "2023-07-01T22:22:34.876Z", "delivery_methods": [{"id": "09cf5fcc-cb9d-4995-a8e4-16517b25229f", "container": {"id": "d29c42eb-7100-4b7a-8257-c196dbcca1cd", "type": "catalog"}}]}], "published_by": "PublishedBy", "published_at": "2019-01-01T12:00:00.000Z", "contract_terms": [{"asset": {"id": "2b0bf220-079c-11ee-be56-0242ac120002", "container": {"id": "d29c42eb-7100-4b7a-8257-c196dbcca1cd", "type": "catalog"}}, "id": "ID", "documents": [{"url": "URL", "type": "terms_and_conditions", "name": "Name", "id": "2b0bf220-079c-11ee-be56-0242ac120002", "attachment": {"id": "ID"}, "upload_url": "UploadURL"}]}], "created_by": "CreatedBy", "created_at": "2019-01-01T12:00:00.000Z", "is_restricted": true}`)
+				}))
+			})
+			It(`Invoke GetDataProductRelease successfully`, func() {
+				dpxService, serviceErr := dpxv1.NewDpxV1(&dpxv1.DpxV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(dpxService).ToNot(BeNil())
+
+				// Invoke operation with nil options model (negative test)
+				result, response, operationErr := dpxService.GetDataProductRelease(nil)
+				Expect(operationErr).NotTo(BeNil())
+				Expect(response).To(BeNil())
+				Expect(result).To(BeNil())
+
+				// Construct an instance of the GetDataProductReleaseOptions model
+				getDataProductReleaseOptionsModel := new(dpxv1.GetDataProductReleaseOptions)
+				getDataProductReleaseOptionsModel.DataProductID = core.StringPtr("b38df608-d34b-4d58-8136-ed25e6c6684e")
+				getDataProductReleaseOptionsModel.ReleaseID = core.StringPtr("2b0bf220-079c-11ee-be56-0242ac120002@d29c42eb-7100-4b7a-8257-c196dbcca1cd")
+				getDataProductReleaseOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with valid options model (positive test)
+				result, response, operationErr = dpxService.GetDataProductRelease(getDataProductReleaseOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+
+			})
+			It(`Invoke GetDataProductRelease with error: Operation validation and request error`, func() {
+				dpxService, serviceErr := dpxv1.NewDpxV1(&dpxv1.DpxV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(dpxService).ToNot(BeNil())
+
+				// Construct an instance of the GetDataProductReleaseOptions model
+				getDataProductReleaseOptionsModel := new(dpxv1.GetDataProductReleaseOptions)
+				getDataProductReleaseOptionsModel.DataProductID = core.StringPtr("b38df608-d34b-4d58-8136-ed25e6c6684e")
+				getDataProductReleaseOptionsModel.ReleaseID = core.StringPtr("2b0bf220-079c-11ee-be56-0242ac120002@d29c42eb-7100-4b7a-8257-c196dbcca1cd")
+				getDataProductReleaseOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+				// Invoke operation with empty URL (negative test)
+				err := dpxService.SetServiceURL("")
+				Expect(err).To(BeNil())
+				result, response, operationErr := dpxService.GetDataProductRelease(getDataProductReleaseOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring(core.ERRORMSG_SERVICE_URL_MISSING))
+				Expect(response).To(BeNil())
+				Expect(result).To(BeNil())
+				// Construct a second instance of the GetDataProductReleaseOptions model with no property values
+				getDataProductReleaseOptionsModelNew := new(dpxv1.GetDataProductReleaseOptions)
+				// Invoke operation with invalid model (negative test)
+				result, response, operationErr = dpxService.GetDataProductRelease(getDataProductReleaseOptionsModelNew)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(response).To(BeNil())
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+		Context(`Using mock server endpoint with missing response body`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Set success status code with no respoonse body
+					res.WriteHeader(200)
+				}))
+			})
+			It(`Invoke GetDataProductRelease successfully`, func() {
+				dpxService, serviceErr := dpxv1.NewDpxV1(&dpxv1.DpxV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(dpxService).ToNot(BeNil())
+
+				// Construct an instance of the GetDataProductReleaseOptions model
+				getDataProductReleaseOptionsModel := new(dpxv1.GetDataProductReleaseOptions)
+				getDataProductReleaseOptionsModel.DataProductID = core.StringPtr("b38df608-d34b-4d58-8136-ed25e6c6684e")
+				getDataProductReleaseOptionsModel.ReleaseID = core.StringPtr("2b0bf220-079c-11ee-be56-0242ac120002@d29c42eb-7100-4b7a-8257-c196dbcca1cd")
+				getDataProductReleaseOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation
+				result, response, operationErr := dpxService.GetDataProductRelease(getDataProductReleaseOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+
+				// Verify a nil result
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+	})
+	Describe(`UpdateDataProductRelease(updateDataProductReleaseOptions *UpdateDataProductReleaseOptions) - Operation response error`, func() {
+		updateDataProductReleasePath := "/data_product_exchange/v1/data_products/b38df608-d34b-4d58-8136-ed25e6c6684e/releases/2b0bf220-079c-11ee-be56-0242ac120002@d29c42eb-7100-4b7a-8257-c196dbcca1cd"
+		Context(`Using mock server endpoint with invalid JSON response`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(updateDataProductReleasePath))
+					Expect(req.Method).To(Equal("PATCH"))
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprint(res, `} this is not valid json {`)
+				}))
+			})
+			It(`Invoke UpdateDataProductRelease with error: Operation response processing error`, func() {
+				dpxService, serviceErr := dpxv1.NewDpxV1(&dpxv1.DpxV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(dpxService).ToNot(BeNil())
+
+				// Construct an instance of the JSONPatchOperation model
+				jsonPatchOperationModel := new(dpxv1.JSONPatchOperation)
+				jsonPatchOperationModel.Op = core.StringPtr("add")
+				jsonPatchOperationModel.Path = core.StringPtr("testString")
+				jsonPatchOperationModel.From = core.StringPtr("testString")
+				jsonPatchOperationModel.Value = "testString"
+
+				// Construct an instance of the UpdateDataProductReleaseOptions model
+				updateDataProductReleaseOptionsModel := new(dpxv1.UpdateDataProductReleaseOptions)
+				updateDataProductReleaseOptionsModel.DataProductID = core.StringPtr("b38df608-d34b-4d58-8136-ed25e6c6684e")
+				updateDataProductReleaseOptionsModel.ReleaseID = core.StringPtr("2b0bf220-079c-11ee-be56-0242ac120002@d29c42eb-7100-4b7a-8257-c196dbcca1cd")
+				updateDataProductReleaseOptionsModel.JSONPatchInstructions = []dpxv1.JSONPatchOperation{*jsonPatchOperationModel}
+				updateDataProductReleaseOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+				// Expect response parsing to fail since we are receiving a text/plain response
+				result, response, operationErr := dpxService.UpdateDataProductRelease(updateDataProductReleaseOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).To(BeNil())
+
+				// Enable retries and test again
+				dpxService.EnableRetries(0, 0)
+				result, response, operationErr = dpxService.UpdateDataProductRelease(updateDataProductReleaseOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+	})
+	Describe(`UpdateDataProductRelease(updateDataProductReleaseOptions *UpdateDataProductReleaseOptions)`, func() {
+		updateDataProductReleasePath := "/data_product_exchange/v1/data_products/b38df608-d34b-4d58-8136-ed25e6c6684e/releases/2b0bf220-079c-11ee-be56-0242ac120002@d29c42eb-7100-4b7a-8257-c196dbcca1cd"
+		Context(`Using mock server endpoint with timeout`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(updateDataProductReleasePath))
+					Expect(req.Method).To(Equal("PATCH"))
+
+					// For gzip-disabled operation, verify Content-Encoding is not set.
+					Expect(req.Header.Get("Content-Encoding")).To(BeEmpty())
+
+					// If there is a body, then make sure we can read it
+					bodyBuf := new(bytes.Buffer)
+					if req.Header.Get("Content-Encoding") == "gzip" {
+						body, err := core.NewGzipDecompressionReader(req.Body)
+						Expect(err).To(BeNil())
+						_, err = bodyBuf.ReadFrom(body)
+						Expect(err).To(BeNil())
+					} else {
+						_, err := bodyBuf.ReadFrom(req.Body)
+						Expect(err).To(BeNil())
+					}
+					fmt.Fprintf(GinkgoWriter, "  Request body: %s", bodyBuf.String())
+
+					// Sleep a short time to support a timeout test
+					time.Sleep(100 * time.Millisecond)
+
+					// Set mock response
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprintf(res, "%s", `{"version": "1.0.0", "state": "draft", "data_product": {"id": "b38df608-d34b-4d58-8136-ed25e6c6684e"}, "name": "My Data Product", "description": "This is a description of My Data Product.", "id": "2b0bf220-079c-11ee-be56-0242ac120002@d29c42eb-7100-4b7a-8257-c196dbcca1cd", "asset": {"id": "2b0bf220-079c-11ee-be56-0242ac120002", "container": {"id": "d29c42eb-7100-4b7a-8257-c196dbcca1cd", "type": "catalog"}}, "tags": ["Tags"], "use_cases": [{"id": "ID", "name": "Name", "container": {"id": "d29c42eb-7100-4b7a-8257-c196dbcca1cd", "type": "catalog"}}], "domain": {"id": "ID", "name": "Name", "container": {"id": "d29c42eb-7100-4b7a-8257-c196dbcca1cd", "type": "catalog"}}, "types": ["data"], "parts_out": [{"asset": {"id": "2b0bf220-079c-11ee-be56-0242ac120002", "container": {"id": "d29c42eb-7100-4b7a-8257-c196dbcca1cd", "type": "catalog"}, "type": "data_asset"}, "revision": 1, "updated_at": "2023-07-01T22:22:34.876Z", "delivery_methods": [{"id": "09cf5fcc-cb9d-4995-a8e4-16517b25229f", "container": {"id": "d29c42eb-7100-4b7a-8257-c196dbcca1cd", "type": "catalog"}}]}], "published_by": "PublishedBy", "published_at": "2019-01-01T12:00:00.000Z", "contract_terms": [{"asset": {"id": "2b0bf220-079c-11ee-be56-0242ac120002", "container": {"id": "d29c42eb-7100-4b7a-8257-c196dbcca1cd", "type": "catalog"}}, "id": "ID", "documents": [{"url": "URL", "type": "terms_and_conditions", "name": "Name", "id": "2b0bf220-079c-11ee-be56-0242ac120002", "attachment": {"id": "ID"}, "upload_url": "UploadURL"}]}], "created_by": "CreatedBy", "created_at": "2019-01-01T12:00:00.000Z", "is_restricted": true}`)
+				}))
+			})
+			It(`Invoke UpdateDataProductRelease successfully with retries`, func() {
+				dpxService, serviceErr := dpxv1.NewDpxV1(&dpxv1.DpxV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(dpxService).ToNot(BeNil())
+				dpxService.EnableRetries(0, 0)
+
+				// Construct an instance of the JSONPatchOperation model
+				jsonPatchOperationModel := new(dpxv1.JSONPatchOperation)
+				jsonPatchOperationModel.Op = core.StringPtr("add")
+				jsonPatchOperationModel.Path = core.StringPtr("testString")
+				jsonPatchOperationModel.From = core.StringPtr("testString")
+				jsonPatchOperationModel.Value = "testString"
+
+				// Construct an instance of the UpdateDataProductReleaseOptions model
+				updateDataProductReleaseOptionsModel := new(dpxv1.UpdateDataProductReleaseOptions)
+				updateDataProductReleaseOptionsModel.DataProductID = core.StringPtr("b38df608-d34b-4d58-8136-ed25e6c6684e")
+				updateDataProductReleaseOptionsModel.ReleaseID = core.StringPtr("2b0bf220-079c-11ee-be56-0242ac120002@d29c42eb-7100-4b7a-8257-c196dbcca1cd")
+				updateDataProductReleaseOptionsModel.JSONPatchInstructions = []dpxv1.JSONPatchOperation{*jsonPatchOperationModel}
+				updateDataProductReleaseOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with a Context to test a timeout error
+				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc()
+				_, _, operationErr := dpxService.UpdateDataProductReleaseWithContext(ctx, updateDataProductReleaseOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+
+				// Disable retries and test again
+				dpxService.DisableRetries()
+				result, response, operationErr := dpxService.UpdateDataProductRelease(updateDataProductReleaseOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+
+				// Re-test the timeout error with retries disabled
+				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc2()
+				_, _, operationErr = dpxService.UpdateDataProductReleaseWithContext(ctx, updateDataProductReleaseOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(updateDataProductReleasePath))
+					Expect(req.Method).To(Equal("PATCH"))
+
+					// For gzip-disabled operation, verify Content-Encoding is not set.
+					Expect(req.Header.Get("Content-Encoding")).To(BeEmpty())
+
+					// If there is a body, then make sure we can read it
+					bodyBuf := new(bytes.Buffer)
+					if req.Header.Get("Content-Encoding") == "gzip" {
+						body, err := core.NewGzipDecompressionReader(req.Body)
+						Expect(err).To(BeNil())
+						_, err = bodyBuf.ReadFrom(body)
+						Expect(err).To(BeNil())
+					} else {
+						_, err := bodyBuf.ReadFrom(req.Body)
+						Expect(err).To(BeNil())
+					}
+					fmt.Fprintf(GinkgoWriter, "  Request body: %s", bodyBuf.String())
+
+					// Set mock response
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprintf(res, "%s", `{"version": "1.0.0", "state": "draft", "data_product": {"id": "b38df608-d34b-4d58-8136-ed25e6c6684e"}, "name": "My Data Product", "description": "This is a description of My Data Product.", "id": "2b0bf220-079c-11ee-be56-0242ac120002@d29c42eb-7100-4b7a-8257-c196dbcca1cd", "asset": {"id": "2b0bf220-079c-11ee-be56-0242ac120002", "container": {"id": "d29c42eb-7100-4b7a-8257-c196dbcca1cd", "type": "catalog"}}, "tags": ["Tags"], "use_cases": [{"id": "ID", "name": "Name", "container": {"id": "d29c42eb-7100-4b7a-8257-c196dbcca1cd", "type": "catalog"}}], "domain": {"id": "ID", "name": "Name", "container": {"id": "d29c42eb-7100-4b7a-8257-c196dbcca1cd", "type": "catalog"}}, "types": ["data"], "parts_out": [{"asset": {"id": "2b0bf220-079c-11ee-be56-0242ac120002", "container": {"id": "d29c42eb-7100-4b7a-8257-c196dbcca1cd", "type": "catalog"}, "type": "data_asset"}, "revision": 1, "updated_at": "2023-07-01T22:22:34.876Z", "delivery_methods": [{"id": "09cf5fcc-cb9d-4995-a8e4-16517b25229f", "container": {"id": "d29c42eb-7100-4b7a-8257-c196dbcca1cd", "type": "catalog"}}]}], "published_by": "PublishedBy", "published_at": "2019-01-01T12:00:00.000Z", "contract_terms": [{"asset": {"id": "2b0bf220-079c-11ee-be56-0242ac120002", "container": {"id": "d29c42eb-7100-4b7a-8257-c196dbcca1cd", "type": "catalog"}}, "id": "ID", "documents": [{"url": "URL", "type": "terms_and_conditions", "name": "Name", "id": "2b0bf220-079c-11ee-be56-0242ac120002", "attachment": {"id": "ID"}, "upload_url": "UploadURL"}]}], "created_by": "CreatedBy", "created_at": "2019-01-01T12:00:00.000Z", "is_restricted": true}`)
+				}))
+			})
+			It(`Invoke UpdateDataProductRelease successfully`, func() {
+				dpxService, serviceErr := dpxv1.NewDpxV1(&dpxv1.DpxV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(dpxService).ToNot(BeNil())
+
+				// Invoke operation with nil options model (negative test)
+				result, response, operationErr := dpxService.UpdateDataProductRelease(nil)
+				Expect(operationErr).NotTo(BeNil())
+				Expect(response).To(BeNil())
+				Expect(result).To(BeNil())
+
+				// Construct an instance of the JSONPatchOperation model
+				jsonPatchOperationModel := new(dpxv1.JSONPatchOperation)
+				jsonPatchOperationModel.Op = core.StringPtr("add")
+				jsonPatchOperationModel.Path = core.StringPtr("testString")
+				jsonPatchOperationModel.From = core.StringPtr("testString")
+				jsonPatchOperationModel.Value = "testString"
+
+				// Construct an instance of the UpdateDataProductReleaseOptions model
+				updateDataProductReleaseOptionsModel := new(dpxv1.UpdateDataProductReleaseOptions)
+				updateDataProductReleaseOptionsModel.DataProductID = core.StringPtr("b38df608-d34b-4d58-8136-ed25e6c6684e")
+				updateDataProductReleaseOptionsModel.ReleaseID = core.StringPtr("2b0bf220-079c-11ee-be56-0242ac120002@d29c42eb-7100-4b7a-8257-c196dbcca1cd")
+				updateDataProductReleaseOptionsModel.JSONPatchInstructions = []dpxv1.JSONPatchOperation{*jsonPatchOperationModel}
+				updateDataProductReleaseOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with valid options model (positive test)
+				result, response, operationErr = dpxService.UpdateDataProductRelease(updateDataProductReleaseOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+
+			})
+			It(`Invoke UpdateDataProductRelease with error: Operation validation and request error`, func() {
+				dpxService, serviceErr := dpxv1.NewDpxV1(&dpxv1.DpxV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(dpxService).ToNot(BeNil())
+
+				// Construct an instance of the JSONPatchOperation model
+				jsonPatchOperationModel := new(dpxv1.JSONPatchOperation)
+				jsonPatchOperationModel.Op = core.StringPtr("add")
+				jsonPatchOperationModel.Path = core.StringPtr("testString")
+				jsonPatchOperationModel.From = core.StringPtr("testString")
+				jsonPatchOperationModel.Value = "testString"
+
+				// Construct an instance of the UpdateDataProductReleaseOptions model
+				updateDataProductReleaseOptionsModel := new(dpxv1.UpdateDataProductReleaseOptions)
+				updateDataProductReleaseOptionsModel.DataProductID = core.StringPtr("b38df608-d34b-4d58-8136-ed25e6c6684e")
+				updateDataProductReleaseOptionsModel.ReleaseID = core.StringPtr("2b0bf220-079c-11ee-be56-0242ac120002@d29c42eb-7100-4b7a-8257-c196dbcca1cd")
+				updateDataProductReleaseOptionsModel.JSONPatchInstructions = []dpxv1.JSONPatchOperation{*jsonPatchOperationModel}
+				updateDataProductReleaseOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+				// Invoke operation with empty URL (negative test)
+				err := dpxService.SetServiceURL("")
+				Expect(err).To(BeNil())
+				result, response, operationErr := dpxService.UpdateDataProductRelease(updateDataProductReleaseOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring(core.ERRORMSG_SERVICE_URL_MISSING))
+				Expect(response).To(BeNil())
+				Expect(result).To(BeNil())
+				// Construct a second instance of the UpdateDataProductReleaseOptions model with no property values
+				updateDataProductReleaseOptionsModelNew := new(dpxv1.UpdateDataProductReleaseOptions)
+				// Invoke operation with invalid model (negative test)
+				result, response, operationErr = dpxService.UpdateDataProductRelease(updateDataProductReleaseOptionsModelNew)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(response).To(BeNil())
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+		Context(`Using mock server endpoint with missing response body`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Set success status code with no respoonse body
+					res.WriteHeader(200)
+				}))
+			})
+			It(`Invoke UpdateDataProductRelease successfully`, func() {
+				dpxService, serviceErr := dpxv1.NewDpxV1(&dpxv1.DpxV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(dpxService).ToNot(BeNil())
+
+				// Construct an instance of the JSONPatchOperation model
+				jsonPatchOperationModel := new(dpxv1.JSONPatchOperation)
+				jsonPatchOperationModel.Op = core.StringPtr("add")
+				jsonPatchOperationModel.Path = core.StringPtr("testString")
+				jsonPatchOperationModel.From = core.StringPtr("testString")
+				jsonPatchOperationModel.Value = "testString"
+
+				// Construct an instance of the UpdateDataProductReleaseOptions model
+				updateDataProductReleaseOptionsModel := new(dpxv1.UpdateDataProductReleaseOptions)
+				updateDataProductReleaseOptionsModel.DataProductID = core.StringPtr("b38df608-d34b-4d58-8136-ed25e6c6684e")
+				updateDataProductReleaseOptionsModel.ReleaseID = core.StringPtr("2b0bf220-079c-11ee-be56-0242ac120002@d29c42eb-7100-4b7a-8257-c196dbcca1cd")
+				updateDataProductReleaseOptionsModel.JSONPatchInstructions = []dpxv1.JSONPatchOperation{*jsonPatchOperationModel}
+				updateDataProductReleaseOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation
+				result, response, operationErr := dpxService.UpdateDataProductRelease(updateDataProductReleaseOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+
+				// Verify a nil result
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+	})
+	Describe(`GetReleaseContractTermsDocument(getReleaseContractTermsDocumentOptions *GetReleaseContractTermsDocumentOptions) - Operation response error`, func() {
+		getReleaseContractTermsDocumentPath := "/data_product_exchange/v1/data_products/b38df608-d34b-4d58-8136-ed25e6c6684e/releases/2b0bf220-079c-11ee-be56-0242ac120002@d29c42eb-7100-4b7a-8257-c196dbcca1cd/contract_terms/598183cd-b910-4e8d-9a97-97097afda3c1@e4fe2f87-0e56-46dd-b3b8-e9af32309e82/documents/testString"
+		Context(`Using mock server endpoint with invalid JSON response`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(getReleaseContractTermsDocumentPath))
+					Expect(req.Method).To(Equal("GET"))
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprint(res, `} this is not valid json {`)
+				}))
+			})
+			It(`Invoke GetReleaseContractTermsDocument with error: Operation response processing error`, func() {
+				dpxService, serviceErr := dpxv1.NewDpxV1(&dpxv1.DpxV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(dpxService).ToNot(BeNil())
+
+				// Construct an instance of the GetReleaseContractTermsDocumentOptions model
+				getReleaseContractTermsDocumentOptionsModel := new(dpxv1.GetReleaseContractTermsDocumentOptions)
+				getReleaseContractTermsDocumentOptionsModel.DataProductID = core.StringPtr("b38df608-d34b-4d58-8136-ed25e6c6684e")
+				getReleaseContractTermsDocumentOptionsModel.ReleaseID = core.StringPtr("2b0bf220-079c-11ee-be56-0242ac120002@d29c42eb-7100-4b7a-8257-c196dbcca1cd")
+				getReleaseContractTermsDocumentOptionsModel.ContractTermsID = core.StringPtr("598183cd-b910-4e8d-9a97-97097afda3c1@e4fe2f87-0e56-46dd-b3b8-e9af32309e82")
+				getReleaseContractTermsDocumentOptionsModel.DocumentID = core.StringPtr("testString")
+				getReleaseContractTermsDocumentOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+				// Expect response parsing to fail since we are receiving a text/plain response
+				result, response, operationErr := dpxService.GetReleaseContractTermsDocument(getReleaseContractTermsDocumentOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).To(BeNil())
+
+				// Enable retries and test again
+				dpxService.EnableRetries(0, 0)
+				result, response, operationErr = dpxService.GetReleaseContractTermsDocument(getReleaseContractTermsDocumentOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+	})
+	Describe(`GetReleaseContractTermsDocument(getReleaseContractTermsDocumentOptions *GetReleaseContractTermsDocumentOptions)`, func() {
+		getReleaseContractTermsDocumentPath := "/data_product_exchange/v1/data_products/b38df608-d34b-4d58-8136-ed25e6c6684e/releases/2b0bf220-079c-11ee-be56-0242ac120002@d29c42eb-7100-4b7a-8257-c196dbcca1cd/contract_terms/598183cd-b910-4e8d-9a97-97097afda3c1@e4fe2f87-0e56-46dd-b3b8-e9af32309e82/documents/testString"
+		Context(`Using mock server endpoint with timeout`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(getReleaseContractTermsDocumentPath))
+					Expect(req.Method).To(Equal("GET"))
+
+					// Sleep a short time to support a timeout test
+					time.Sleep(100 * time.Millisecond)
+
+					// Set mock response
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprintf(res, "%s", `{"url": "URL", "type": "terms_and_conditions", "name": "Name", "id": "2b0bf220-079c-11ee-be56-0242ac120002", "attachment": {"id": "ID"}, "upload_url": "UploadURL"}`)
+				}))
+			})
+			It(`Invoke GetReleaseContractTermsDocument successfully with retries`, func() {
+				dpxService, serviceErr := dpxv1.NewDpxV1(&dpxv1.DpxV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(dpxService).ToNot(BeNil())
+				dpxService.EnableRetries(0, 0)
+
+				// Construct an instance of the GetReleaseContractTermsDocumentOptions model
+				getReleaseContractTermsDocumentOptionsModel := new(dpxv1.GetReleaseContractTermsDocumentOptions)
+				getReleaseContractTermsDocumentOptionsModel.DataProductID = core.StringPtr("b38df608-d34b-4d58-8136-ed25e6c6684e")
+				getReleaseContractTermsDocumentOptionsModel.ReleaseID = core.StringPtr("2b0bf220-079c-11ee-be56-0242ac120002@d29c42eb-7100-4b7a-8257-c196dbcca1cd")
+				getReleaseContractTermsDocumentOptionsModel.ContractTermsID = core.StringPtr("598183cd-b910-4e8d-9a97-97097afda3c1@e4fe2f87-0e56-46dd-b3b8-e9af32309e82")
+				getReleaseContractTermsDocumentOptionsModel.DocumentID = core.StringPtr("testString")
+				getReleaseContractTermsDocumentOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with a Context to test a timeout error
+				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc()
+				_, _, operationErr := dpxService.GetReleaseContractTermsDocumentWithContext(ctx, getReleaseContractTermsDocumentOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+
+				// Disable retries and test again
+				dpxService.DisableRetries()
+				result, response, operationErr := dpxService.GetReleaseContractTermsDocument(getReleaseContractTermsDocumentOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+
+				// Re-test the timeout error with retries disabled
+				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc2()
+				_, _, operationErr = dpxService.GetReleaseContractTermsDocumentWithContext(ctx, getReleaseContractTermsDocumentOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(getReleaseContractTermsDocumentPath))
+					Expect(req.Method).To(Equal("GET"))
+
+					// Set mock response
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprintf(res, "%s", `{"url": "URL", "type": "terms_and_conditions", "name": "Name", "id": "2b0bf220-079c-11ee-be56-0242ac120002", "attachment": {"id": "ID"}, "upload_url": "UploadURL"}`)
+				}))
+			})
+			It(`Invoke GetReleaseContractTermsDocument successfully`, func() {
+				dpxService, serviceErr := dpxv1.NewDpxV1(&dpxv1.DpxV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(dpxService).ToNot(BeNil())
+
+				// Invoke operation with nil options model (negative test)
+				result, response, operationErr := dpxService.GetReleaseContractTermsDocument(nil)
+				Expect(operationErr).NotTo(BeNil())
+				Expect(response).To(BeNil())
+				Expect(result).To(BeNil())
+
+				// Construct an instance of the GetReleaseContractTermsDocumentOptions model
+				getReleaseContractTermsDocumentOptionsModel := new(dpxv1.GetReleaseContractTermsDocumentOptions)
+				getReleaseContractTermsDocumentOptionsModel.DataProductID = core.StringPtr("b38df608-d34b-4d58-8136-ed25e6c6684e")
+				getReleaseContractTermsDocumentOptionsModel.ReleaseID = core.StringPtr("2b0bf220-079c-11ee-be56-0242ac120002@d29c42eb-7100-4b7a-8257-c196dbcca1cd")
+				getReleaseContractTermsDocumentOptionsModel.ContractTermsID = core.StringPtr("598183cd-b910-4e8d-9a97-97097afda3c1@e4fe2f87-0e56-46dd-b3b8-e9af32309e82")
+				getReleaseContractTermsDocumentOptionsModel.DocumentID = core.StringPtr("testString")
+				getReleaseContractTermsDocumentOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with valid options model (positive test)
+				result, response, operationErr = dpxService.GetReleaseContractTermsDocument(getReleaseContractTermsDocumentOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+
+			})
+			It(`Invoke GetReleaseContractTermsDocument with error: Operation validation and request error`, func() {
+				dpxService, serviceErr := dpxv1.NewDpxV1(&dpxv1.DpxV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(dpxService).ToNot(BeNil())
+
+				// Construct an instance of the GetReleaseContractTermsDocumentOptions model
+				getReleaseContractTermsDocumentOptionsModel := new(dpxv1.GetReleaseContractTermsDocumentOptions)
+				getReleaseContractTermsDocumentOptionsModel.DataProductID = core.StringPtr("b38df608-d34b-4d58-8136-ed25e6c6684e")
+				getReleaseContractTermsDocumentOptionsModel.ReleaseID = core.StringPtr("2b0bf220-079c-11ee-be56-0242ac120002@d29c42eb-7100-4b7a-8257-c196dbcca1cd")
+				getReleaseContractTermsDocumentOptionsModel.ContractTermsID = core.StringPtr("598183cd-b910-4e8d-9a97-97097afda3c1@e4fe2f87-0e56-46dd-b3b8-e9af32309e82")
+				getReleaseContractTermsDocumentOptionsModel.DocumentID = core.StringPtr("testString")
+				getReleaseContractTermsDocumentOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+				// Invoke operation with empty URL (negative test)
+				err := dpxService.SetServiceURL("")
+				Expect(err).To(BeNil())
+				result, response, operationErr := dpxService.GetReleaseContractTermsDocument(getReleaseContractTermsDocumentOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring(core.ERRORMSG_SERVICE_URL_MISSING))
+				Expect(response).To(BeNil())
+				Expect(result).To(BeNil())
+				// Construct a second instance of the GetReleaseContractTermsDocumentOptions model with no property values
+				getReleaseContractTermsDocumentOptionsModelNew := new(dpxv1.GetReleaseContractTermsDocumentOptions)
+				// Invoke operation with invalid model (negative test)
+				result, response, operationErr = dpxService.GetReleaseContractTermsDocument(getReleaseContractTermsDocumentOptionsModelNew)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(response).To(BeNil())
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+		Context(`Using mock server endpoint with missing response body`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Set success status code with no respoonse body
+					res.WriteHeader(200)
+				}))
+			})
+			It(`Invoke GetReleaseContractTermsDocument successfully`, func() {
+				dpxService, serviceErr := dpxv1.NewDpxV1(&dpxv1.DpxV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(dpxService).ToNot(BeNil())
+
+				// Construct an instance of the GetReleaseContractTermsDocumentOptions model
+				getReleaseContractTermsDocumentOptionsModel := new(dpxv1.GetReleaseContractTermsDocumentOptions)
+				getReleaseContractTermsDocumentOptionsModel.DataProductID = core.StringPtr("b38df608-d34b-4d58-8136-ed25e6c6684e")
+				getReleaseContractTermsDocumentOptionsModel.ReleaseID = core.StringPtr("2b0bf220-079c-11ee-be56-0242ac120002@d29c42eb-7100-4b7a-8257-c196dbcca1cd")
+				getReleaseContractTermsDocumentOptionsModel.ContractTermsID = core.StringPtr("598183cd-b910-4e8d-9a97-97097afda3c1@e4fe2f87-0e56-46dd-b3b8-e9af32309e82")
+				getReleaseContractTermsDocumentOptionsModel.DocumentID = core.StringPtr("testString")
+				getReleaseContractTermsDocumentOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation
+				result, response, operationErr := dpxService.GetReleaseContractTermsDocument(getReleaseContractTermsDocumentOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+
+				// Verify a nil result
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+	})
+	Describe(`ListDataProductReleases(listDataProductReleasesOptions *ListDataProductReleasesOptions) - Operation response error`, func() {
+		listDataProductReleasesPath := "/data_product_exchange/v1/data_products/b38df608-d34b-4d58-8136-ed25e6c6684e/releases"
+		Context(`Using mock server endpoint with invalid JSON response`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(listDataProductReleasesPath))
+					Expect(req.Method).To(Equal("GET"))
+					Expect(req.URL.Query()["asset.container.id"]).To(Equal([]string{"testString"}))
+					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
+					Expect(req.URL.Query()["limit"]).To(Equal([]string{fmt.Sprint(int64(10))}))
+					Expect(req.URL.Query()["start"]).To(Equal([]string{"testString"}))
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprint(res, `} this is not valid json {`)
+				}))
+			})
+			It(`Invoke ListDataProductReleases with error: Operation response processing error`, func() {
+				dpxService, serviceErr := dpxv1.NewDpxV1(&dpxv1.DpxV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(dpxService).ToNot(BeNil())
+
+				// Construct an instance of the ListDataProductReleasesOptions model
+				listDataProductReleasesOptionsModel := new(dpxv1.ListDataProductReleasesOptions)
+				listDataProductReleasesOptionsModel.DataProductID = core.StringPtr("b38df608-d34b-4d58-8136-ed25e6c6684e")
+				listDataProductReleasesOptionsModel.AssetContainerID = core.StringPtr("testString")
+				listDataProductReleasesOptionsModel.State = []string{"available"}
+				listDataProductReleasesOptionsModel.Version = core.StringPtr("testString")
+				listDataProductReleasesOptionsModel.Limit = core.Int64Ptr(int64(10))
+				listDataProductReleasesOptionsModel.Start = core.StringPtr("testString")
+				listDataProductReleasesOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+				// Expect response parsing to fail since we are receiving a text/plain response
+				result, response, operationErr := dpxService.ListDataProductReleases(listDataProductReleasesOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).To(BeNil())
+
+				// Enable retries and test again
+				dpxService.EnableRetries(0, 0)
+				result, response, operationErr = dpxService.ListDataProductReleases(listDataProductReleasesOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+	})
+	Describe(`ListDataProductReleases(listDataProductReleasesOptions *ListDataProductReleasesOptions)`, func() {
+		listDataProductReleasesPath := "/data_product_exchange/v1/data_products/b38df608-d34b-4d58-8136-ed25e6c6684e/releases"
+		Context(`Using mock server endpoint with timeout`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(listDataProductReleasesPath))
+					Expect(req.Method).To(Equal("GET"))
+
+					Expect(req.URL.Query()["asset.container.id"]).To(Equal([]string{"testString"}))
+					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
+					Expect(req.URL.Query()["limit"]).To(Equal([]string{fmt.Sprint(int64(10))}))
+					Expect(req.URL.Query()["start"]).To(Equal([]string{"testString"}))
+					// Sleep a short time to support a timeout test
+					time.Sleep(100 * time.Millisecond)
+
+					// Set mock response
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprintf(res, "%s", `{"limit": 200, "first": {"href": "https://api.example.com/collection"}, "next": {"href": "https://api.example.com/collection?start=eyJvZmZzZXQiOjAsImRvbmUiOnRydWV9", "start": "eyJvZmZzZXQiOjAsImRvbmUiOnRydWV9"}, "releases": [{"version": "1.0.0", "state": "draft", "data_product": {"id": "b38df608-d34b-4d58-8136-ed25e6c6684e"}, "name": "My Data Product", "description": "This is a description of My Data Product.", "id": "2b0bf220-079c-11ee-be56-0242ac120002@d29c42eb-7100-4b7a-8257-c196dbcca1cd", "asset": {"id": "2b0bf220-079c-11ee-be56-0242ac120002", "container": {"id": "d29c42eb-7100-4b7a-8257-c196dbcca1cd", "type": "catalog"}}}]}`)
+				}))
+			})
+			It(`Invoke ListDataProductReleases successfully with retries`, func() {
+				dpxService, serviceErr := dpxv1.NewDpxV1(&dpxv1.DpxV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(dpxService).ToNot(BeNil())
+				dpxService.EnableRetries(0, 0)
+
+				// Construct an instance of the ListDataProductReleasesOptions model
+				listDataProductReleasesOptionsModel := new(dpxv1.ListDataProductReleasesOptions)
+				listDataProductReleasesOptionsModel.DataProductID = core.StringPtr("b38df608-d34b-4d58-8136-ed25e6c6684e")
+				listDataProductReleasesOptionsModel.AssetContainerID = core.StringPtr("testString")
+				listDataProductReleasesOptionsModel.State = []string{"available"}
+				listDataProductReleasesOptionsModel.Version = core.StringPtr("testString")
+				listDataProductReleasesOptionsModel.Limit = core.Int64Ptr(int64(10))
+				listDataProductReleasesOptionsModel.Start = core.StringPtr("testString")
+				listDataProductReleasesOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with a Context to test a timeout error
+				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc()
+				_, _, operationErr := dpxService.ListDataProductReleasesWithContext(ctx, listDataProductReleasesOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+
+				// Disable retries and test again
+				dpxService.DisableRetries()
+				result, response, operationErr := dpxService.ListDataProductReleases(listDataProductReleasesOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+
+				// Re-test the timeout error with retries disabled
+				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc2()
+				_, _, operationErr = dpxService.ListDataProductReleasesWithContext(ctx, listDataProductReleasesOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(listDataProductReleasesPath))
+					Expect(req.Method).To(Equal("GET"))
+
+					Expect(req.URL.Query()["asset.container.id"]).To(Equal([]string{"testString"}))
+					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
+					Expect(req.URL.Query()["limit"]).To(Equal([]string{fmt.Sprint(int64(10))}))
+					Expect(req.URL.Query()["start"]).To(Equal([]string{"testString"}))
+					// Set mock response
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprintf(res, "%s", `{"limit": 200, "first": {"href": "https://api.example.com/collection"}, "next": {"href": "https://api.example.com/collection?start=eyJvZmZzZXQiOjAsImRvbmUiOnRydWV9", "start": "eyJvZmZzZXQiOjAsImRvbmUiOnRydWV9"}, "releases": [{"version": "1.0.0", "state": "draft", "data_product": {"id": "b38df608-d34b-4d58-8136-ed25e6c6684e"}, "name": "My Data Product", "description": "This is a description of My Data Product.", "id": "2b0bf220-079c-11ee-be56-0242ac120002@d29c42eb-7100-4b7a-8257-c196dbcca1cd", "asset": {"id": "2b0bf220-079c-11ee-be56-0242ac120002", "container": {"id": "d29c42eb-7100-4b7a-8257-c196dbcca1cd", "type": "catalog"}}}]}`)
+				}))
+			})
+			It(`Invoke ListDataProductReleases successfully`, func() {
+				dpxService, serviceErr := dpxv1.NewDpxV1(&dpxv1.DpxV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(dpxService).ToNot(BeNil())
+
+				// Invoke operation with nil options model (negative test)
+				result, response, operationErr := dpxService.ListDataProductReleases(nil)
+				Expect(operationErr).NotTo(BeNil())
+				Expect(response).To(BeNil())
+				Expect(result).To(BeNil())
+
+				// Construct an instance of the ListDataProductReleasesOptions model
+				listDataProductReleasesOptionsModel := new(dpxv1.ListDataProductReleasesOptions)
+				listDataProductReleasesOptionsModel.DataProductID = core.StringPtr("b38df608-d34b-4d58-8136-ed25e6c6684e")
+				listDataProductReleasesOptionsModel.AssetContainerID = core.StringPtr("testString")
+				listDataProductReleasesOptionsModel.State = []string{"available"}
+				listDataProductReleasesOptionsModel.Version = core.StringPtr("testString")
+				listDataProductReleasesOptionsModel.Limit = core.Int64Ptr(int64(10))
+				listDataProductReleasesOptionsModel.Start = core.StringPtr("testString")
+				listDataProductReleasesOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with valid options model (positive test)
+				result, response, operationErr = dpxService.ListDataProductReleases(listDataProductReleasesOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+
+			})
+			It(`Invoke ListDataProductReleases with error: Operation validation and request error`, func() {
+				dpxService, serviceErr := dpxv1.NewDpxV1(&dpxv1.DpxV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(dpxService).ToNot(BeNil())
+
+				// Construct an instance of the ListDataProductReleasesOptions model
+				listDataProductReleasesOptionsModel := new(dpxv1.ListDataProductReleasesOptions)
+				listDataProductReleasesOptionsModel.DataProductID = core.StringPtr("b38df608-d34b-4d58-8136-ed25e6c6684e")
+				listDataProductReleasesOptionsModel.AssetContainerID = core.StringPtr("testString")
+				listDataProductReleasesOptionsModel.State = []string{"available"}
+				listDataProductReleasesOptionsModel.Version = core.StringPtr("testString")
+				listDataProductReleasesOptionsModel.Limit = core.Int64Ptr(int64(10))
+				listDataProductReleasesOptionsModel.Start = core.StringPtr("testString")
+				listDataProductReleasesOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+				// Invoke operation with empty URL (negative test)
+				err := dpxService.SetServiceURL("")
+				Expect(err).To(BeNil())
+				result, response, operationErr := dpxService.ListDataProductReleases(listDataProductReleasesOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring(core.ERRORMSG_SERVICE_URL_MISSING))
+				Expect(response).To(BeNil())
+				Expect(result).To(BeNil())
+				// Construct a second instance of the ListDataProductReleasesOptions model with no property values
+				listDataProductReleasesOptionsModelNew := new(dpxv1.ListDataProductReleasesOptions)
+				// Invoke operation with invalid model (negative test)
+				result, response, operationErr = dpxService.ListDataProductReleases(listDataProductReleasesOptionsModelNew)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(response).To(BeNil())
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+		Context(`Using mock server endpoint with missing response body`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Set success status code with no respoonse body
+					res.WriteHeader(200)
+				}))
+			})
+			It(`Invoke ListDataProductReleases successfully`, func() {
+				dpxService, serviceErr := dpxv1.NewDpxV1(&dpxv1.DpxV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(dpxService).ToNot(BeNil())
+
+				// Construct an instance of the ListDataProductReleasesOptions model
+				listDataProductReleasesOptionsModel := new(dpxv1.ListDataProductReleasesOptions)
+				listDataProductReleasesOptionsModel.DataProductID = core.StringPtr("b38df608-d34b-4d58-8136-ed25e6c6684e")
+				listDataProductReleasesOptionsModel.AssetContainerID = core.StringPtr("testString")
+				listDataProductReleasesOptionsModel.State = []string{"available"}
+				listDataProductReleasesOptionsModel.Version = core.StringPtr("testString")
+				listDataProductReleasesOptionsModel.Limit = core.Int64Ptr(int64(10))
+				listDataProductReleasesOptionsModel.Start = core.StringPtr("testString")
+				listDataProductReleasesOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation
+				result, response, operationErr := dpxService.ListDataProductReleases(listDataProductReleasesOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+
+				// Verify a nil result
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+		Context(`Test pagination helper method on response`, func() {
+			It(`Invoke GetNextStart successfully`, func() {
+				responseObject := new(dpxv1.DataProductReleaseCollection)
+				nextObject := new(dpxv1.NextPage)
+				nextObject.Start = core.StringPtr("abc-123")
+				responseObject.Next = nextObject
+
+				value, err := responseObject.GetNextStart()
+				Expect(err).To(BeNil())
+				Expect(value).To(Equal(core.StringPtr("abc-123")))
+			})
+			It(`Invoke GetNextStart without a "Next" property in the response`, func() {
+				responseObject := new(dpxv1.DataProductReleaseCollection)
+
+				value, err := responseObject.GetNextStart()
+				Expect(err).To(BeNil())
+				Expect(value).To(BeNil())
+			})
+		})
+		Context(`Using mock server endpoint - paginated response`, func() {
+			BeforeEach(func() {
+				var requestNumber int = 0
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(listDataProductReleasesPath))
+					Expect(req.Method).To(Equal("GET"))
+
+					// Set mock response
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					requestNumber++
+					if requestNumber == 1 {
+						fmt.Fprintf(res, "%s", `{"next":{"start":"1"},"total_count":2,"limit":1,"releases":[{"version":"1.0.0","state":"draft","data_product":{"id":"b38df608-d34b-4d58-8136-ed25e6c6684e"},"name":"My Data Product","description":"This is a description of My Data Product.","id":"2b0bf220-079c-11ee-be56-0242ac120002@d29c42eb-7100-4b7a-8257-c196dbcca1cd","asset":{"id":"2b0bf220-079c-11ee-be56-0242ac120002","container":{"id":"d29c42eb-7100-4b7a-8257-c196dbcca1cd","type":"catalog"}}}]}`)
+					} else if requestNumber == 2 {
+						fmt.Fprintf(res, "%s", `{"total_count":2,"limit":1,"releases":[{"version":"1.0.0","state":"draft","data_product":{"id":"b38df608-d34b-4d58-8136-ed25e6c6684e"},"name":"My Data Product","description":"This is a description of My Data Product.","id":"2b0bf220-079c-11ee-be56-0242ac120002@d29c42eb-7100-4b7a-8257-c196dbcca1cd","asset":{"id":"2b0bf220-079c-11ee-be56-0242ac120002","container":{"id":"d29c42eb-7100-4b7a-8257-c196dbcca1cd","type":"catalog"}}}]}`)
+					} else {
+						res.WriteHeader(400)
+					}
+				}))
+			})
+			It(`Use DataProductReleasesPager.GetNext successfully`, func() {
+				dpxService, serviceErr := dpxv1.NewDpxV1(&dpxv1.DpxV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(dpxService).ToNot(BeNil())
+
+				listDataProductReleasesOptionsModel := &dpxv1.ListDataProductReleasesOptions{
+					DataProductID:    core.StringPtr("b38df608-d34b-4d58-8136-ed25e6c6684e"),
+					AssetContainerID: core.StringPtr("testString"),
+					State:            []string{"available"},
+					Version:          core.StringPtr("testString"),
+					Limit:            core.Int64Ptr(int64(10)),
+				}
+
+				pager, err := dpxService.NewDataProductReleasesPager(listDataProductReleasesOptionsModel)
+				Expect(err).To(BeNil())
+				Expect(pager).ToNot(BeNil())
+
+				var allResults []dpxv1.DataProductVersionSummary
+				for pager.HasNext() {
+					nextPage, err := pager.GetNext()
+					Expect(err).To(BeNil())
+					Expect(nextPage).ToNot(BeNil())
+					allResults = append(allResults, nextPage...)
+				}
+				Expect(len(allResults)).To(Equal(2))
+			})
+			It(`Use DataProductReleasesPager.GetAll successfully`, func() {
+				dpxService, serviceErr := dpxv1.NewDpxV1(&dpxv1.DpxV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(dpxService).ToNot(BeNil())
+
+				listDataProductReleasesOptionsModel := &dpxv1.ListDataProductReleasesOptions{
+					DataProductID:    core.StringPtr("b38df608-d34b-4d58-8136-ed25e6c6684e"),
+					AssetContainerID: core.StringPtr("testString"),
+					State:            []string{"available"},
+					Version:          core.StringPtr("testString"),
+					Limit:            core.Int64Ptr(int64(10)),
+				}
+
+				pager, err := dpxService.NewDataProductReleasesPager(listDataProductReleasesOptionsModel)
+				Expect(err).To(BeNil())
+				Expect(pager).ToNot(BeNil())
+
+				allResults, err := pager.GetAll()
+				Expect(err).To(BeNil())
+				Expect(allResults).ToNot(BeNil())
+				Expect(len(allResults)).To(Equal(2))
+			})
+		})
+	})
+	Describe(`RetireDataProductRelease(retireDataProductReleaseOptions *RetireDataProductReleaseOptions) - Operation response error`, func() {
+		retireDataProductReleasePath := "/data_product_exchange/v1/data_products/b38df608-d34b-4d58-8136-ed25e6c6684e/releases/2b0bf220-079c-11ee-be56-0242ac120002@d29c42eb-7100-4b7a-8257-c196dbcca1cd/retire"
+		Context(`Using mock server endpoint with invalid JSON response`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(retireDataProductReleasePath))
+					Expect(req.Method).To(Equal("POST"))
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprint(res, `} this is not valid json {`)
+				}))
+			})
+			It(`Invoke RetireDataProductRelease with error: Operation response processing error`, func() {
+				dpxService, serviceErr := dpxv1.NewDpxV1(&dpxv1.DpxV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(dpxService).ToNot(BeNil())
+
+				// Construct an instance of the RetireDataProductReleaseOptions model
+				retireDataProductReleaseOptionsModel := new(dpxv1.RetireDataProductReleaseOptions)
+				retireDataProductReleaseOptionsModel.DataProductID = core.StringPtr("b38df608-d34b-4d58-8136-ed25e6c6684e")
+				retireDataProductReleaseOptionsModel.ReleaseID = core.StringPtr("2b0bf220-079c-11ee-be56-0242ac120002@d29c42eb-7100-4b7a-8257-c196dbcca1cd")
+				retireDataProductReleaseOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+				// Expect response parsing to fail since we are receiving a text/plain response
+				result, response, operationErr := dpxService.RetireDataProductRelease(retireDataProductReleaseOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).To(BeNil())
+
+				// Enable retries and test again
+				dpxService.EnableRetries(0, 0)
+				result, response, operationErr = dpxService.RetireDataProductRelease(retireDataProductReleaseOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+	})
+	Describe(`RetireDataProductRelease(retireDataProductReleaseOptions *RetireDataProductReleaseOptions)`, func() {
+		retireDataProductReleasePath := "/data_product_exchange/v1/data_products/b38df608-d34b-4d58-8136-ed25e6c6684e/releases/2b0bf220-079c-11ee-be56-0242ac120002@d29c42eb-7100-4b7a-8257-c196dbcca1cd/retire"
+		Context(`Using mock server endpoint with timeout`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(retireDataProductReleasePath))
+					Expect(req.Method).To(Equal("POST"))
+
+					// Sleep a short time to support a timeout test
+					time.Sleep(100 * time.Millisecond)
+
+					// Set mock response
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprintf(res, "%s", `{"version": "1.0.0", "state": "draft", "data_product": {"id": "b38df608-d34b-4d58-8136-ed25e6c6684e"}, "name": "My Data Product", "description": "This is a description of My Data Product.", "id": "2b0bf220-079c-11ee-be56-0242ac120002@d29c42eb-7100-4b7a-8257-c196dbcca1cd", "asset": {"id": "2b0bf220-079c-11ee-be56-0242ac120002", "container": {"id": "d29c42eb-7100-4b7a-8257-c196dbcca1cd", "type": "catalog"}}, "tags": ["Tags"], "use_cases": [{"id": "ID", "name": "Name", "container": {"id": "d29c42eb-7100-4b7a-8257-c196dbcca1cd", "type": "catalog"}}], "domain": {"id": "ID", "name": "Name", "container": {"id": "d29c42eb-7100-4b7a-8257-c196dbcca1cd", "type": "catalog"}}, "types": ["data"], "parts_out": [{"asset": {"id": "2b0bf220-079c-11ee-be56-0242ac120002", "container": {"id": "d29c42eb-7100-4b7a-8257-c196dbcca1cd", "type": "catalog"}, "type": "data_asset"}, "revision": 1, "updated_at": "2023-07-01T22:22:34.876Z", "delivery_methods": [{"id": "09cf5fcc-cb9d-4995-a8e4-16517b25229f", "container": {"id": "d29c42eb-7100-4b7a-8257-c196dbcca1cd", "type": "catalog"}}]}], "published_by": "PublishedBy", "published_at": "2019-01-01T12:00:00.000Z", "contract_terms": [{"asset": {"id": "2b0bf220-079c-11ee-be56-0242ac120002", "container": {"id": "d29c42eb-7100-4b7a-8257-c196dbcca1cd", "type": "catalog"}}, "id": "ID", "documents": [{"url": "URL", "type": "terms_and_conditions", "name": "Name", "id": "2b0bf220-079c-11ee-be56-0242ac120002", "attachment": {"id": "ID"}, "upload_url": "UploadURL"}]}], "created_by": "CreatedBy", "created_at": "2019-01-01T12:00:00.000Z", "is_restricted": true}`)
+				}))
+			})
+			It(`Invoke RetireDataProductRelease successfully with retries`, func() {
+				dpxService, serviceErr := dpxv1.NewDpxV1(&dpxv1.DpxV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(dpxService).ToNot(BeNil())
+				dpxService.EnableRetries(0, 0)
+
+				// Construct an instance of the RetireDataProductReleaseOptions model
+				retireDataProductReleaseOptionsModel := new(dpxv1.RetireDataProductReleaseOptions)
+				retireDataProductReleaseOptionsModel.DataProductID = core.StringPtr("b38df608-d34b-4d58-8136-ed25e6c6684e")
+				retireDataProductReleaseOptionsModel.ReleaseID = core.StringPtr("2b0bf220-079c-11ee-be56-0242ac120002@d29c42eb-7100-4b7a-8257-c196dbcca1cd")
+				retireDataProductReleaseOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with a Context to test a timeout error
+				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc()
+				_, _, operationErr := dpxService.RetireDataProductReleaseWithContext(ctx, retireDataProductReleaseOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+
+				// Disable retries and test again
+				dpxService.DisableRetries()
+				result, response, operationErr := dpxService.RetireDataProductRelease(retireDataProductReleaseOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+
+				// Re-test the timeout error with retries disabled
+				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc2()
+				_, _, operationErr = dpxService.RetireDataProductReleaseWithContext(ctx, retireDataProductReleaseOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(retireDataProductReleasePath))
+					Expect(req.Method).To(Equal("POST"))
+
+					// Set mock response
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprintf(res, "%s", `{"version": "1.0.0", "state": "draft", "data_product": {"id": "b38df608-d34b-4d58-8136-ed25e6c6684e"}, "name": "My Data Product", "description": "This is a description of My Data Product.", "id": "2b0bf220-079c-11ee-be56-0242ac120002@d29c42eb-7100-4b7a-8257-c196dbcca1cd", "asset": {"id": "2b0bf220-079c-11ee-be56-0242ac120002", "container": {"id": "d29c42eb-7100-4b7a-8257-c196dbcca1cd", "type": "catalog"}}, "tags": ["Tags"], "use_cases": [{"id": "ID", "name": "Name", "container": {"id": "d29c42eb-7100-4b7a-8257-c196dbcca1cd", "type": "catalog"}}], "domain": {"id": "ID", "name": "Name", "container": {"id": "d29c42eb-7100-4b7a-8257-c196dbcca1cd", "type": "catalog"}}, "types": ["data"], "parts_out": [{"asset": {"id": "2b0bf220-079c-11ee-be56-0242ac120002", "container": {"id": "d29c42eb-7100-4b7a-8257-c196dbcca1cd", "type": "catalog"}, "type": "data_asset"}, "revision": 1, "updated_at": "2023-07-01T22:22:34.876Z", "delivery_methods": [{"id": "09cf5fcc-cb9d-4995-a8e4-16517b25229f", "container": {"id": "d29c42eb-7100-4b7a-8257-c196dbcca1cd", "type": "catalog"}}]}], "published_by": "PublishedBy", "published_at": "2019-01-01T12:00:00.000Z", "contract_terms": [{"asset": {"id": "2b0bf220-079c-11ee-be56-0242ac120002", "container": {"id": "d29c42eb-7100-4b7a-8257-c196dbcca1cd", "type": "catalog"}}, "id": "ID", "documents": [{"url": "URL", "type": "terms_and_conditions", "name": "Name", "id": "2b0bf220-079c-11ee-be56-0242ac120002", "attachment": {"id": "ID"}, "upload_url": "UploadURL"}]}], "created_by": "CreatedBy", "created_at": "2019-01-01T12:00:00.000Z", "is_restricted": true}`)
+				}))
+			})
+			It(`Invoke RetireDataProductRelease successfully`, func() {
+				dpxService, serviceErr := dpxv1.NewDpxV1(&dpxv1.DpxV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(dpxService).ToNot(BeNil())
+
+				// Invoke operation with nil options model (negative test)
+				result, response, operationErr := dpxService.RetireDataProductRelease(nil)
+				Expect(operationErr).NotTo(BeNil())
+				Expect(response).To(BeNil())
+				Expect(result).To(BeNil())
+
+				// Construct an instance of the RetireDataProductReleaseOptions model
+				retireDataProductReleaseOptionsModel := new(dpxv1.RetireDataProductReleaseOptions)
+				retireDataProductReleaseOptionsModel.DataProductID = core.StringPtr("b38df608-d34b-4d58-8136-ed25e6c6684e")
+				retireDataProductReleaseOptionsModel.ReleaseID = core.StringPtr("2b0bf220-079c-11ee-be56-0242ac120002@d29c42eb-7100-4b7a-8257-c196dbcca1cd")
+				retireDataProductReleaseOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with valid options model (positive test)
+				result, response, operationErr = dpxService.RetireDataProductRelease(retireDataProductReleaseOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+
+			})
+			It(`Invoke RetireDataProductRelease with error: Operation validation and request error`, func() {
+				dpxService, serviceErr := dpxv1.NewDpxV1(&dpxv1.DpxV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(dpxService).ToNot(BeNil())
+
+				// Construct an instance of the RetireDataProductReleaseOptions model
+				retireDataProductReleaseOptionsModel := new(dpxv1.RetireDataProductReleaseOptions)
+				retireDataProductReleaseOptionsModel.DataProductID = core.StringPtr("b38df608-d34b-4d58-8136-ed25e6c6684e")
+				retireDataProductReleaseOptionsModel.ReleaseID = core.StringPtr("2b0bf220-079c-11ee-be56-0242ac120002@d29c42eb-7100-4b7a-8257-c196dbcca1cd")
+				retireDataProductReleaseOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+				// Invoke operation with empty URL (negative test)
+				err := dpxService.SetServiceURL("")
+				Expect(err).To(BeNil())
+				result, response, operationErr := dpxService.RetireDataProductRelease(retireDataProductReleaseOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring(core.ERRORMSG_SERVICE_URL_MISSING))
+				Expect(response).To(BeNil())
+				Expect(result).To(BeNil())
+				// Construct a second instance of the RetireDataProductReleaseOptions model with no property values
+				retireDataProductReleaseOptionsModelNew := new(dpxv1.RetireDataProductReleaseOptions)
+				// Invoke operation with invalid model (negative test)
+				result, response, operationErr = dpxService.RetireDataProductRelease(retireDataProductReleaseOptionsModelNew)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(response).To(BeNil())
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+		Context(`Using mock server endpoint with missing response body`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Set success status code with no respoonse body
+					res.WriteHeader(200)
+				}))
+			})
+			It(`Invoke RetireDataProductRelease successfully`, func() {
+				dpxService, serviceErr := dpxv1.NewDpxV1(&dpxv1.DpxV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(dpxService).ToNot(BeNil())
+
+				// Construct an instance of the RetireDataProductReleaseOptions model
+				retireDataProductReleaseOptionsModel := new(dpxv1.RetireDataProductReleaseOptions)
+				retireDataProductReleaseOptionsModel.DataProductID = core.StringPtr("b38df608-d34b-4d58-8136-ed25e6c6684e")
+				retireDataProductReleaseOptionsModel.ReleaseID = core.StringPtr("2b0bf220-079c-11ee-be56-0242ac120002@d29c42eb-7100-4b7a-8257-c196dbcca1cd")
+				retireDataProductReleaseOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation
+				result, response, operationErr := dpxService.RetireDataProductRelease(retireDataProductReleaseOptionsModel)
 				Expect(operationErr).To(BeNil())
 				Expect(response).ToNot(BeNil())
 
@@ -3795,32 +6043,33 @@ var _ = Describe(`DpxV1`, func() {
 				Authenticator: &core.NoAuthAuthenticator{},
 			})
 			It(`Invoke NewAssetPartReference successfully`, func() {
-				id := "2b0bf220-079c-11ee-be56-0242ac120002"
 				var container *dpxv1.ContainerReference = nil
-				_, err := dpxService.NewAssetPartReference(id, container)
+				_, err := dpxService.NewAssetPartReference(container)
 				Expect(err).ToNot(BeNil())
 			})
 			It(`Invoke NewAssetReference successfully`, func() {
-				id := "2b0bf220-079c-11ee-be56-0242ac120002"
 				var container *dpxv1.ContainerReference = nil
-				_, err := dpxService.NewAssetReference(id, container)
+				_, err := dpxService.NewAssetReference(container)
 				Expect(err).ToNot(BeNil())
 			})
-			It(`Invoke NewCompleteContractTermsDocumentOptions successfully`, func() {
-				// Construct an instance of the CompleteContractTermsDocumentOptions model
-				dataProductVersionID := "testString"
-				contractTermsID := "testString"
+			It(`Invoke NewCompleteDraftContractTermsDocumentOptions successfully`, func() {
+				// Construct an instance of the CompleteDraftContractTermsDocumentOptions model
+				dataProductID := "b38df608-d34b-4d58-8136-ed25e6c6684e"
+				draftID := "2b0bf220-079c-11ee-be56-0242ac120002@d29c42eb-7100-4b7a-8257-c196dbcca1cd"
+				contractTermsID := "598183cd-b910-4e8d-9a97-97097afda3c1@e4fe2f87-0e56-46dd-b3b8-e9af32309e82"
 				documentID := "testString"
-				completeContractTermsDocumentOptionsModel := dpxService.NewCompleteContractTermsDocumentOptions(dataProductVersionID, contractTermsID, documentID)
-				completeContractTermsDocumentOptionsModel.SetDataProductVersionID("testString")
-				completeContractTermsDocumentOptionsModel.SetContractTermsID("testString")
-				completeContractTermsDocumentOptionsModel.SetDocumentID("testString")
-				completeContractTermsDocumentOptionsModel.SetHeaders(map[string]string{"foo": "bar"})
-				Expect(completeContractTermsDocumentOptionsModel).ToNot(BeNil())
-				Expect(completeContractTermsDocumentOptionsModel.DataProductVersionID).To(Equal(core.StringPtr("testString")))
-				Expect(completeContractTermsDocumentOptionsModel.ContractTermsID).To(Equal(core.StringPtr("testString")))
-				Expect(completeContractTermsDocumentOptionsModel.DocumentID).To(Equal(core.StringPtr("testString")))
-				Expect(completeContractTermsDocumentOptionsModel.Headers).To(Equal(map[string]string{"foo": "bar"}))
+				completeDraftContractTermsDocumentOptionsModel := dpxService.NewCompleteDraftContractTermsDocumentOptions(dataProductID, draftID, contractTermsID, documentID)
+				completeDraftContractTermsDocumentOptionsModel.SetDataProductID("b38df608-d34b-4d58-8136-ed25e6c6684e")
+				completeDraftContractTermsDocumentOptionsModel.SetDraftID("2b0bf220-079c-11ee-be56-0242ac120002@d29c42eb-7100-4b7a-8257-c196dbcca1cd")
+				completeDraftContractTermsDocumentOptionsModel.SetContractTermsID("598183cd-b910-4e8d-9a97-97097afda3c1@e4fe2f87-0e56-46dd-b3b8-e9af32309e82")
+				completeDraftContractTermsDocumentOptionsModel.SetDocumentID("testString")
+				completeDraftContractTermsDocumentOptionsModel.SetHeaders(map[string]string{"foo": "bar"})
+				Expect(completeDraftContractTermsDocumentOptionsModel).ToNot(BeNil())
+				Expect(completeDraftContractTermsDocumentOptionsModel.DataProductID).To(Equal(core.StringPtr("b38df608-d34b-4d58-8136-ed25e6c6684e")))
+				Expect(completeDraftContractTermsDocumentOptionsModel.DraftID).To(Equal(core.StringPtr("2b0bf220-079c-11ee-be56-0242ac120002@d29c42eb-7100-4b7a-8257-c196dbcca1cd")))
+				Expect(completeDraftContractTermsDocumentOptionsModel.ContractTermsID).To(Equal(core.StringPtr("598183cd-b910-4e8d-9a97-97097afda3c1@e4fe2f87-0e56-46dd-b3b8-e9af32309e82")))
+				Expect(completeDraftContractTermsDocumentOptionsModel.DocumentID).To(Equal(core.StringPtr("testString")))
+				Expect(completeDraftContractTermsDocumentOptionsModel.Headers).To(Equal(map[string]string{"foo": "bar"}))
 			})
 			It(`Invoke NewContainerReference successfully`, func() {
 				id := "d29c42eb-7100-4b7a-8257-c196dbcca1cd"
@@ -3848,6 +6097,7 @@ var _ = Describe(`DpxV1`, func() {
 				contractTermsDocument.Name = core.StringPtr("testString")
 				contractTermsDocument.ID = core.StringPtr("2b0bf220-079c-11ee-be56-0242ac120002")
 				contractTermsDocument.Attachment = contractTermsDocumentAttachmentModel
+				contractTermsDocument.UploadURL = core.StringPtr("testString")
 
 				contractTermsDocumentPatch := dpxService.NewContractTermsDocumentPatch(contractTermsDocument)
 				Expect(contractTermsDocumentPatch).ToNot(BeNil())
@@ -3856,71 +6106,45 @@ var _ = Describe(`DpxV1`, func() {
 					return *op.(dpxv1.JSONPatchOperation).Path
 				}
 				Expect(contractTermsDocumentPatch).To(MatchAllElements(_path, Elements{
-				"/url": MatchAllFields(Fields{
-					"Op": PointTo(Equal(dpxv1.JSONPatchOperation_Op_Add)),
-					"Path": PointTo(Equal("/url")),
-					"From": BeNil(),
-					"Value": Equal(contractTermsDocument.URL),
+					"/url": MatchAllFields(Fields{
+						"Op":    PointTo(Equal(dpxv1.JSONPatchOperation_Op_Add)),
+						"Path":  PointTo(Equal("/url")),
+						"From":  BeNil(),
+						"Value": Equal(contractTermsDocument.URL),
 					}),
-				"/type": MatchAllFields(Fields{
-					"Op": PointTo(Equal(dpxv1.JSONPatchOperation_Op_Add)),
-					"Path": PointTo(Equal("/type")),
-					"From": BeNil(),
-					"Value": Equal(contractTermsDocument.Type),
+					"/type": MatchAllFields(Fields{
+						"Op":    PointTo(Equal(dpxv1.JSONPatchOperation_Op_Add)),
+						"Path":  PointTo(Equal("/type")),
+						"From":  BeNil(),
+						"Value": Equal(contractTermsDocument.Type),
 					}),
-				"/name": MatchAllFields(Fields{
-					"Op": PointTo(Equal(dpxv1.JSONPatchOperation_Op_Add)),
-					"Path": PointTo(Equal("/name")),
-					"From": BeNil(),
-					"Value": Equal(contractTermsDocument.Name),
+					"/name": MatchAllFields(Fields{
+						"Op":    PointTo(Equal(dpxv1.JSONPatchOperation_Op_Add)),
+						"Path":  PointTo(Equal("/name")),
+						"From":  BeNil(),
+						"Value": Equal(contractTermsDocument.Name),
 					}),
-				"/id": MatchAllFields(Fields{
-					"Op": PointTo(Equal(dpxv1.JSONPatchOperation_Op_Add)),
-					"Path": PointTo(Equal("/id")),
-					"From": BeNil(),
-					"Value": Equal(contractTermsDocument.ID),
+					"/id": MatchAllFields(Fields{
+						"Op":    PointTo(Equal(dpxv1.JSONPatchOperation_Op_Add)),
+						"Path":  PointTo(Equal("/id")),
+						"From":  BeNil(),
+						"Value": Equal(contractTermsDocument.ID),
 					}),
-				"/attachment": MatchAllFields(Fields{
-					"Op": PointTo(Equal(dpxv1.JSONPatchOperation_Op_Add)),
-					"Path": PointTo(Equal("/attachment")),
-					"From": BeNil(),
-					"Value": Equal(contractTermsDocument.Attachment),
+					"/attachment": MatchAllFields(Fields{
+						"Op":    PointTo(Equal(dpxv1.JSONPatchOperation_Op_Add)),
+						"Path":  PointTo(Equal("/attachment")),
+						"From":  BeNil(),
+						"Value": Equal(contractTermsDocument.Attachment),
+					}),
+					"/upload_url": MatchAllFields(Fields{
+						"Op":    PointTo(Equal(dpxv1.JSONPatchOperation_Op_Add)),
+						"Path":  PointTo(Equal("/upload_url")),
+						"From":  BeNil(),
+						"Value": Equal(contractTermsDocument.UploadURL),
 					}),
 				}))
 			})
-			It(`Invoke NewCreateContractTermsDocumentOptions successfully`, func() {
-				// Construct an instance of the ContractTermsDocumentAttachment model
-				contractTermsDocumentAttachmentModel := new(dpxv1.ContractTermsDocumentAttachment)
-				Expect(contractTermsDocumentAttachmentModel).ToNot(BeNil())
-				contractTermsDocumentAttachmentModel.ID = core.StringPtr("testString")
-				Expect(contractTermsDocumentAttachmentModel.ID).To(Equal(core.StringPtr("testString")))
-
-				// Construct an instance of the CreateContractTermsDocumentOptions model
-				dataProductVersionID := "testString"
-				contractTermsID := "testString"
-				createContractTermsDocumentOptionsType := "terms_and_conditions"
-				createContractTermsDocumentOptionsName := "Terms and conditions document"
-				createContractTermsDocumentOptionsID := "testString"
-				createContractTermsDocumentOptionsModel := dpxService.NewCreateContractTermsDocumentOptions(dataProductVersionID, contractTermsID, createContractTermsDocumentOptionsType, createContractTermsDocumentOptionsName, createContractTermsDocumentOptionsID)
-				createContractTermsDocumentOptionsModel.SetDataProductVersionID("testString")
-				createContractTermsDocumentOptionsModel.SetContractTermsID("testString")
-				createContractTermsDocumentOptionsModel.SetType("terms_and_conditions")
-				createContractTermsDocumentOptionsModel.SetName("Terms and conditions document")
-				createContractTermsDocumentOptionsModel.SetID("testString")
-				createContractTermsDocumentOptionsModel.SetURL("testString")
-				createContractTermsDocumentOptionsModel.SetAttachment(contractTermsDocumentAttachmentModel)
-				createContractTermsDocumentOptionsModel.SetHeaders(map[string]string{"foo": "bar"})
-				Expect(createContractTermsDocumentOptionsModel).ToNot(BeNil())
-				Expect(createContractTermsDocumentOptionsModel.DataProductVersionID).To(Equal(core.StringPtr("testString")))
-				Expect(createContractTermsDocumentOptionsModel.ContractTermsID).To(Equal(core.StringPtr("testString")))
-				Expect(createContractTermsDocumentOptionsModel.Type).To(Equal(core.StringPtr("terms_and_conditions")))
-				Expect(createContractTermsDocumentOptionsModel.Name).To(Equal(core.StringPtr("Terms and conditions document")))
-				Expect(createContractTermsDocumentOptionsModel.ID).To(Equal(core.StringPtr("testString")))
-				Expect(createContractTermsDocumentOptionsModel.URL).To(Equal(core.StringPtr("testString")))
-				Expect(createContractTermsDocumentOptionsModel.Attachment).To(Equal(contractTermsDocumentAttachmentModel))
-				Expect(createContractTermsDocumentOptionsModel.Headers).To(Equal(map[string]string{"foo": "bar"}))
-			})
-			It(`Invoke NewCreateDataProductVersionOptions successfully`, func() {
+			It(`Invoke NewCreateDataProductDraftOptions successfully`, func() {
 				// Construct an instance of the ContainerReference model
 				containerReferenceModel := new(dpxv1.ContainerReference)
 				Expect(containerReferenceModel).ToNot(BeNil())
@@ -3928,6 +6152,14 @@ var _ = Describe(`DpxV1`, func() {
 				containerReferenceModel.Type = core.StringPtr("catalog")
 				Expect(containerReferenceModel.ID).To(Equal(core.StringPtr("d29c42eb-7100-4b7a-8257-c196dbcca1cd")))
 				Expect(containerReferenceModel.Type).To(Equal(core.StringPtr("catalog")))
+
+				// Construct an instance of the AssetReference model
+				assetReferenceModel := new(dpxv1.AssetReference)
+				Expect(assetReferenceModel).ToNot(BeNil())
+				assetReferenceModel.ID = core.StringPtr("2b0bf220-079c-11ee-be56-0242ac120002")
+				assetReferenceModel.Container = containerReferenceModel
+				Expect(assetReferenceModel.ID).To(Equal(core.StringPtr("2b0bf220-079c-11ee-be56-0242ac120002")))
+				Expect(assetReferenceModel.Container).To(Equal(containerReferenceModel))
 
 				// Construct an instance of the DataProductIdentity model
 				dataProductIdentityModel := new(dpxv1.DataProductIdentity)
@@ -3999,11 +6231,74 @@ var _ = Describe(`DpxV1`, func() {
 				contractTermsDocumentModel.Name = core.StringPtr("testString")
 				contractTermsDocumentModel.ID = core.StringPtr("2b0bf220-079c-11ee-be56-0242ac120002")
 				contractTermsDocumentModel.Attachment = contractTermsDocumentAttachmentModel
+				contractTermsDocumentModel.UploadURL = core.StringPtr("testString")
 				Expect(contractTermsDocumentModel.URL).To(Equal(core.StringPtr("testString")))
 				Expect(contractTermsDocumentModel.Type).To(Equal(core.StringPtr("terms_and_conditions")))
 				Expect(contractTermsDocumentModel.Name).To(Equal(core.StringPtr("testString")))
 				Expect(contractTermsDocumentModel.ID).To(Equal(core.StringPtr("2b0bf220-079c-11ee-be56-0242ac120002")))
 				Expect(contractTermsDocumentModel.Attachment).To(Equal(contractTermsDocumentAttachmentModel))
+				Expect(contractTermsDocumentModel.UploadURL).To(Equal(core.StringPtr("testString")))
+
+				// Construct an instance of the DataProductContractTerms model
+				dataProductContractTermsModel := new(dpxv1.DataProductContractTerms)
+				Expect(dataProductContractTermsModel).ToNot(BeNil())
+				dataProductContractTermsModel.Asset = assetReferenceModel
+				dataProductContractTermsModel.ID = core.StringPtr("testString")
+				dataProductContractTermsModel.Documents = []dpxv1.ContractTermsDocument{*contractTermsDocumentModel}
+				Expect(dataProductContractTermsModel.Asset).To(Equal(assetReferenceModel))
+				Expect(dataProductContractTermsModel.ID).To(Equal(core.StringPtr("testString")))
+				Expect(dataProductContractTermsModel.Documents).To(Equal([]dpxv1.ContractTermsDocument{*contractTermsDocumentModel}))
+
+				// Construct an instance of the CreateDataProductDraftOptions model
+				dataProductID := "b38df608-d34b-4d58-8136-ed25e6c6684e"
+				var createDataProductDraftOptionsAsset *dpxv1.AssetReference = nil
+				createDataProductDraftOptionsModel := dpxService.NewCreateDataProductDraftOptions(dataProductID, createDataProductDraftOptionsAsset)
+				createDataProductDraftOptionsModel.SetDataProductID("b38df608-d34b-4d58-8136-ed25e6c6684e")
+				createDataProductDraftOptionsModel.SetAsset(assetReferenceModel)
+				createDataProductDraftOptionsModel.SetVersion("1.2.0")
+				createDataProductDraftOptionsModel.SetState("draft")
+				createDataProductDraftOptionsModel.SetDataProduct(dataProductIdentityModel)
+				createDataProductDraftOptionsModel.SetName("testString")
+				createDataProductDraftOptionsModel.SetDescription("testString")
+				createDataProductDraftOptionsModel.SetTags([]string{"testString"})
+				createDataProductDraftOptionsModel.SetUseCases([]dpxv1.UseCase{*useCaseModel})
+				createDataProductDraftOptionsModel.SetDomain(domainModel)
+				createDataProductDraftOptionsModel.SetTypes([]string{"data"})
+				createDataProductDraftOptionsModel.SetPartsOut([]dpxv1.DataProductPart{*dataProductPartModel})
+				createDataProductDraftOptionsModel.SetContractTerms([]dpxv1.DataProductContractTerms{*dataProductContractTermsModel})
+				createDataProductDraftOptionsModel.SetIsRestricted(true)
+				createDataProductDraftOptionsModel.SetHeaders(map[string]string{"foo": "bar"})
+				Expect(createDataProductDraftOptionsModel).ToNot(BeNil())
+				Expect(createDataProductDraftOptionsModel.DataProductID).To(Equal(core.StringPtr("b38df608-d34b-4d58-8136-ed25e6c6684e")))
+				Expect(createDataProductDraftOptionsModel.Asset).To(Equal(assetReferenceModel))
+				Expect(createDataProductDraftOptionsModel.Version).To(Equal(core.StringPtr("1.2.0")))
+				Expect(createDataProductDraftOptionsModel.State).To(Equal(core.StringPtr("draft")))
+				Expect(createDataProductDraftOptionsModel.DataProduct).To(Equal(dataProductIdentityModel))
+				Expect(createDataProductDraftOptionsModel.Name).To(Equal(core.StringPtr("testString")))
+				Expect(createDataProductDraftOptionsModel.Description).To(Equal(core.StringPtr("testString")))
+				Expect(createDataProductDraftOptionsModel.Tags).To(Equal([]string{"testString"}))
+				Expect(createDataProductDraftOptionsModel.UseCases).To(Equal([]dpxv1.UseCase{*useCaseModel}))
+				Expect(createDataProductDraftOptionsModel.Domain).To(Equal(domainModel))
+				Expect(createDataProductDraftOptionsModel.Types).To(Equal([]string{"data"}))
+				Expect(createDataProductDraftOptionsModel.PartsOut).To(Equal([]dpxv1.DataProductPart{*dataProductPartModel}))
+				Expect(createDataProductDraftOptionsModel.ContractTerms).To(Equal([]dpxv1.DataProductContractTerms{*dataProductContractTermsModel}))
+				Expect(createDataProductDraftOptionsModel.IsRestricted).To(Equal(core.BoolPtr(true)))
+				Expect(createDataProductDraftOptionsModel.Headers).To(Equal(map[string]string{"foo": "bar"}))
+			})
+			It(`Invoke NewCreateDataProductOptions successfully`, func() {
+				// Construct an instance of the DataProductIdentity model
+				dataProductIdentityModel := new(dpxv1.DataProductIdentity)
+				Expect(dataProductIdentityModel).ToNot(BeNil())
+				dataProductIdentityModel.ID = core.StringPtr("b38df608-d34b-4d58-8136-ed25e6c6684e")
+				Expect(dataProductIdentityModel.ID).To(Equal(core.StringPtr("b38df608-d34b-4d58-8136-ed25e6c6684e")))
+
+				// Construct an instance of the ContainerReference model
+				containerReferenceModel := new(dpxv1.ContainerReference)
+				Expect(containerReferenceModel).ToNot(BeNil())
+				containerReferenceModel.ID = core.StringPtr("d29c42eb-7100-4b7a-8257-c196dbcca1cd")
+				containerReferenceModel.Type = core.StringPtr("catalog")
+				Expect(containerReferenceModel.ID).To(Equal(core.StringPtr("d29c42eb-7100-4b7a-8257-c196dbcca1cd")))
+				Expect(containerReferenceModel.Type).To(Equal(core.StringPtr("catalog")))
 
 				// Construct an instance of the AssetReference model
 				assetReferenceModel := new(dpxv1.AssetReference)
@@ -4013,46 +6308,164 @@ var _ = Describe(`DpxV1`, func() {
 				Expect(assetReferenceModel.ID).To(Equal(core.StringPtr("2b0bf220-079c-11ee-be56-0242ac120002")))
 				Expect(assetReferenceModel.Container).To(Equal(containerReferenceModel))
 
+				// Construct an instance of the UseCase model
+				useCaseModel := new(dpxv1.UseCase)
+				Expect(useCaseModel).ToNot(BeNil())
+				useCaseModel.ID = core.StringPtr("testString")
+				useCaseModel.Name = core.StringPtr("testString")
+				useCaseModel.Container = containerReferenceModel
+				Expect(useCaseModel.ID).To(Equal(core.StringPtr("testString")))
+				Expect(useCaseModel.Name).To(Equal(core.StringPtr("testString")))
+				Expect(useCaseModel.Container).To(Equal(containerReferenceModel))
+
+				// Construct an instance of the Domain model
+				domainModel := new(dpxv1.Domain)
+				Expect(domainModel).ToNot(BeNil())
+				domainModel.ID = core.StringPtr("testString")
+				domainModel.Name = core.StringPtr("testString")
+				domainModel.Container = containerReferenceModel
+				Expect(domainModel.ID).To(Equal(core.StringPtr("testString")))
+				Expect(domainModel.Name).To(Equal(core.StringPtr("testString")))
+				Expect(domainModel.Container).To(Equal(containerReferenceModel))
+
+				// Construct an instance of the AssetPartReference model
+				assetPartReferenceModel := new(dpxv1.AssetPartReference)
+				Expect(assetPartReferenceModel).ToNot(BeNil())
+				assetPartReferenceModel.ID = core.StringPtr("2b0bf220-079c-11ee-be56-0242ac120002")
+				assetPartReferenceModel.Container = containerReferenceModel
+				assetPartReferenceModel.Type = core.StringPtr("data_asset")
+				Expect(assetPartReferenceModel.ID).To(Equal(core.StringPtr("2b0bf220-079c-11ee-be56-0242ac120002")))
+				Expect(assetPartReferenceModel.Container).To(Equal(containerReferenceModel))
+				Expect(assetPartReferenceModel.Type).To(Equal(core.StringPtr("data_asset")))
+
+				// Construct an instance of the DeliveryMethod model
+				deliveryMethodModel := new(dpxv1.DeliveryMethod)
+				Expect(deliveryMethodModel).ToNot(BeNil())
+				deliveryMethodModel.ID = core.StringPtr("09cf5fcc-cb9d-4995-a8e4-16517b25229f")
+				deliveryMethodModel.Container = containerReferenceModel
+				Expect(deliveryMethodModel.ID).To(Equal(core.StringPtr("09cf5fcc-cb9d-4995-a8e4-16517b25229f")))
+				Expect(deliveryMethodModel.Container).To(Equal(containerReferenceModel))
+
+				// Construct an instance of the DataProductPart model
+				dataProductPartModel := new(dpxv1.DataProductPart)
+				Expect(dataProductPartModel).ToNot(BeNil())
+				dataProductPartModel.Asset = assetPartReferenceModel
+				dataProductPartModel.Revision = core.Int64Ptr(int64(1))
+				dataProductPartModel.UpdatedAt = CreateMockDateTime("2023-07-01T22:22:34.876Z")
+				dataProductPartModel.DeliveryMethods = []dpxv1.DeliveryMethod{*deliveryMethodModel}
+				Expect(dataProductPartModel.Asset).To(Equal(assetPartReferenceModel))
+				Expect(dataProductPartModel.Revision).To(Equal(core.Int64Ptr(int64(1))))
+				Expect(dataProductPartModel.UpdatedAt).To(Equal(CreateMockDateTime("2023-07-01T22:22:34.876Z")))
+				Expect(dataProductPartModel.DeliveryMethods).To(Equal([]dpxv1.DeliveryMethod{*deliveryMethodModel}))
+
+				// Construct an instance of the ContractTermsDocumentAttachment model
+				contractTermsDocumentAttachmentModel := new(dpxv1.ContractTermsDocumentAttachment)
+				Expect(contractTermsDocumentAttachmentModel).ToNot(BeNil())
+				contractTermsDocumentAttachmentModel.ID = core.StringPtr("testString")
+				Expect(contractTermsDocumentAttachmentModel.ID).To(Equal(core.StringPtr("testString")))
+
+				// Construct an instance of the ContractTermsDocument model
+				contractTermsDocumentModel := new(dpxv1.ContractTermsDocument)
+				Expect(contractTermsDocumentModel).ToNot(BeNil())
+				contractTermsDocumentModel.URL = core.StringPtr("testString")
+				contractTermsDocumentModel.Type = core.StringPtr("terms_and_conditions")
+				contractTermsDocumentModel.Name = core.StringPtr("testString")
+				contractTermsDocumentModel.ID = core.StringPtr("2b0bf220-079c-11ee-be56-0242ac120002")
+				contractTermsDocumentModel.Attachment = contractTermsDocumentAttachmentModel
+				contractTermsDocumentModel.UploadURL = core.StringPtr("testString")
+				Expect(contractTermsDocumentModel.URL).To(Equal(core.StringPtr("testString")))
+				Expect(contractTermsDocumentModel.Type).To(Equal(core.StringPtr("terms_and_conditions")))
+				Expect(contractTermsDocumentModel.Name).To(Equal(core.StringPtr("testString")))
+				Expect(contractTermsDocumentModel.ID).To(Equal(core.StringPtr("2b0bf220-079c-11ee-be56-0242ac120002")))
+				Expect(contractTermsDocumentModel.Attachment).To(Equal(contractTermsDocumentAttachmentModel))
+				Expect(contractTermsDocumentModel.UploadURL).To(Equal(core.StringPtr("testString")))
+
 				// Construct an instance of the DataProductContractTerms model
 				dataProductContractTermsModel := new(dpxv1.DataProductContractTerms)
 				Expect(dataProductContractTermsModel).ToNot(BeNil())
+				dataProductContractTermsModel.Asset = assetReferenceModel
 				dataProductContractTermsModel.ID = core.StringPtr("testString")
 				dataProductContractTermsModel.Documents = []dpxv1.ContractTermsDocument{*contractTermsDocumentModel}
-				dataProductContractTermsModel.Asset = assetReferenceModel
+				Expect(dataProductContractTermsModel.Asset).To(Equal(assetReferenceModel))
 				Expect(dataProductContractTermsModel.ID).To(Equal(core.StringPtr("testString")))
 				Expect(dataProductContractTermsModel.Documents).To(Equal([]dpxv1.ContractTermsDocument{*contractTermsDocumentModel}))
-				Expect(dataProductContractTermsModel.Asset).To(Equal(assetReferenceModel))
 
-				// Construct an instance of the CreateDataProductVersionOptions model
-				var createDataProductVersionOptionsContainer *dpxv1.ContainerReference = nil
-				createDataProductVersionOptionsModel := dpxService.NewCreateDataProductVersionOptions(createDataProductVersionOptionsContainer)
-				createDataProductVersionOptionsModel.SetContainer(containerReferenceModel)
-				createDataProductVersionOptionsModel.SetVersion("testString")
-				createDataProductVersionOptionsModel.SetState("draft")
-				createDataProductVersionOptionsModel.SetDataProduct(dataProductIdentityModel)
-				createDataProductVersionOptionsModel.SetName("My New Data Product")
-				createDataProductVersionOptionsModel.SetDescription("testString")
-				createDataProductVersionOptionsModel.SetTags([]string{"testString"})
-				createDataProductVersionOptionsModel.SetUseCases([]dpxv1.UseCase{*useCaseModel})
-				createDataProductVersionOptionsModel.SetDomain(domainModel)
-				createDataProductVersionOptionsModel.SetType([]string{"data"})
-				createDataProductVersionOptionsModel.SetPartsOut([]dpxv1.DataProductPart{*dataProductPartModel})
-				createDataProductVersionOptionsModel.SetContractTerms([]dpxv1.DataProductContractTerms{*dataProductContractTermsModel})
-				createDataProductVersionOptionsModel.SetHeaders(map[string]string{"foo": "bar"})
-				Expect(createDataProductVersionOptionsModel).ToNot(BeNil())
-				Expect(createDataProductVersionOptionsModel.Container).To(Equal(containerReferenceModel))
-				Expect(createDataProductVersionOptionsModel.Version).To(Equal(core.StringPtr("testString")))
-				Expect(createDataProductVersionOptionsModel.State).To(Equal(core.StringPtr("draft")))
-				Expect(createDataProductVersionOptionsModel.DataProduct).To(Equal(dataProductIdentityModel))
-				Expect(createDataProductVersionOptionsModel.Name).To(Equal(core.StringPtr("My New Data Product")))
-				Expect(createDataProductVersionOptionsModel.Description).To(Equal(core.StringPtr("testString")))
-				Expect(createDataProductVersionOptionsModel.Tags).To(Equal([]string{"testString"}))
-				Expect(createDataProductVersionOptionsModel.UseCases).To(Equal([]dpxv1.UseCase{*useCaseModel}))
-				Expect(createDataProductVersionOptionsModel.Domain).To(Equal(domainModel))
-				Expect(createDataProductVersionOptionsModel.Type).To(Equal([]string{"data"}))
-				Expect(createDataProductVersionOptionsModel.PartsOut).To(Equal([]dpxv1.DataProductPart{*dataProductPartModel}))
-				Expect(createDataProductVersionOptionsModel.ContractTerms).To(Equal([]dpxv1.DataProductContractTerms{*dataProductContractTermsModel}))
-				Expect(createDataProductVersionOptionsModel.Headers).To(Equal(map[string]string{"foo": "bar"}))
+				// Construct an instance of the DataProductVersionPrototype model
+				dataProductVersionPrototypeModel := new(dpxv1.DataProductVersionPrototype)
+				Expect(dataProductVersionPrototypeModel).ToNot(BeNil())
+				dataProductVersionPrototypeModel.Version = core.StringPtr("1.0.0")
+				dataProductVersionPrototypeModel.State = core.StringPtr("draft")
+				dataProductVersionPrototypeModel.DataProduct = dataProductIdentityModel
+				dataProductVersionPrototypeModel.Name = core.StringPtr("My New Data Product")
+				dataProductVersionPrototypeModel.Description = core.StringPtr("This is a description of My Data Product.")
+				dataProductVersionPrototypeModel.Asset = assetReferenceModel
+				dataProductVersionPrototypeModel.Tags = []string{"testString"}
+				dataProductVersionPrototypeModel.UseCases = []dpxv1.UseCase{*useCaseModel}
+				dataProductVersionPrototypeModel.Domain = domainModel
+				dataProductVersionPrototypeModel.Types = []string{"data"}
+				dataProductVersionPrototypeModel.PartsOut = []dpxv1.DataProductPart{*dataProductPartModel}
+				dataProductVersionPrototypeModel.ContractTerms = []dpxv1.DataProductContractTerms{*dataProductContractTermsModel}
+				dataProductVersionPrototypeModel.IsRestricted = core.BoolPtr(true)
+				Expect(dataProductVersionPrototypeModel.Version).To(Equal(core.StringPtr("1.0.0")))
+				Expect(dataProductVersionPrototypeModel.State).To(Equal(core.StringPtr("draft")))
+				Expect(dataProductVersionPrototypeModel.DataProduct).To(Equal(dataProductIdentityModel))
+				Expect(dataProductVersionPrototypeModel.Name).To(Equal(core.StringPtr("My New Data Product")))
+				Expect(dataProductVersionPrototypeModel.Description).To(Equal(core.StringPtr("This is a description of My Data Product.")))
+				Expect(dataProductVersionPrototypeModel.Asset).To(Equal(assetReferenceModel))
+				Expect(dataProductVersionPrototypeModel.Tags).To(Equal([]string{"testString"}))
+				Expect(dataProductVersionPrototypeModel.UseCases).To(Equal([]dpxv1.UseCase{*useCaseModel}))
+				Expect(dataProductVersionPrototypeModel.Domain).To(Equal(domainModel))
+				Expect(dataProductVersionPrototypeModel.Types).To(Equal([]string{"data"}))
+				Expect(dataProductVersionPrototypeModel.PartsOut).To(Equal([]dpxv1.DataProductPart{*dataProductPartModel}))
+				Expect(dataProductVersionPrototypeModel.ContractTerms).To(Equal([]dpxv1.DataProductContractTerms{*dataProductContractTermsModel}))
+				Expect(dataProductVersionPrototypeModel.IsRestricted).To(Equal(core.BoolPtr(true)))
+
+				// Construct an instance of the CreateDataProductOptions model
+				createDataProductOptionsDrafts := []dpxv1.DataProductVersionPrototype{}
+				createDataProductOptionsModel := dpxService.NewCreateDataProductOptions(createDataProductOptionsDrafts)
+				createDataProductOptionsModel.SetDrafts([]dpxv1.DataProductVersionPrototype{*dataProductVersionPrototypeModel})
+				createDataProductOptionsModel.SetHeaders(map[string]string{"foo": "bar"})
+				Expect(createDataProductOptionsModel).ToNot(BeNil())
+				Expect(createDataProductOptionsModel.Drafts).To(Equal([]dpxv1.DataProductVersionPrototype{*dataProductVersionPrototypeModel}))
+				Expect(createDataProductOptionsModel.Headers).To(Equal(map[string]string{"foo": "bar"}))
+			})
+			It(`Invoke NewCreateDraftContractTermsDocumentOptions successfully`, func() {
+				// Construct an instance of the ContractTermsDocumentAttachment model
+				contractTermsDocumentAttachmentModel := new(dpxv1.ContractTermsDocumentAttachment)
+				Expect(contractTermsDocumentAttachmentModel).ToNot(BeNil())
+				contractTermsDocumentAttachmentModel.ID = core.StringPtr("testString")
+				Expect(contractTermsDocumentAttachmentModel.ID).To(Equal(core.StringPtr("testString")))
+
+				// Construct an instance of the CreateDraftContractTermsDocumentOptions model
+				dataProductID := "b38df608-d34b-4d58-8136-ed25e6c6684e"
+				draftID := "2b0bf220-079c-11ee-be56-0242ac120002@d29c42eb-7100-4b7a-8257-c196dbcca1cd"
+				contractTermsID := "598183cd-b910-4e8d-9a97-97097afda3c1@e4fe2f87-0e56-46dd-b3b8-e9af32309e82"
+				createDraftContractTermsDocumentOptionsType := "terms_and_conditions"
+				createDraftContractTermsDocumentOptionsName := "Terms and conditions document"
+				createDraftContractTermsDocumentOptionsID := "b38df608-d34b-4d58-8136-ed25e6c6684e"
+				url := "teststring"
+				createDraftContractTermsDocumentOptionsModel := dpxService.NewCreateDraftContractTermsDocumentOptions(dataProductID, draftID, contractTermsID, createDraftContractTermsDocumentOptionsType, createDraftContractTermsDocumentOptionsName, createDraftContractTermsDocumentOptionsID, url)
+				createDraftContractTermsDocumentOptionsModel.SetDataProductID("b38df608-d34b-4d58-8136-ed25e6c6684e")
+				createDraftContractTermsDocumentOptionsModel.SetDraftID("2b0bf220-079c-11ee-be56-0242ac120002@d29c42eb-7100-4b7a-8257-c196dbcca1cd")
+				createDraftContractTermsDocumentOptionsModel.SetContractTermsID("598183cd-b910-4e8d-9a97-97097afda3c1@e4fe2f87-0e56-46dd-b3b8-e9af32309e82")
+				createDraftContractTermsDocumentOptionsModel.SetType("terms_and_conditions")
+				createDraftContractTermsDocumentOptionsModel.SetName("Terms and conditions document")
+				createDraftContractTermsDocumentOptionsModel.SetID("b38df608-d34b-4d58-8136-ed25e6c6684e")
+				createDraftContractTermsDocumentOptionsModel.SetURL("testString")
+				createDraftContractTermsDocumentOptionsModel.SetAttachment(contractTermsDocumentAttachmentModel)
+				createDraftContractTermsDocumentOptionsModel.SetUploadURL("testString")
+				createDraftContractTermsDocumentOptionsModel.SetHeaders(map[string]string{"foo": "bar"})
+				Expect(createDraftContractTermsDocumentOptionsModel).ToNot(BeNil())
+				Expect(createDraftContractTermsDocumentOptionsModel.DataProductID).To(Equal(core.StringPtr("b38df608-d34b-4d58-8136-ed25e6c6684e")))
+				Expect(createDraftContractTermsDocumentOptionsModel.DraftID).To(Equal(core.StringPtr("2b0bf220-079c-11ee-be56-0242ac120002@d29c42eb-7100-4b7a-8257-c196dbcca1cd")))
+				Expect(createDraftContractTermsDocumentOptionsModel.ContractTermsID).To(Equal(core.StringPtr("598183cd-b910-4e8d-9a97-97097afda3c1@e4fe2f87-0e56-46dd-b3b8-e9af32309e82")))
+				Expect(createDraftContractTermsDocumentOptionsModel.Type).To(Equal(core.StringPtr("terms_and_conditions")))
+				Expect(createDraftContractTermsDocumentOptionsModel.Name).To(Equal(core.StringPtr("Terms and conditions document")))
+				Expect(createDraftContractTermsDocumentOptionsModel.ID).To(Equal(core.StringPtr("b38df608-d34b-4d58-8136-ed25e6c6684e")))
+				Expect(createDraftContractTermsDocumentOptionsModel.URL).To(Equal(core.StringPtr("testString")))
+				Expect(createDraftContractTermsDocumentOptionsModel.Attachment).To(Equal(contractTermsDocumentAttachmentModel))
+				Expect(createDraftContractTermsDocumentOptionsModel.UploadURL).To(Equal(core.StringPtr("testString")))
+				Expect(createDraftContractTermsDocumentOptionsModel.Headers).To(Equal(map[string]string{"foo": "bar"}))
 			})
 			It(`Invoke NewDataProductIdentity successfully`, func() {
 				id := "b38df608-d34b-4d58-8136-ed25e6c6684e"
@@ -4121,12 +6534,13 @@ var _ = Describe(`DpxV1`, func() {
 				contractTermsDocumentModel.Name = core.StringPtr("testString")
 				contractTermsDocumentModel.ID = core.StringPtr("2b0bf220-079c-11ee-be56-0242ac120002")
 				contractTermsDocumentModel.Attachment = contractTermsDocumentAttachmentModel
+				contractTermsDocumentModel.UploadURL = core.StringPtr("testString")
 
 				// Construct an instance of the DataProductContractTerms model
 				dataProductContractTermsModel := new(dpxv1.DataProductContractTerms)
+				dataProductContractTermsModel.Asset = assetReferenceModel
 				dataProductContractTermsModel.ID = core.StringPtr("testString")
 				dataProductContractTermsModel.Documents = []dpxv1.ContractTermsDocument{*contractTermsDocumentModel}
-				dataProductContractTermsModel.Asset = assetReferenceModel
 
 				// Construct an instance of the DataProductVersion model
 				dataProductVersion := new(dpxv1.DataProductVersion)
@@ -4140,13 +6554,14 @@ var _ = Describe(`DpxV1`, func() {
 				dataProductVersion.Tags = []string{"testString"}
 				dataProductVersion.UseCases = []dpxv1.UseCase{*useCaseModel}
 				dataProductVersion.Domain = domainModel
-				dataProductVersion.Type = []string{"data"}
+				dataProductVersion.Types = []string{"data"}
 				dataProductVersion.PartsOut = []dpxv1.DataProductPart{*dataProductPartModel}
 				dataProductVersion.PublishedBy = core.StringPtr("testString")
 				dataProductVersion.PublishedAt = CreateMockDateTime("2019-01-01T12:00:00.000Z")
 				dataProductVersion.ContractTerms = []dpxv1.DataProductContractTerms{*dataProductContractTermsModel}
 				dataProductVersion.CreatedBy = core.StringPtr("testString")
 				dataProductVersion.CreatedAt = CreateMockDateTime("2019-01-01T12:00:00.000Z")
+				dataProductVersion.IsRestricted = core.BoolPtr(true)
 
 				dataProductVersionPatch := dpxService.NewDataProductVersionPatch(dataProductVersion)
 				Expect(dataProductVersionPatch).ToNot(BeNil())
@@ -4155,135 +6570,152 @@ var _ = Describe(`DpxV1`, func() {
 					return *op.(dpxv1.JSONPatchOperation).Path
 				}
 				Expect(dataProductVersionPatch).To(MatchAllElements(_path, Elements{
-				"/version": MatchAllFields(Fields{
-					"Op": PointTo(Equal(dpxv1.JSONPatchOperation_Op_Add)),
-					"Path": PointTo(Equal("/version")),
-					"From": BeNil(),
-					"Value": Equal(dataProductVersion.Version),
+					"/version": MatchAllFields(Fields{
+						"Op":    PointTo(Equal(dpxv1.JSONPatchOperation_Op_Add)),
+						"Path":  PointTo(Equal("/version")),
+						"From":  BeNil(),
+						"Value": Equal(dataProductVersion.Version),
 					}),
-				"/state": MatchAllFields(Fields{
-					"Op": PointTo(Equal(dpxv1.JSONPatchOperation_Op_Add)),
-					"Path": PointTo(Equal("/state")),
-					"From": BeNil(),
-					"Value": Equal(dataProductVersion.State),
+					"/state": MatchAllFields(Fields{
+						"Op":    PointTo(Equal(dpxv1.JSONPatchOperation_Op_Add)),
+						"Path":  PointTo(Equal("/state")),
+						"From":  BeNil(),
+						"Value": Equal(dataProductVersion.State),
 					}),
-				"/data_product": MatchAllFields(Fields{
-					"Op": PointTo(Equal(dpxv1.JSONPatchOperation_Op_Add)),
-					"Path": PointTo(Equal("/data_product")),
-					"From": BeNil(),
-					"Value": Equal(dataProductVersion.DataProduct),
+					"/data_product": MatchAllFields(Fields{
+						"Op":    PointTo(Equal(dpxv1.JSONPatchOperation_Op_Add)),
+						"Path":  PointTo(Equal("/data_product")),
+						"From":  BeNil(),
+						"Value": Equal(dataProductVersion.DataProduct),
 					}),
-				"/name": MatchAllFields(Fields{
-					"Op": PointTo(Equal(dpxv1.JSONPatchOperation_Op_Add)),
-					"Path": PointTo(Equal("/name")),
-					"From": BeNil(),
-					"Value": Equal(dataProductVersion.Name),
+					"/name": MatchAllFields(Fields{
+						"Op":    PointTo(Equal(dpxv1.JSONPatchOperation_Op_Add)),
+						"Path":  PointTo(Equal("/name")),
+						"From":  BeNil(),
+						"Value": Equal(dataProductVersion.Name),
 					}),
-				"/description": MatchAllFields(Fields{
-					"Op": PointTo(Equal(dpxv1.JSONPatchOperation_Op_Add)),
-					"Path": PointTo(Equal("/description")),
-					"From": BeNil(),
-					"Value": Equal(dataProductVersion.Description),
+					"/description": MatchAllFields(Fields{
+						"Op":    PointTo(Equal(dpxv1.JSONPatchOperation_Op_Add)),
+						"Path":  PointTo(Equal("/description")),
+						"From":  BeNil(),
+						"Value": Equal(dataProductVersion.Description),
 					}),
-				"/id": MatchAllFields(Fields{
-					"Op": PointTo(Equal(dpxv1.JSONPatchOperation_Op_Add)),
-					"Path": PointTo(Equal("/id")),
-					"From": BeNil(),
-					"Value": Equal(dataProductVersion.ID),
+					"/id": MatchAllFields(Fields{
+						"Op":    PointTo(Equal(dpxv1.JSONPatchOperation_Op_Add)),
+						"Path":  PointTo(Equal("/id")),
+						"From":  BeNil(),
+						"Value": Equal(dataProductVersion.ID),
 					}),
-				"/asset": MatchAllFields(Fields{
-					"Op": PointTo(Equal(dpxv1.JSONPatchOperation_Op_Add)),
-					"Path": PointTo(Equal("/asset")),
-					"From": BeNil(),
-					"Value": Equal(dataProductVersion.Asset),
+					"/asset": MatchAllFields(Fields{
+						"Op":    PointTo(Equal(dpxv1.JSONPatchOperation_Op_Add)),
+						"Path":  PointTo(Equal("/asset")),
+						"From":  BeNil(),
+						"Value": Equal(dataProductVersion.Asset),
 					}),
-				"/tags": MatchAllFields(Fields{
-					"Op": PointTo(Equal(dpxv1.JSONPatchOperation_Op_Add)),
-					"Path": PointTo(Equal("/tags")),
-					"From": BeNil(),
-					"Value": Equal(dataProductVersion.Tags),
+					"/tags": MatchAllFields(Fields{
+						"Op":    PointTo(Equal(dpxv1.JSONPatchOperation_Op_Add)),
+						"Path":  PointTo(Equal("/tags")),
+						"From":  BeNil(),
+						"Value": Equal(dataProductVersion.Tags),
 					}),
-				"/use_cases": MatchAllFields(Fields{
-					"Op": PointTo(Equal(dpxv1.JSONPatchOperation_Op_Add)),
-					"Path": PointTo(Equal("/use_cases")),
-					"From": BeNil(),
-					"Value": Equal(dataProductVersion.UseCases),
+					"/use_cases": MatchAllFields(Fields{
+						"Op":    PointTo(Equal(dpxv1.JSONPatchOperation_Op_Add)),
+						"Path":  PointTo(Equal("/use_cases")),
+						"From":  BeNil(),
+						"Value": Equal(dataProductVersion.UseCases),
 					}),
-				"/domain": MatchAllFields(Fields{
-					"Op": PointTo(Equal(dpxv1.JSONPatchOperation_Op_Add)),
-					"Path": PointTo(Equal("/domain")),
-					"From": BeNil(),
-					"Value": Equal(dataProductVersion.Domain),
+					"/domain": MatchAllFields(Fields{
+						"Op":    PointTo(Equal(dpxv1.JSONPatchOperation_Op_Add)),
+						"Path":  PointTo(Equal("/domain")),
+						"From":  BeNil(),
+						"Value": Equal(dataProductVersion.Domain),
 					}),
-				"/type": MatchAllFields(Fields{
-					"Op": PointTo(Equal(dpxv1.JSONPatchOperation_Op_Add)),
-					"Path": PointTo(Equal("/type")),
-					"From": BeNil(),
-					"Value": Equal(dataProductVersion.Type),
+					"/types": MatchAllFields(Fields{
+						"Op":    PointTo(Equal(dpxv1.JSONPatchOperation_Op_Add)),
+						"Path":  PointTo(Equal("/types")),
+						"From":  BeNil(),
+						"Value": Equal(dataProductVersion.Types),
 					}),
-				"/parts_out": MatchAllFields(Fields{
-					"Op": PointTo(Equal(dpxv1.JSONPatchOperation_Op_Add)),
-					"Path": PointTo(Equal("/parts_out")),
-					"From": BeNil(),
-					"Value": Equal(dataProductVersion.PartsOut),
+					"/parts_out": MatchAllFields(Fields{
+						"Op":    PointTo(Equal(dpxv1.JSONPatchOperation_Op_Add)),
+						"Path":  PointTo(Equal("/parts_out")),
+						"From":  BeNil(),
+						"Value": Equal(dataProductVersion.PartsOut),
 					}),
-				"/published_by": MatchAllFields(Fields{
-					"Op": PointTo(Equal(dpxv1.JSONPatchOperation_Op_Add)),
-					"Path": PointTo(Equal("/published_by")),
-					"From": BeNil(),
-					"Value": Equal(dataProductVersion.PublishedBy),
+					"/published_by": MatchAllFields(Fields{
+						"Op":    PointTo(Equal(dpxv1.JSONPatchOperation_Op_Add)),
+						"Path":  PointTo(Equal("/published_by")),
+						"From":  BeNil(),
+						"Value": Equal(dataProductVersion.PublishedBy),
 					}),
-				"/published_at": MatchAllFields(Fields{
-					"Op": PointTo(Equal(dpxv1.JSONPatchOperation_Op_Add)),
-					"Path": PointTo(Equal("/published_at")),
-					"From": BeNil(),
-					"Value": Equal(dataProductVersion.PublishedAt),
+					"/published_at": MatchAllFields(Fields{
+						"Op":    PointTo(Equal(dpxv1.JSONPatchOperation_Op_Add)),
+						"Path":  PointTo(Equal("/published_at")),
+						"From":  BeNil(),
+						"Value": Equal(dataProductVersion.PublishedAt),
 					}),
-				"/contract_terms": MatchAllFields(Fields{
-					"Op": PointTo(Equal(dpxv1.JSONPatchOperation_Op_Add)),
-					"Path": PointTo(Equal("/contract_terms")),
-					"From": BeNil(),
-					"Value": Equal(dataProductVersion.ContractTerms),
+					"/contract_terms": MatchAllFields(Fields{
+						"Op":    PointTo(Equal(dpxv1.JSONPatchOperation_Op_Add)),
+						"Path":  PointTo(Equal("/contract_terms")),
+						"From":  BeNil(),
+						"Value": Equal(dataProductVersion.ContractTerms),
 					}),
-				"/created_by": MatchAllFields(Fields{
-					"Op": PointTo(Equal(dpxv1.JSONPatchOperation_Op_Add)),
-					"Path": PointTo(Equal("/created_by")),
-					"From": BeNil(),
-					"Value": Equal(dataProductVersion.CreatedBy),
+					"/created_by": MatchAllFields(Fields{
+						"Op":    PointTo(Equal(dpxv1.JSONPatchOperation_Op_Add)),
+						"Path":  PointTo(Equal("/created_by")),
+						"From":  BeNil(),
+						"Value": Equal(dataProductVersion.CreatedBy),
 					}),
-				"/created_at": MatchAllFields(Fields{
-					"Op": PointTo(Equal(dpxv1.JSONPatchOperation_Op_Add)),
-					"Path": PointTo(Equal("/created_at")),
-					"From": BeNil(),
-					"Value": Equal(dataProductVersion.CreatedAt),
+					"/created_at": MatchAllFields(Fields{
+						"Op":    PointTo(Equal(dpxv1.JSONPatchOperation_Op_Add)),
+						"Path":  PointTo(Equal("/created_at")),
+						"From":  BeNil(),
+						"Value": Equal(dataProductVersion.CreatedAt),
+					}),
+					"/is_restricted": MatchAllFields(Fields{
+						"Op":    PointTo(Equal(dpxv1.JSONPatchOperation_Op_Add)),
+						"Path":  PointTo(Equal("/is_restricted")),
+						"From":  BeNil(),
+						"Value": Equal(dataProductVersion.IsRestricted),
 					}),
 				}))
 			})
-			It(`Invoke NewDeleteContractTermsDocumentOptions successfully`, func() {
-				// Construct an instance of the DeleteContractTermsDocumentOptions model
-				dataProductVersionID := "testString"
-				contractTermsID := "testString"
-				documentID := "testString"
-				deleteContractTermsDocumentOptionsModel := dpxService.NewDeleteContractTermsDocumentOptions(dataProductVersionID, contractTermsID, documentID)
-				deleteContractTermsDocumentOptionsModel.SetDataProductVersionID("testString")
-				deleteContractTermsDocumentOptionsModel.SetContractTermsID("testString")
-				deleteContractTermsDocumentOptionsModel.SetDocumentID("testString")
-				deleteContractTermsDocumentOptionsModel.SetHeaders(map[string]string{"foo": "bar"})
-				Expect(deleteContractTermsDocumentOptionsModel).ToNot(BeNil())
-				Expect(deleteContractTermsDocumentOptionsModel.DataProductVersionID).To(Equal(core.StringPtr("testString")))
-				Expect(deleteContractTermsDocumentOptionsModel.ContractTermsID).To(Equal(core.StringPtr("testString")))
-				Expect(deleteContractTermsDocumentOptionsModel.DocumentID).To(Equal(core.StringPtr("testString")))
-				Expect(deleteContractTermsDocumentOptionsModel.Headers).To(Equal(map[string]string{"foo": "bar"}))
+			It(`Invoke NewDataProductVersionPrototype successfully`, func() {
+				var asset *dpxv1.AssetReference = nil
+				_, err := dpxService.NewDataProductVersionPrototype(asset)
+				Expect(err).ToNot(BeNil())
 			})
-			It(`Invoke NewDeleteDataProductVersionOptions successfully`, func() {
-				// Construct an instance of the DeleteDataProductVersionOptions model
-				id := "testString"
-				deleteDataProductVersionOptionsModel := dpxService.NewDeleteDataProductVersionOptions(id)
-				deleteDataProductVersionOptionsModel.SetID("testString")
-				deleteDataProductVersionOptionsModel.SetHeaders(map[string]string{"foo": "bar"})
-				Expect(deleteDataProductVersionOptionsModel).ToNot(BeNil())
-				Expect(deleteDataProductVersionOptionsModel.ID).To(Equal(core.StringPtr("testString")))
-				Expect(deleteDataProductVersionOptionsModel.Headers).To(Equal(map[string]string{"foo": "bar"}))
+			It(`Invoke NewDeleteDataProductDraftOptions successfully`, func() {
+				// Construct an instance of the DeleteDataProductDraftOptions model
+				dataProductID := "b38df608-d34b-4d58-8136-ed25e6c6684e"
+				draftID := "2b0bf220-079c-11ee-be56-0242ac120002@d29c42eb-7100-4b7a-8257-c196dbcca1cd"
+				deleteDataProductDraftOptionsModel := dpxService.NewDeleteDataProductDraftOptions(dataProductID, draftID)
+				deleteDataProductDraftOptionsModel.SetDataProductID("b38df608-d34b-4d58-8136-ed25e6c6684e")
+				deleteDataProductDraftOptionsModel.SetDraftID("2b0bf220-079c-11ee-be56-0242ac120002@d29c42eb-7100-4b7a-8257-c196dbcca1cd")
+				deleteDataProductDraftOptionsModel.SetHeaders(map[string]string{"foo": "bar"})
+				Expect(deleteDataProductDraftOptionsModel).ToNot(BeNil())
+				Expect(deleteDataProductDraftOptionsModel.DataProductID).To(Equal(core.StringPtr("b38df608-d34b-4d58-8136-ed25e6c6684e")))
+				Expect(deleteDataProductDraftOptionsModel.DraftID).To(Equal(core.StringPtr("2b0bf220-079c-11ee-be56-0242ac120002@d29c42eb-7100-4b7a-8257-c196dbcca1cd")))
+				Expect(deleteDataProductDraftOptionsModel.Headers).To(Equal(map[string]string{"foo": "bar"}))
+			})
+			It(`Invoke NewDeleteDraftContractTermsDocumentOptions successfully`, func() {
+				// Construct an instance of the DeleteDraftContractTermsDocumentOptions model
+				dataProductID := "b38df608-d34b-4d58-8136-ed25e6c6684e"
+				draftID := "2b0bf220-079c-11ee-be56-0242ac120002@d29c42eb-7100-4b7a-8257-c196dbcca1cd"
+				contractTermsID := "598183cd-b910-4e8d-9a97-97097afda3c1@e4fe2f87-0e56-46dd-b3b8-e9af32309e82"
+				documentID := "testString"
+				deleteDraftContractTermsDocumentOptionsModel := dpxService.NewDeleteDraftContractTermsDocumentOptions(dataProductID, draftID, contractTermsID, documentID)
+				deleteDraftContractTermsDocumentOptionsModel.SetDataProductID("b38df608-d34b-4d58-8136-ed25e6c6684e")
+				deleteDraftContractTermsDocumentOptionsModel.SetDraftID("2b0bf220-079c-11ee-be56-0242ac120002@d29c42eb-7100-4b7a-8257-c196dbcca1cd")
+				deleteDraftContractTermsDocumentOptionsModel.SetContractTermsID("598183cd-b910-4e8d-9a97-97097afda3c1@e4fe2f87-0e56-46dd-b3b8-e9af32309e82")
+				deleteDraftContractTermsDocumentOptionsModel.SetDocumentID("testString")
+				deleteDraftContractTermsDocumentOptionsModel.SetHeaders(map[string]string{"foo": "bar"})
+				Expect(deleteDraftContractTermsDocumentOptionsModel).ToNot(BeNil())
+				Expect(deleteDraftContractTermsDocumentOptionsModel.DataProductID).To(Equal(core.StringPtr("b38df608-d34b-4d58-8136-ed25e6c6684e")))
+				Expect(deleteDraftContractTermsDocumentOptionsModel.DraftID).To(Equal(core.StringPtr("2b0bf220-079c-11ee-be56-0242ac120002@d29c42eb-7100-4b7a-8257-c196dbcca1cd")))
+				Expect(deleteDraftContractTermsDocumentOptionsModel.ContractTermsID).To(Equal(core.StringPtr("598183cd-b910-4e8d-9a97-97097afda3c1@e4fe2f87-0e56-46dd-b3b8-e9af32309e82")))
+				Expect(deleteDraftContractTermsDocumentOptionsModel.DocumentID).To(Equal(core.StringPtr("testString")))
+				Expect(deleteDraftContractTermsDocumentOptionsModel.Headers).To(Equal(map[string]string{"foo": "bar"}))
 			})
 			It(`Invoke NewDeliveryMethod successfully`, func() {
 				id := "09cf5fcc-cb9d-4995-a8e4-16517b25229f"
@@ -4297,41 +6729,60 @@ var _ = Describe(`DpxV1`, func() {
 				Expect(_model).ToNot(BeNil())
 				Expect(err).To(BeNil())
 			})
-			It(`Invoke NewGetContractTermsDocumentOptions successfully`, func() {
-				// Construct an instance of the GetContractTermsDocumentOptions model
-				dataProductVersionID := "testString"
-				contractTermsID := "testString"
-				documentID := "testString"
-				getContractTermsDocumentOptionsModel := dpxService.NewGetContractTermsDocumentOptions(dataProductVersionID, contractTermsID, documentID)
-				getContractTermsDocumentOptionsModel.SetDataProductVersionID("testString")
-				getContractTermsDocumentOptionsModel.SetContractTermsID("testString")
-				getContractTermsDocumentOptionsModel.SetDocumentID("testString")
-				getContractTermsDocumentOptionsModel.SetHeaders(map[string]string{"foo": "bar"})
-				Expect(getContractTermsDocumentOptionsModel).ToNot(BeNil())
-				Expect(getContractTermsDocumentOptionsModel.DataProductVersionID).To(Equal(core.StringPtr("testString")))
-				Expect(getContractTermsDocumentOptionsModel.ContractTermsID).To(Equal(core.StringPtr("testString")))
-				Expect(getContractTermsDocumentOptionsModel.DocumentID).To(Equal(core.StringPtr("testString")))
-				Expect(getContractTermsDocumentOptionsModel.Headers).To(Equal(map[string]string{"foo": "bar"}))
+			It(`Invoke NewGetDataProductDraftOptions successfully`, func() {
+				// Construct an instance of the GetDataProductDraftOptions model
+				dataProductID := "b38df608-d34b-4d58-8136-ed25e6c6684e"
+				draftID := "2b0bf220-079c-11ee-be56-0242ac120002@d29c42eb-7100-4b7a-8257-c196dbcca1cd"
+				getDataProductDraftOptionsModel := dpxService.NewGetDataProductDraftOptions(dataProductID, draftID)
+				getDataProductDraftOptionsModel.SetDataProductID("b38df608-d34b-4d58-8136-ed25e6c6684e")
+				getDataProductDraftOptionsModel.SetDraftID("2b0bf220-079c-11ee-be56-0242ac120002@d29c42eb-7100-4b7a-8257-c196dbcca1cd")
+				getDataProductDraftOptionsModel.SetHeaders(map[string]string{"foo": "bar"})
+				Expect(getDataProductDraftOptionsModel).ToNot(BeNil())
+				Expect(getDataProductDraftOptionsModel.DataProductID).To(Equal(core.StringPtr("b38df608-d34b-4d58-8136-ed25e6c6684e")))
+				Expect(getDataProductDraftOptionsModel.DraftID).To(Equal(core.StringPtr("2b0bf220-079c-11ee-be56-0242ac120002@d29c42eb-7100-4b7a-8257-c196dbcca1cd")))
+				Expect(getDataProductDraftOptionsModel.Headers).To(Equal(map[string]string{"foo": "bar"}))
 			})
 			It(`Invoke NewGetDataProductOptions successfully`, func() {
 				// Construct an instance of the GetDataProductOptions model
-				id := "testString"
-				getDataProductOptionsModel := dpxService.NewGetDataProductOptions(id)
-				getDataProductOptionsModel.SetID("testString")
+				dataProductID := "b38df608-d34b-4d58-8136-ed25e6c6684e"
+				getDataProductOptionsModel := dpxService.NewGetDataProductOptions(dataProductID)
+				getDataProductOptionsModel.SetDataProductID("b38df608-d34b-4d58-8136-ed25e6c6684e")
 				getDataProductOptionsModel.SetHeaders(map[string]string{"foo": "bar"})
 				Expect(getDataProductOptionsModel).ToNot(BeNil())
-				Expect(getDataProductOptionsModel.ID).To(Equal(core.StringPtr("testString")))
+				Expect(getDataProductOptionsModel.DataProductID).To(Equal(core.StringPtr("b38df608-d34b-4d58-8136-ed25e6c6684e")))
 				Expect(getDataProductOptionsModel.Headers).To(Equal(map[string]string{"foo": "bar"}))
 			})
-			It(`Invoke NewGetDataProductVersionOptions successfully`, func() {
-				// Construct an instance of the GetDataProductVersionOptions model
-				id := "testString"
-				getDataProductVersionOptionsModel := dpxService.NewGetDataProductVersionOptions(id)
-				getDataProductVersionOptionsModel.SetID("testString")
-				getDataProductVersionOptionsModel.SetHeaders(map[string]string{"foo": "bar"})
-				Expect(getDataProductVersionOptionsModel).ToNot(BeNil())
-				Expect(getDataProductVersionOptionsModel.ID).To(Equal(core.StringPtr("testString")))
-				Expect(getDataProductVersionOptionsModel.Headers).To(Equal(map[string]string{"foo": "bar"}))
+			It(`Invoke NewGetDataProductReleaseOptions successfully`, func() {
+				// Construct an instance of the GetDataProductReleaseOptions model
+				dataProductID := "b38df608-d34b-4d58-8136-ed25e6c6684e"
+				releaseID := "2b0bf220-079c-11ee-be56-0242ac120002@d29c42eb-7100-4b7a-8257-c196dbcca1cd"
+				getDataProductReleaseOptionsModel := dpxService.NewGetDataProductReleaseOptions(dataProductID, releaseID)
+				getDataProductReleaseOptionsModel.SetDataProductID("b38df608-d34b-4d58-8136-ed25e6c6684e")
+				getDataProductReleaseOptionsModel.SetReleaseID("2b0bf220-079c-11ee-be56-0242ac120002@d29c42eb-7100-4b7a-8257-c196dbcca1cd")
+				getDataProductReleaseOptionsModel.SetHeaders(map[string]string{"foo": "bar"})
+				Expect(getDataProductReleaseOptionsModel).ToNot(BeNil())
+				Expect(getDataProductReleaseOptionsModel.DataProductID).To(Equal(core.StringPtr("b38df608-d34b-4d58-8136-ed25e6c6684e")))
+				Expect(getDataProductReleaseOptionsModel.ReleaseID).To(Equal(core.StringPtr("2b0bf220-079c-11ee-be56-0242ac120002@d29c42eb-7100-4b7a-8257-c196dbcca1cd")))
+				Expect(getDataProductReleaseOptionsModel.Headers).To(Equal(map[string]string{"foo": "bar"}))
+			})
+			It(`Invoke NewGetDraftContractTermsDocumentOptions successfully`, func() {
+				// Construct an instance of the GetDraftContractTermsDocumentOptions model
+				dataProductID := "b38df608-d34b-4d58-8136-ed25e6c6684e"
+				draftID := "2b0bf220-079c-11ee-be56-0242ac120002@d29c42eb-7100-4b7a-8257-c196dbcca1cd"
+				contractTermsID := "598183cd-b910-4e8d-9a97-97097afda3c1@e4fe2f87-0e56-46dd-b3b8-e9af32309e82"
+				documentID := "testString"
+				getDraftContractTermsDocumentOptionsModel := dpxService.NewGetDraftContractTermsDocumentOptions(dataProductID, draftID, contractTermsID, documentID)
+				getDraftContractTermsDocumentOptionsModel.SetDataProductID("b38df608-d34b-4d58-8136-ed25e6c6684e")
+				getDraftContractTermsDocumentOptionsModel.SetDraftID("2b0bf220-079c-11ee-be56-0242ac120002@d29c42eb-7100-4b7a-8257-c196dbcca1cd")
+				getDraftContractTermsDocumentOptionsModel.SetContractTermsID("598183cd-b910-4e8d-9a97-97097afda3c1@e4fe2f87-0e56-46dd-b3b8-e9af32309e82")
+				getDraftContractTermsDocumentOptionsModel.SetDocumentID("testString")
+				getDraftContractTermsDocumentOptionsModel.SetHeaders(map[string]string{"foo": "bar"})
+				Expect(getDraftContractTermsDocumentOptionsModel).ToNot(BeNil())
+				Expect(getDraftContractTermsDocumentOptionsModel.DataProductID).To(Equal(core.StringPtr("b38df608-d34b-4d58-8136-ed25e6c6684e")))
+				Expect(getDraftContractTermsDocumentOptionsModel.DraftID).To(Equal(core.StringPtr("2b0bf220-079c-11ee-be56-0242ac120002@d29c42eb-7100-4b7a-8257-c196dbcca1cd")))
+				Expect(getDraftContractTermsDocumentOptionsModel.ContractTermsID).To(Equal(core.StringPtr("598183cd-b910-4e8d-9a97-97097afda3c1@e4fe2f87-0e56-46dd-b3b8-e9af32309e82")))
+				Expect(getDraftContractTermsDocumentOptionsModel.DocumentID).To(Equal(core.StringPtr("testString")))
+				Expect(getDraftContractTermsDocumentOptionsModel.Headers).To(Equal(map[string]string{"foo": "bar"}))
 			})
 			It(`Invoke NewGetInitializeStatusOptions successfully`, func() {
 				// Construct an instance of the GetInitializeStatusOptions model
@@ -4341,6 +6792,25 @@ var _ = Describe(`DpxV1`, func() {
 				Expect(getInitializeStatusOptionsModel).ToNot(BeNil())
 				Expect(getInitializeStatusOptionsModel.ContainerID).To(Equal(core.StringPtr("testString")))
 				Expect(getInitializeStatusOptionsModel.Headers).To(Equal(map[string]string{"foo": "bar"}))
+			})
+			It(`Invoke NewGetReleaseContractTermsDocumentOptions successfully`, func() {
+				// Construct an instance of the GetReleaseContractTermsDocumentOptions model
+				dataProductID := "b38df608-d34b-4d58-8136-ed25e6c6684e"
+				releaseID := "2b0bf220-079c-11ee-be56-0242ac120002@d29c42eb-7100-4b7a-8257-c196dbcca1cd"
+				contractTermsID := "598183cd-b910-4e8d-9a97-97097afda3c1@e4fe2f87-0e56-46dd-b3b8-e9af32309e82"
+				documentID := "testString"
+				getReleaseContractTermsDocumentOptionsModel := dpxService.NewGetReleaseContractTermsDocumentOptions(dataProductID, releaseID, contractTermsID, documentID)
+				getReleaseContractTermsDocumentOptionsModel.SetDataProductID("b38df608-d34b-4d58-8136-ed25e6c6684e")
+				getReleaseContractTermsDocumentOptionsModel.SetReleaseID("2b0bf220-079c-11ee-be56-0242ac120002@d29c42eb-7100-4b7a-8257-c196dbcca1cd")
+				getReleaseContractTermsDocumentOptionsModel.SetContractTermsID("598183cd-b910-4e8d-9a97-97097afda3c1@e4fe2f87-0e56-46dd-b3b8-e9af32309e82")
+				getReleaseContractTermsDocumentOptionsModel.SetDocumentID("testString")
+				getReleaseContractTermsDocumentOptionsModel.SetHeaders(map[string]string{"foo": "bar"})
+				Expect(getReleaseContractTermsDocumentOptionsModel).ToNot(BeNil())
+				Expect(getReleaseContractTermsDocumentOptionsModel.DataProductID).To(Equal(core.StringPtr("b38df608-d34b-4d58-8136-ed25e6c6684e")))
+				Expect(getReleaseContractTermsDocumentOptionsModel.ReleaseID).To(Equal(core.StringPtr("2b0bf220-079c-11ee-be56-0242ac120002@d29c42eb-7100-4b7a-8257-c196dbcca1cd")))
+				Expect(getReleaseContractTermsDocumentOptionsModel.ContractTermsID).To(Equal(core.StringPtr("598183cd-b910-4e8d-9a97-97097afda3c1@e4fe2f87-0e56-46dd-b3b8-e9af32309e82")))
+				Expect(getReleaseContractTermsDocumentOptionsModel.DocumentID).To(Equal(core.StringPtr("testString")))
+				Expect(getReleaseContractTermsDocumentOptionsModel.Headers).To(Equal(map[string]string{"foo": "bar"}))
 			})
 			It(`Invoke NewInitializeOptions successfully`, func() {
 				// Construct an instance of the ContainerReference model
@@ -4354,14 +6824,10 @@ var _ = Describe(`DpxV1`, func() {
 				// Construct an instance of the InitializeOptions model
 				initializeOptionsModel := dpxService.NewInitializeOptions()
 				initializeOptionsModel.SetContainer(containerReferenceModel)
-				initializeOptionsModel.SetForce(true)
-				initializeOptionsModel.SetReinitialize(true)
 				initializeOptionsModel.SetInclude([]string{"delivery_methods", "data_product_samples", "domains_multi_industry"})
 				initializeOptionsModel.SetHeaders(map[string]string{"foo": "bar"})
 				Expect(initializeOptionsModel).ToNot(BeNil())
 				Expect(initializeOptionsModel.Container).To(Equal(containerReferenceModel))
-				Expect(initializeOptionsModel.Force).To(Equal(core.BoolPtr(true)))
-				Expect(initializeOptionsModel.Reinitialize).To(Equal(core.BoolPtr(true)))
 				Expect(initializeOptionsModel.Include).To(Equal([]string{"delivery_methods", "data_product_samples", "domains_multi_industry"}))
 				Expect(initializeOptionsModel.Headers).To(Equal(map[string]string{"foo": "bar"}))
 			})
@@ -4372,24 +6838,43 @@ var _ = Describe(`DpxV1`, func() {
 				Expect(_model).ToNot(BeNil())
 				Expect(err).To(BeNil())
 			})
-			It(`Invoke NewListDataProductVersionsOptions successfully`, func() {
-				// Construct an instance of the ListDataProductVersionsOptions model
-				listDataProductVersionsOptionsModel := dpxService.NewListDataProductVersionsOptions()
-				listDataProductVersionsOptionsModel.SetAssetContainerID("testString")
-				listDataProductVersionsOptionsModel.SetDataProduct("testString")
-				listDataProductVersionsOptionsModel.SetState("draft")
-				listDataProductVersionsOptionsModel.SetVersion("testString")
-				listDataProductVersionsOptionsModel.SetLimit(int64(10))
-				listDataProductVersionsOptionsModel.SetStart("testString")
-				listDataProductVersionsOptionsModel.SetHeaders(map[string]string{"foo": "bar"})
-				Expect(listDataProductVersionsOptionsModel).ToNot(BeNil())
-				Expect(listDataProductVersionsOptionsModel.AssetContainerID).To(Equal(core.StringPtr("testString")))
-				Expect(listDataProductVersionsOptionsModel.DataProduct).To(Equal(core.StringPtr("testString")))
-				Expect(listDataProductVersionsOptionsModel.State).To(Equal(core.StringPtr("draft")))
-				Expect(listDataProductVersionsOptionsModel.Version).To(Equal(core.StringPtr("testString")))
-				Expect(listDataProductVersionsOptionsModel.Limit).To(Equal(core.Int64Ptr(int64(10))))
-				Expect(listDataProductVersionsOptionsModel.Start).To(Equal(core.StringPtr("testString")))
-				Expect(listDataProductVersionsOptionsModel.Headers).To(Equal(map[string]string{"foo": "bar"}))
+			It(`Invoke NewListDataProductDraftsOptions successfully`, func() {
+				// Construct an instance of the ListDataProductDraftsOptions model
+				dataProductID := "b38df608-d34b-4d58-8136-ed25e6c6684e"
+				listDataProductDraftsOptionsModel := dpxService.NewListDataProductDraftsOptions(dataProductID)
+				listDataProductDraftsOptionsModel.SetDataProductID("b38df608-d34b-4d58-8136-ed25e6c6684e")
+				listDataProductDraftsOptionsModel.SetAssetContainerID("testString")
+				listDataProductDraftsOptionsModel.SetVersion("testString")
+				listDataProductDraftsOptionsModel.SetLimit(int64(10))
+				listDataProductDraftsOptionsModel.SetStart("testString")
+				listDataProductDraftsOptionsModel.SetHeaders(map[string]string{"foo": "bar"})
+				Expect(listDataProductDraftsOptionsModel).ToNot(BeNil())
+				Expect(listDataProductDraftsOptionsModel.DataProductID).To(Equal(core.StringPtr("b38df608-d34b-4d58-8136-ed25e6c6684e")))
+				Expect(listDataProductDraftsOptionsModel.AssetContainerID).To(Equal(core.StringPtr("testString")))
+				Expect(listDataProductDraftsOptionsModel.Version).To(Equal(core.StringPtr("testString")))
+				Expect(listDataProductDraftsOptionsModel.Limit).To(Equal(core.Int64Ptr(int64(10))))
+				Expect(listDataProductDraftsOptionsModel.Start).To(Equal(core.StringPtr("testString")))
+				Expect(listDataProductDraftsOptionsModel.Headers).To(Equal(map[string]string{"foo": "bar"}))
+			})
+			It(`Invoke NewListDataProductReleasesOptions successfully`, func() {
+				// Construct an instance of the ListDataProductReleasesOptions model
+				dataProductID := "b38df608-d34b-4d58-8136-ed25e6c6684e"
+				listDataProductReleasesOptionsModel := dpxService.NewListDataProductReleasesOptions(dataProductID)
+				listDataProductReleasesOptionsModel.SetDataProductID("b38df608-d34b-4d58-8136-ed25e6c6684e")
+				listDataProductReleasesOptionsModel.SetAssetContainerID("testString")
+				listDataProductReleasesOptionsModel.SetState([]string{"available"})
+				listDataProductReleasesOptionsModel.SetVersion("testString")
+				listDataProductReleasesOptionsModel.SetLimit(int64(10))
+				listDataProductReleasesOptionsModel.SetStart("testString")
+				listDataProductReleasesOptionsModel.SetHeaders(map[string]string{"foo": "bar"})
+				Expect(listDataProductReleasesOptionsModel).ToNot(BeNil())
+				Expect(listDataProductReleasesOptionsModel.DataProductID).To(Equal(core.StringPtr("b38df608-d34b-4d58-8136-ed25e6c6684e")))
+				Expect(listDataProductReleasesOptionsModel.AssetContainerID).To(Equal(core.StringPtr("testString")))
+				Expect(listDataProductReleasesOptionsModel.State).To(Equal([]string{"available"}))
+				Expect(listDataProductReleasesOptionsModel.Version).To(Equal(core.StringPtr("testString")))
+				Expect(listDataProductReleasesOptionsModel.Limit).To(Equal(core.Int64Ptr(int64(10))))
+				Expect(listDataProductReleasesOptionsModel.Start).To(Equal(core.StringPtr("testString")))
+				Expect(listDataProductReleasesOptionsModel.Headers).To(Equal(map[string]string{"foo": "bar"}))
 			})
 			It(`Invoke NewListDataProductsOptions successfully`, func() {
 				// Construct an instance of the ListDataProductsOptions model
@@ -4402,61 +6887,128 @@ var _ = Describe(`DpxV1`, func() {
 				Expect(listDataProductsOptionsModel.Start).To(Equal(core.StringPtr("testString")))
 				Expect(listDataProductsOptionsModel.Headers).To(Equal(map[string]string{"foo": "bar"}))
 			})
-			It(`Invoke NewUpdateContractTermsDocumentOptions successfully`, func() {
+			It(`Invoke NewManageApiKeysOptions successfully`, func() {
+				// Construct an instance of the ManageApiKeysOptions model
+				manageApiKeysOptionsModel := dpxService.NewManageApiKeysOptions()
+				manageApiKeysOptionsModel.SetHeaders(map[string]string{"foo": "bar"})
+				Expect(manageApiKeysOptionsModel).ToNot(BeNil())
+				Expect(manageApiKeysOptionsModel.Headers).To(Equal(map[string]string{"foo": "bar"}))
+			})
+			It(`Invoke NewPublishDataProductDraftOptions successfully`, func() {
+				// Construct an instance of the PublishDataProductDraftOptions model
+				dataProductID := "b38df608-d34b-4d58-8136-ed25e6c6684e"
+				draftID := "2b0bf220-079c-11ee-be56-0242ac120002@d29c42eb-7100-4b7a-8257-c196dbcca1cd"
+				publishDataProductDraftOptionsModel := dpxService.NewPublishDataProductDraftOptions(dataProductID, draftID)
+				publishDataProductDraftOptionsModel.SetDataProductID("b38df608-d34b-4d58-8136-ed25e6c6684e")
+				publishDataProductDraftOptionsModel.SetDraftID("2b0bf220-079c-11ee-be56-0242ac120002@d29c42eb-7100-4b7a-8257-c196dbcca1cd")
+				publishDataProductDraftOptionsModel.SetHeaders(map[string]string{"foo": "bar"})
+				Expect(publishDataProductDraftOptionsModel).ToNot(BeNil())
+				Expect(publishDataProductDraftOptionsModel.DataProductID).To(Equal(core.StringPtr("b38df608-d34b-4d58-8136-ed25e6c6684e")))
+				Expect(publishDataProductDraftOptionsModel.DraftID).To(Equal(core.StringPtr("2b0bf220-079c-11ee-be56-0242ac120002@d29c42eb-7100-4b7a-8257-c196dbcca1cd")))
+				Expect(publishDataProductDraftOptionsModel.Headers).To(Equal(map[string]string{"foo": "bar"}))
+			})
+			It(`Invoke NewRetireDataProductReleaseOptions successfully`, func() {
+				// Construct an instance of the RetireDataProductReleaseOptions model
+				dataProductID := "b38df608-d34b-4d58-8136-ed25e6c6684e"
+				releaseID := "2b0bf220-079c-11ee-be56-0242ac120002@d29c42eb-7100-4b7a-8257-c196dbcca1cd"
+				retireDataProductReleaseOptionsModel := dpxService.NewRetireDataProductReleaseOptions(dataProductID, releaseID)
+				retireDataProductReleaseOptionsModel.SetDataProductID("b38df608-d34b-4d58-8136-ed25e6c6684e")
+				retireDataProductReleaseOptionsModel.SetReleaseID("2b0bf220-079c-11ee-be56-0242ac120002@d29c42eb-7100-4b7a-8257-c196dbcca1cd")
+				retireDataProductReleaseOptionsModel.SetHeaders(map[string]string{"foo": "bar"})
+				Expect(retireDataProductReleaseOptionsModel).ToNot(BeNil())
+				Expect(retireDataProductReleaseOptionsModel.DataProductID).To(Equal(core.StringPtr("b38df608-d34b-4d58-8136-ed25e6c6684e")))
+				Expect(retireDataProductReleaseOptionsModel.ReleaseID).To(Equal(core.StringPtr("2b0bf220-079c-11ee-be56-0242ac120002@d29c42eb-7100-4b7a-8257-c196dbcca1cd")))
+				Expect(retireDataProductReleaseOptionsModel.Headers).To(Equal(map[string]string{"foo": "bar"}))
+			})
+			It(`Invoke NewUpdateDataProductDraftOptions successfully`, func() {
 				// Construct an instance of the JSONPatchOperation model
 				jsonPatchOperationModel := new(dpxv1.JSONPatchOperation)
 				Expect(jsonPatchOperationModel).ToNot(BeNil())
 				jsonPatchOperationModel.Op = core.StringPtr("add")
 				jsonPatchOperationModel.Path = core.StringPtr("testString")
 				jsonPatchOperationModel.From = core.StringPtr("testString")
-				jsonPatchOperationModel.Value = core.StringPtr("testString")
+				jsonPatchOperationModel.Value = "testString"
 				Expect(jsonPatchOperationModel.Op).To(Equal(core.StringPtr("add")))
 				Expect(jsonPatchOperationModel.Path).To(Equal(core.StringPtr("testString")))
 				Expect(jsonPatchOperationModel.From).To(Equal(core.StringPtr("testString")))
-				Expect(jsonPatchOperationModel.Value).To(Equal(core.StringPtr("testString")))
+				Expect(jsonPatchOperationModel.Value).To(Equal("testString"))
 
-				// Construct an instance of the UpdateContractTermsDocumentOptions model
-				dataProductVersionID := "testString"
-				contractTermsID := "testString"
+				// Construct an instance of the UpdateDataProductDraftOptions model
+				dataProductID := "b38df608-d34b-4d58-8136-ed25e6c6684e"
+				draftID := "2b0bf220-079c-11ee-be56-0242ac120002@d29c42eb-7100-4b7a-8257-c196dbcca1cd"
+				jsonPatchInstructions := []dpxv1.JSONPatchOperation{}
+				updateDataProductDraftOptionsModel := dpxService.NewUpdateDataProductDraftOptions(dataProductID, draftID, jsonPatchInstructions)
+				updateDataProductDraftOptionsModel.SetDataProductID("b38df608-d34b-4d58-8136-ed25e6c6684e")
+				updateDataProductDraftOptionsModel.SetDraftID("2b0bf220-079c-11ee-be56-0242ac120002@d29c42eb-7100-4b7a-8257-c196dbcca1cd")
+				updateDataProductDraftOptionsModel.SetJSONPatchInstructions([]dpxv1.JSONPatchOperation{*jsonPatchOperationModel})
+				updateDataProductDraftOptionsModel.SetHeaders(map[string]string{"foo": "bar"})
+				Expect(updateDataProductDraftOptionsModel).ToNot(BeNil())
+				Expect(updateDataProductDraftOptionsModel.DataProductID).To(Equal(core.StringPtr("b38df608-d34b-4d58-8136-ed25e6c6684e")))
+				Expect(updateDataProductDraftOptionsModel.DraftID).To(Equal(core.StringPtr("2b0bf220-079c-11ee-be56-0242ac120002@d29c42eb-7100-4b7a-8257-c196dbcca1cd")))
+				Expect(updateDataProductDraftOptionsModel.JSONPatchInstructions).To(Equal([]dpxv1.JSONPatchOperation{*jsonPatchOperationModel}))
+				Expect(updateDataProductDraftOptionsModel.Headers).To(Equal(map[string]string{"foo": "bar"}))
+			})
+			It(`Invoke NewUpdateDataProductReleaseOptions successfully`, func() {
+				// Construct an instance of the JSONPatchOperation model
+				jsonPatchOperationModel := new(dpxv1.JSONPatchOperation)
+				Expect(jsonPatchOperationModel).ToNot(BeNil())
+				jsonPatchOperationModel.Op = core.StringPtr("add")
+				jsonPatchOperationModel.Path = core.StringPtr("testString")
+				jsonPatchOperationModel.From = core.StringPtr("testString")
+				jsonPatchOperationModel.Value = "testString"
+				Expect(jsonPatchOperationModel.Op).To(Equal(core.StringPtr("add")))
+				Expect(jsonPatchOperationModel.Path).To(Equal(core.StringPtr("testString")))
+				Expect(jsonPatchOperationModel.From).To(Equal(core.StringPtr("testString")))
+				Expect(jsonPatchOperationModel.Value).To(Equal("testString"))
+
+				// Construct an instance of the UpdateDataProductReleaseOptions model
+				dataProductID := "b38df608-d34b-4d58-8136-ed25e6c6684e"
+				releaseID := "2b0bf220-079c-11ee-be56-0242ac120002@d29c42eb-7100-4b7a-8257-c196dbcca1cd"
+				jsonPatchInstructions := []dpxv1.JSONPatchOperation{}
+				updateDataProductReleaseOptionsModel := dpxService.NewUpdateDataProductReleaseOptions(dataProductID, releaseID, jsonPatchInstructions)
+				updateDataProductReleaseOptionsModel.SetDataProductID("b38df608-d34b-4d58-8136-ed25e6c6684e")
+				updateDataProductReleaseOptionsModel.SetReleaseID("2b0bf220-079c-11ee-be56-0242ac120002@d29c42eb-7100-4b7a-8257-c196dbcca1cd")
+				updateDataProductReleaseOptionsModel.SetJSONPatchInstructions([]dpxv1.JSONPatchOperation{*jsonPatchOperationModel})
+				updateDataProductReleaseOptionsModel.SetHeaders(map[string]string{"foo": "bar"})
+				Expect(updateDataProductReleaseOptionsModel).ToNot(BeNil())
+				Expect(updateDataProductReleaseOptionsModel.DataProductID).To(Equal(core.StringPtr("b38df608-d34b-4d58-8136-ed25e6c6684e")))
+				Expect(updateDataProductReleaseOptionsModel.ReleaseID).To(Equal(core.StringPtr("2b0bf220-079c-11ee-be56-0242ac120002@d29c42eb-7100-4b7a-8257-c196dbcca1cd")))
+				Expect(updateDataProductReleaseOptionsModel.JSONPatchInstructions).To(Equal([]dpxv1.JSONPatchOperation{*jsonPatchOperationModel}))
+				Expect(updateDataProductReleaseOptionsModel.Headers).To(Equal(map[string]string{"foo": "bar"}))
+			})
+			It(`Invoke NewUpdateDraftContractTermsDocumentOptions successfully`, func() {
+				// Construct an instance of the JSONPatchOperation model
+				jsonPatchOperationModel := new(dpxv1.JSONPatchOperation)
+				Expect(jsonPatchOperationModel).ToNot(BeNil())
+				jsonPatchOperationModel.Op = core.StringPtr("add")
+				jsonPatchOperationModel.Path = core.StringPtr("testString")
+				jsonPatchOperationModel.From = core.StringPtr("testString")
+				jsonPatchOperationModel.Value = "testString"
+				Expect(jsonPatchOperationModel.Op).To(Equal(core.StringPtr("add")))
+				Expect(jsonPatchOperationModel.Path).To(Equal(core.StringPtr("testString")))
+				Expect(jsonPatchOperationModel.From).To(Equal(core.StringPtr("testString")))
+				Expect(jsonPatchOperationModel.Value).To(Equal("testString"))
+
+				// Construct an instance of the UpdateDraftContractTermsDocumentOptions model
+				dataProductID := "b38df608-d34b-4d58-8136-ed25e6c6684e"
+				draftID := "2b0bf220-079c-11ee-be56-0242ac120002@d29c42eb-7100-4b7a-8257-c196dbcca1cd"
+				contractTermsID := "598183cd-b910-4e8d-9a97-97097afda3c1@e4fe2f87-0e56-46dd-b3b8-e9af32309e82"
 				documentID := "testString"
 				jsonPatchInstructions := []dpxv1.JSONPatchOperation{}
-				updateContractTermsDocumentOptionsModel := dpxService.NewUpdateContractTermsDocumentOptions(dataProductVersionID, contractTermsID, documentID, jsonPatchInstructions)
-				updateContractTermsDocumentOptionsModel.SetDataProductVersionID("testString")
-				updateContractTermsDocumentOptionsModel.SetContractTermsID("testString")
-				updateContractTermsDocumentOptionsModel.SetDocumentID("testString")
-				updateContractTermsDocumentOptionsModel.SetJSONPatchInstructions([]dpxv1.JSONPatchOperation{*jsonPatchOperationModel})
-				updateContractTermsDocumentOptionsModel.SetHeaders(map[string]string{"foo": "bar"})
-				Expect(updateContractTermsDocumentOptionsModel).ToNot(BeNil())
-				Expect(updateContractTermsDocumentOptionsModel.DataProductVersionID).To(Equal(core.StringPtr("testString")))
-				Expect(updateContractTermsDocumentOptionsModel.ContractTermsID).To(Equal(core.StringPtr("testString")))
-				Expect(updateContractTermsDocumentOptionsModel.DocumentID).To(Equal(core.StringPtr("testString")))
-				Expect(updateContractTermsDocumentOptionsModel.JSONPatchInstructions).To(Equal([]dpxv1.JSONPatchOperation{*jsonPatchOperationModel}))
-				Expect(updateContractTermsDocumentOptionsModel.Headers).To(Equal(map[string]string{"foo": "bar"}))
-			})
-			It(`Invoke NewUpdateDataProductVersionOptions successfully`, func() {
-				// Construct an instance of the JSONPatchOperation model
-				jsonPatchOperationModel := new(dpxv1.JSONPatchOperation)
-				Expect(jsonPatchOperationModel).ToNot(BeNil())
-				jsonPatchOperationModel.Op = core.StringPtr("add")
-				jsonPatchOperationModel.Path = core.StringPtr("testString")
-				jsonPatchOperationModel.From = core.StringPtr("testString")
-				jsonPatchOperationModel.Value = core.StringPtr("testString")
-				Expect(jsonPatchOperationModel.Op).To(Equal(core.StringPtr("add")))
-				Expect(jsonPatchOperationModel.Path).To(Equal(core.StringPtr("testString")))
-				Expect(jsonPatchOperationModel.From).To(Equal(core.StringPtr("testString")))
-				Expect(jsonPatchOperationModel.Value).To(Equal(core.StringPtr("testString")))
-
-				// Construct an instance of the UpdateDataProductVersionOptions model
-				id := "testString"
-				jsonPatchInstructions := []dpxv1.JSONPatchOperation{}
-				updateDataProductVersionOptionsModel := dpxService.NewUpdateDataProductVersionOptions(id, jsonPatchInstructions)
-				updateDataProductVersionOptionsModel.SetID("testString")
-				updateDataProductVersionOptionsModel.SetJSONPatchInstructions([]dpxv1.JSONPatchOperation{*jsonPatchOperationModel})
-				updateDataProductVersionOptionsModel.SetHeaders(map[string]string{"foo": "bar"})
-				Expect(updateDataProductVersionOptionsModel).ToNot(BeNil())
-				Expect(updateDataProductVersionOptionsModel.ID).To(Equal(core.StringPtr("testString")))
-				Expect(updateDataProductVersionOptionsModel.JSONPatchInstructions).To(Equal([]dpxv1.JSONPatchOperation{*jsonPatchOperationModel}))
-				Expect(updateDataProductVersionOptionsModel.Headers).To(Equal(map[string]string{"foo": "bar"}))
+				updateDraftContractTermsDocumentOptionsModel := dpxService.NewUpdateDraftContractTermsDocumentOptions(dataProductID, draftID, contractTermsID, documentID, jsonPatchInstructions)
+				updateDraftContractTermsDocumentOptionsModel.SetDataProductID("b38df608-d34b-4d58-8136-ed25e6c6684e")
+				updateDraftContractTermsDocumentOptionsModel.SetDraftID("2b0bf220-079c-11ee-be56-0242ac120002@d29c42eb-7100-4b7a-8257-c196dbcca1cd")
+				updateDraftContractTermsDocumentOptionsModel.SetContractTermsID("598183cd-b910-4e8d-9a97-97097afda3c1@e4fe2f87-0e56-46dd-b3b8-e9af32309e82")
+				updateDraftContractTermsDocumentOptionsModel.SetDocumentID("testString")
+				updateDraftContractTermsDocumentOptionsModel.SetJSONPatchInstructions([]dpxv1.JSONPatchOperation{*jsonPatchOperationModel})
+				updateDraftContractTermsDocumentOptionsModel.SetHeaders(map[string]string{"foo": "bar"})
+				Expect(updateDraftContractTermsDocumentOptionsModel).ToNot(BeNil())
+				Expect(updateDraftContractTermsDocumentOptionsModel.DataProductID).To(Equal(core.StringPtr("b38df608-d34b-4d58-8136-ed25e6c6684e")))
+				Expect(updateDraftContractTermsDocumentOptionsModel.DraftID).To(Equal(core.StringPtr("2b0bf220-079c-11ee-be56-0242ac120002@d29c42eb-7100-4b7a-8257-c196dbcca1cd")))
+				Expect(updateDraftContractTermsDocumentOptionsModel.ContractTermsID).To(Equal(core.StringPtr("598183cd-b910-4e8d-9a97-97097afda3c1@e4fe2f87-0e56-46dd-b3b8-e9af32309e82")))
+				Expect(updateDraftContractTermsDocumentOptionsModel.DocumentID).To(Equal(core.StringPtr("testString")))
+				Expect(updateDraftContractTermsDocumentOptionsModel.JSONPatchInstructions).To(Equal([]dpxv1.JSONPatchOperation{*jsonPatchOperationModel}))
+				Expect(updateDraftContractTermsDocumentOptionsModel.Headers).To(Equal(map[string]string{"foo": "bar"}))
 			})
 			It(`Invoke NewUseCase successfully`, func() {
 				id := "testString"
@@ -4466,6 +7018,277 @@ var _ = Describe(`DpxV1`, func() {
 			})
 		})
 	})
+	Describe(`Model unmarshaling tests`, func() {
+		It(`Invoke UnmarshalAssetPartReference successfully`, func() {
+			// Construct an instance of the model.
+			model := new(dpxv1.AssetPartReference)
+			model.ID = core.StringPtr("2b0bf220-079c-11ee-be56-0242ac120002")
+			model.Container = nil
+			model.Type = core.StringPtr("data_asset")
+
+			b, err := json.Marshal(model)
+			Expect(err).To(BeNil())
+
+			var raw map[string]json.RawMessage
+			err = json.Unmarshal(b, &raw)
+			Expect(err).To(BeNil())
+
+			var result *dpxv1.AssetPartReference
+			err = dpxv1.UnmarshalAssetPartReference(raw, &result)
+			Expect(err).To(BeNil())
+			Expect(result).ToNot(BeNil())
+			Expect(result).To(Equal(model))
+		})
+		It(`Invoke UnmarshalAssetReference successfully`, func() {
+			// Construct an instance of the model.
+			model := new(dpxv1.AssetReference)
+			model.ID = core.StringPtr("2b0bf220-079c-11ee-be56-0242ac120002")
+			model.Container = nil
+
+			b, err := json.Marshal(model)
+			Expect(err).To(BeNil())
+
+			var raw map[string]json.RawMessage
+			err = json.Unmarshal(b, &raw)
+			Expect(err).To(BeNil())
+
+			var result *dpxv1.AssetReference
+			err = dpxv1.UnmarshalAssetReference(raw, &result)
+			Expect(err).To(BeNil())
+			Expect(result).ToNot(BeNil())
+			Expect(result).To(Equal(model))
+		})
+		It(`Invoke UnmarshalContainerReference successfully`, func() {
+			// Construct an instance of the model.
+			model := new(dpxv1.ContainerReference)
+			model.ID = core.StringPtr("d29c42eb-7100-4b7a-8257-c196dbcca1cd")
+			model.Type = core.StringPtr("catalog")
+
+			b, err := json.Marshal(model)
+			Expect(err).To(BeNil())
+
+			var raw map[string]json.RawMessage
+			err = json.Unmarshal(b, &raw)
+			Expect(err).To(BeNil())
+
+			var result *dpxv1.ContainerReference
+			err = dpxv1.UnmarshalContainerReference(raw, &result)
+			Expect(err).To(BeNil())
+			Expect(result).ToNot(BeNil())
+			Expect(result).To(Equal(model))
+		})
+		It(`Invoke UnmarshalContractTermsDocument successfully`, func() {
+			// Construct an instance of the model.
+			model := new(dpxv1.ContractTermsDocument)
+			model.URL = core.StringPtr("testString")
+			model.Type = core.StringPtr("terms_and_conditions")
+			model.Name = core.StringPtr("testString")
+			model.ID = core.StringPtr("2b0bf220-079c-11ee-be56-0242ac120002")
+			model.Attachment = nil
+			model.UploadURL = core.StringPtr("testString")
+
+			b, err := json.Marshal(model)
+			Expect(err).To(BeNil())
+
+			var raw map[string]json.RawMessage
+			err = json.Unmarshal(b, &raw)
+			Expect(err).To(BeNil())
+
+			var result *dpxv1.ContractTermsDocument
+			err = dpxv1.UnmarshalContractTermsDocument(raw, &result)
+			Expect(err).To(BeNil())
+			Expect(result).ToNot(BeNil())
+			Expect(result).To(Equal(model))
+		})
+		It(`Invoke UnmarshalContractTermsDocumentAttachment successfully`, func() {
+			// Construct an instance of the model.
+			model := new(dpxv1.ContractTermsDocumentAttachment)
+			model.ID = core.StringPtr("testString")
+
+			b, err := json.Marshal(model)
+			Expect(err).To(BeNil())
+
+			var raw map[string]json.RawMessage
+			err = json.Unmarshal(b, &raw)
+			Expect(err).To(BeNil())
+
+			var result *dpxv1.ContractTermsDocumentAttachment
+			err = dpxv1.UnmarshalContractTermsDocumentAttachment(raw, &result)
+			Expect(err).To(BeNil())
+			Expect(result).ToNot(BeNil())
+			Expect(result).To(Equal(model))
+		})
+		It(`Invoke UnmarshalDataProductContractTerms successfully`, func() {
+			// Construct an instance of the model.
+			model := new(dpxv1.DataProductContractTerms)
+			model.Asset = nil
+			model.ID = core.StringPtr("testString")
+			model.Documents = nil
+
+			b, err := json.Marshal(model)
+			Expect(err).To(BeNil())
+
+			var raw map[string]json.RawMessage
+			err = json.Unmarshal(b, &raw)
+			Expect(err).To(BeNil())
+
+			var result *dpxv1.DataProductContractTerms
+			err = dpxv1.UnmarshalDataProductContractTerms(raw, &result)
+			Expect(err).To(BeNil())
+			Expect(result).ToNot(BeNil())
+			Expect(result).To(Equal(model))
+		})
+		It(`Invoke UnmarshalDataProductIdentity successfully`, func() {
+			// Construct an instance of the model.
+			model := new(dpxv1.DataProductIdentity)
+			model.ID = core.StringPtr("b38df608-d34b-4d58-8136-ed25e6c6684e")
+
+			b, err := json.Marshal(model)
+			Expect(err).To(BeNil())
+
+			var raw map[string]json.RawMessage
+			err = json.Unmarshal(b, &raw)
+			Expect(err).To(BeNil())
+
+			var result *dpxv1.DataProductIdentity
+			err = dpxv1.UnmarshalDataProductIdentity(raw, &result)
+			Expect(err).To(BeNil())
+			Expect(result).ToNot(BeNil())
+			Expect(result).To(Equal(model))
+		})
+		It(`Invoke UnmarshalDataProductPart successfully`, func() {
+			// Construct an instance of the model.
+			model := new(dpxv1.DataProductPart)
+			model.Asset = nil
+			model.Revision = core.Int64Ptr(int64(1))
+			model.UpdatedAt = CreateMockDateTime("2023-07-01T22:22:34.876Z")
+			model.DeliveryMethods = nil
+
+			b, err := json.Marshal(model)
+			Expect(err).To(BeNil())
+
+			var raw map[string]json.RawMessage
+			err = json.Unmarshal(b, &raw)
+			Expect(err).To(BeNil())
+
+			var result *dpxv1.DataProductPart
+			err = dpxv1.UnmarshalDataProductPart(raw, &result)
+			Expect(err).To(BeNil())
+			Expect(result).ToNot(BeNil())
+			Expect(result).To(Equal(model))
+		})
+		It(`Invoke UnmarshalDataProductVersionPrototype successfully`, func() {
+			// Construct an instance of the model.
+			model := new(dpxv1.DataProductVersionPrototype)
+			model.Version = core.StringPtr("1.0.0")
+			model.State = core.StringPtr("draft")
+			model.DataProduct = nil
+			model.Name = core.StringPtr("My Data Product")
+			model.Description = core.StringPtr("This is a description of My Data Product.")
+			model.Asset = nil
+			model.Tags = []string{"testString"}
+			model.UseCases = nil
+			model.Domain = nil
+			model.Types = []string{"data"}
+			model.PartsOut = nil
+			model.ContractTerms = nil
+			model.IsRestricted = core.BoolPtr(true)
+
+			b, err := json.Marshal(model)
+			Expect(err).To(BeNil())
+
+			var raw map[string]json.RawMessage
+			err = json.Unmarshal(b, &raw)
+			Expect(err).To(BeNil())
+
+			var result *dpxv1.DataProductVersionPrototype
+			err = dpxv1.UnmarshalDataProductVersionPrototype(raw, &result)
+			Expect(err).To(BeNil())
+			Expect(result).ToNot(BeNil())
+			Expect(result).To(Equal(model))
+		})
+		It(`Invoke UnmarshalDeliveryMethod successfully`, func() {
+			// Construct an instance of the model.
+			model := new(dpxv1.DeliveryMethod)
+			model.ID = core.StringPtr("09cf5fcc-cb9d-4995-a8e4-16517b25229f")
+			model.Container = nil
+
+			b, err := json.Marshal(model)
+			Expect(err).To(BeNil())
+
+			var raw map[string]json.RawMessage
+			err = json.Unmarshal(b, &raw)
+			Expect(err).To(BeNil())
+
+			var result *dpxv1.DeliveryMethod
+			err = dpxv1.UnmarshalDeliveryMethod(raw, &result)
+			Expect(err).To(BeNil())
+			Expect(result).ToNot(BeNil())
+			Expect(result).To(Equal(model))
+		})
+		It(`Invoke UnmarshalDomain successfully`, func() {
+			// Construct an instance of the model.
+			model := new(dpxv1.Domain)
+			model.ID = core.StringPtr("testString")
+			model.Name = core.StringPtr("testString")
+			model.Container = nil
+
+			b, err := json.Marshal(model)
+			Expect(err).To(BeNil())
+
+			var raw map[string]json.RawMessage
+			err = json.Unmarshal(b, &raw)
+			Expect(err).To(BeNil())
+
+			var result *dpxv1.Domain
+			err = dpxv1.UnmarshalDomain(raw, &result)
+			Expect(err).To(BeNil())
+			Expect(result).ToNot(BeNil())
+			Expect(result).To(Equal(model))
+		})
+		It(`Invoke UnmarshalJSONPatchOperation successfully`, func() {
+			// Construct an instance of the model.
+			model := new(dpxv1.JSONPatchOperation)
+			model.Op = core.StringPtr("add")
+			model.Path = core.StringPtr("testString")
+			model.From = core.StringPtr("testString")
+			model.Value = "testString"
+
+			b, err := json.Marshal(model)
+			Expect(err).To(BeNil())
+
+			var raw map[string]json.RawMessage
+			err = json.Unmarshal(b, &raw)
+			Expect(err).To(BeNil())
+
+			var result *dpxv1.JSONPatchOperation
+			err = dpxv1.UnmarshalJSONPatchOperation(raw, &result)
+			Expect(err).To(BeNil())
+			Expect(result).ToNot(BeNil())
+			Expect(result).To(Equal(model))
+		})
+		It(`Invoke UnmarshalUseCase successfully`, func() {
+			// Construct an instance of the model.
+			model := new(dpxv1.UseCase)
+			model.ID = core.StringPtr("testString")
+			model.Name = core.StringPtr("testString")
+			model.Container = nil
+
+			b, err := json.Marshal(model)
+			Expect(err).To(BeNil())
+
+			var raw map[string]json.RawMessage
+			err = json.Unmarshal(b, &raw)
+			Expect(err).To(BeNil())
+
+			var result *dpxv1.UseCase
+			err = dpxv1.UnmarshalUseCase(raw, &result)
+			Expect(err).To(BeNil())
+			Expect(result).ToNot(BeNil())
+			Expect(result).To(Equal(model))
+		})
+	})
+
 	Describe(`Utility function tests`, func() {
 		It(`Invoke CreateMockByteArray() successfully`, func() {
 			mockByteArray := CreateMockByteArray("This is a test")
@@ -4495,8 +7318,7 @@ var _ = Describe(`DpxV1`, func() {
 //
 
 func CreateMockByteArray(mockData string) *[]byte {
-	ba := make([]byte, 0)
-	ba = append(ba, mockData...)
+	ba := []byte(mockData)
 	return &ba
 }
 

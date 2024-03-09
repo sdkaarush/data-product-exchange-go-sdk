@@ -34,7 +34,7 @@ The IBM Cloud Data Product Exchange Go SDK allows developers to programmatically
 
 Service Name | Package name 
 --- | --- 
-[Data Product Exchange](https://cloud.ibm.com/apidocs/dataproducts) | dataproductexchangeapiservicev1
+[Data Product Exchange](https://cloud.ibm.com/apidocs/dataproducts) | dpxv1
 
 
 ## Prerequisites

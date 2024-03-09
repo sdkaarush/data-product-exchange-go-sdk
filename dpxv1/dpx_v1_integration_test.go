@@ -1,7 +1,7 @@
 //go:build integration
 
 /**
- * (C) Copyright IBM Corp. 2023.
+ * (C) Copyright IBM Corp. 2024.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -42,34 +42,19 @@ var _ = Describe(`DpxV1 Integration Tests`, func() {
 	const externalConfigFile = "../dpx_v1.env"
 
 	var (
-		err          error
+		err        error
 		dpxService *dpxv1.DpxV1
-		serviceURL   string
-		config       map[string]string
+		serviceURL string
+		config     map[string]string
 
 		// Variables to hold link values
-		completeContractTermsDocumentByContractIdLink string
-		completeContractTermsDocumentByVersionIdLink string
-		completeContractTermsDocumentLink string
-		createDataProductVersionByCatalogIdLink string
-		deleteContractTermsDocumentByContractIdLink string
-		deleteContractTermsDocumentByVersionIdLink string
-		deleteContractTermsDocumentLink string
-		deleteDataProductVersionByUserIdLink string
-		deliverDataProductVersionByUserIdLink string
-		getContractTermsDocumentByIdLink string
-		getContractTermsDocumentByVersionIdLink string
-		getContractTermsDocumentsByContractIdLink string
-		getDataProductByUserIdLink string
-		getDataProductVersionByUserIdLink string
-		getListOfDataProductByCatalogIdLink string
-		getStatusByCatalogIdLink string
-		updateContractTermsDocumentByContractIdLink string
-		updateContractTermsDocumentByVersionIdLink string
-		updateContractTermsDocumentLink string
-		updateDataProductVersionByUserIdLink string
-		uploadContractDocumentsByContractIdLink string
-		uploadContractTermsDocumentsByVersionIdLink string
+		containerIdLink           string
+		contractTermsIdLink       string
+		dataProductIdLink         string
+		documentIdLink            string
+		draftIdLink               string
+		optionalDataProductIdLink string
+		releaseIdLink             string
 	)
 
 	var shouldSkipTest = func() {
@@ -115,21 +100,19 @@ var _ = Describe(`DpxV1 Integration Tests`, func() {
 		})
 	})
 
-	Describe(`Initialize - Initialize resources in a data product exchange`, func() {
+	Describe(`Initialize - Initialize resources`, func() {
 		BeforeEach(func() {
 			shouldSkipTest()
 		})
 		It(`Initialize(initializeOptions *InitializeOptions)`, func() {
 			// containerReferenceModel := &dpxv1.ContainerReference{
-			// 	ID: core.StringPtr("d29c42eb-7100-4b7a-8257-c196dbcca1cd"),
+			// 	ID:   &containerIdLink,
 			// 	Type: core.StringPtr("catalog"),
 			// }
 
 			initializeOptions := &dpxv1.InitializeOptions{
 				Container: nil,
-				Force: core.BoolPtr(true),
-				Reinitialize: core.BoolPtr(true),
-				Include: []string{"delivery_methods", "data_product_samples", "domains_multi_industry"},
+				Include:   []string{"delivery_methods", "data_product_samples", "domains_multi_industry"},
 			}
 
 			initializeResource, response, err := dpxService.Initialize(initializeOptions)
@@ -137,194 +120,488 @@ var _ = Describe(`DpxV1 Integration Tests`, func() {
 			Expect(response.StatusCode).To(Equal(202))
 			Expect(initializeResource).ToNot(BeNil())
 
-			createDataProductVersionByCatalogIdLink = *initializeResource.Container.ID
-			fmt.Fprintf(GinkgoWriter, "Saved createDataProductVersionByCatalogIdLink value: %v\n", createDataProductVersionByCatalogIdLink)
-			getStatusByCatalogIdLink = *initializeResource.Container.ID
-			fmt.Fprintf(GinkgoWriter, "Saved getStatusByCatalogIdLink value: %v\n", getStatusByCatalogIdLink)
-			getListOfDataProductByCatalogIdLink = *initializeResource.Container.ID
-			fmt.Fprintf(GinkgoWriter, "Saved getListOfDataProductByCatalogIdLink value: %v\n", getListOfDataProductByCatalogIdLink)
+			containerIdLink = *initializeResource.Container.ID
+			fmt.Fprintf(GinkgoWriter, "Saved containerIdLink value: %v\n", containerIdLink)
 		})
 	})
 
-	Describe(`CreateDataProductVersion - Create a new data product version`, func() {
+	Describe(`CreateDataProduct - Create a new data product`, func() {
 		BeforeEach(func() {
 			shouldSkipTest()
 		})
-		It(`CreateDataProductVersion(createDataProductVersionOptions *CreateDataProductVersionOptions)`, func() {
+		It(`CreateDataProduct(createDataProductOptions *CreateDataProductOptions)`, func() {
+			// dataProductIdentityModel := &dpxv1.DataProductIdentity{
+			// 	ID: core.StringPtr("b38df608-d34b-4d58-8136-ed25e6c6684e"),
+			// }
+
 			containerReferenceModel := &dpxv1.ContainerReference{
-				ID: core.StringPtr(createDataProductVersionByCatalogIdLink),
+				ID:   &containerIdLink,
 				Type: core.StringPtr("catalog"),
 			}
 
-			dataProductIdentityModel := &dpxv1.DataProductIdentity{
-				ID: core.StringPtr("b38df608-d34b-4d58-8136-ed25e6c6684e"),
-			}
-
-			useCaseModel := &dpxv1.UseCase{
-				ID: core.StringPtr("testString"),
-				Name: core.StringPtr("testString"),
+			assetReferenceModel := &dpxv1.AssetReference{
+				ID:        core.StringPtr("2b0bf220-079c-11ee-be56-0242ac120002"),
 				Container: containerReferenceModel,
 			}
 
-			domainModel := &dpxv1.Domain{
-				ID: core.StringPtr("testString"),
-				Name: core.StringPtr("testString"),
-				Container: containerReferenceModel,
+			// useCaseModel := &dpxv1.UseCase{
+			// 	ID:        core.StringPtr("testString"),
+			// 	Name:      core.StringPtr("testString"),
+			// 	Container: containerReferenceModel,
+			// }
+
+			// domainModel := &dpxv1.Domain{
+			// 	ID:        core.StringPtr("testString"),
+			// 	Name:      core.StringPtr("testString"),
+			// 	Container: containerReferenceModel,
+			// }
+
+			// assetPartReferenceModel := &dpxv1.AssetPartReference{
+			// 	ID:        core.StringPtr("2b0bf220-079c-11ee-be56-0242ac120002"),
+			// 	Container: containerReferenceModel,
+			// 	Type:      core.StringPtr("data_asset"),
+			// }
+
+			// deliveryMethodModel := &dpxv1.DeliveryMethod{
+			// 	ID:        core.StringPtr("09cf5fcc-cb9d-4995-a8e4-16517b25229f"),
+			// 	Container: containerReferenceModel,
+			// }
+
+			// dataProductPartModel := &dpxv1.DataProductPart{
+			// 	Asset:           assetPartReferenceModel,
+			// 	Revision:        core.Int64Ptr(int64(1)),
+			// 	UpdatedAt:       CreateMockDateTime("2023-07-01T22:22:34.876Z"),
+			// 	DeliveryMethods: []dpxv1.DeliveryMethod{*deliveryMethodModel},
+			// }
+
+			// contractTermsDocumentAttachmentModel := &dpxv1.ContractTermsDocumentAttachment{
+			// 	ID: core.StringPtr("testString"),
+			// }
+
+			// contractTermsDocumentModel := &dpxv1.ContractTermsDocument{
+			// 	URL:        core.StringPtr("testString"),
+			// 	Type:       core.StringPtr("terms_and_conditions"),
+			// 	Name:       core.StringPtr("testString"),
+			// 	ID:         core.StringPtr("2b0bf220-079c-11ee-be56-0242ac120002"),
+			// 	Attachment: contractTermsDocumentAttachmentModel,
+			// 	UploadURL:  core.StringPtr("testString"),
+			// }
+
+			// dataProductContractTermsModel := &dpxv1.DataProductContractTerms{
+			// 	Asset:     assetReferenceModel,
+			// 	ID:        &contractTermsIdLink,
+			// 	Documents: []dpxv1.ContractTermsDocument{*contractTermsDocumentModel},
+			// }
+
+			dataProductVersionPrototypeModel := &dpxv1.DataProductVersionPrototype{
+				// Version:       core.StringPtr("1.0.0"),
+				// State:         core.StringPtr("draft"),
+				// DataProduct:   dataProductIdentityModel,
+				Name:        core.StringPtr("My New Data Product"),
+				Description: core.StringPtr("This is a description of My Data Product."),
+				Asset:       assetReferenceModel,
+				// Tags:          []string{"testString"},
+				// UseCases:      []dpxv1.UseCase{*useCaseModel},
+				// Domain:        domainModel,
+				Types: []string{"data"},
+				// PartsOut:      []dpxv1.DataProductPart{*dataProductPartModel},
+				// ContractTerms: []dpxv1.DataProductContractTerms{*dataProductContractTermsModel},
+				// IsRestricted:  core.BoolPtr(true),
 			}
 
-			assetPartReferenceModel := &dpxv1.AssetPartReference{
-				ID: core.StringPtr("2b0bf220-079c-11ee-be56-0242ac120002"),
-				Container: containerReferenceModel,
-				Type: core.StringPtr("data_asset"),
+			createDataProductOptions := &dpxv1.CreateDataProductOptions{
+				Drafts: []dpxv1.DataProductVersionPrototype{*dataProductVersionPrototypeModel},
 			}
 
-			deliveryMethodModel := &dpxv1.DeliveryMethod{
-				ID: core.StringPtr("09cf5fcc-cb9d-4995-a8e4-16517b25229f"),
-				Container: containerReferenceModel,
-			}
+			dataProduct, response, err := dpxService.CreateDataProduct(createDataProductOptions)
+			Expect(err).To(BeNil())
+			Expect(response.StatusCode).To(Equal(200))
+			Expect(dataProduct).ToNot(BeNil())
 
-			dataProductPartModel := &dpxv1.DataProductPart{
-				Asset: assetPartReferenceModel,
-				Revision: core.Int64Ptr(int64(1)),
-				UpdatedAt: CreateMockDateTime("2023-07-01T22:22:34.876Z"),
-				DeliveryMethods: []dpxv1.DeliveryMethod{*deliveryMethodModel},
-			}
+			optionalDataProductIdLink = *dataProduct.ID
+			fmt.Fprintf(GinkgoWriter, "Saved optionalDataProductIdLink value: %v\n", optionalDataProductIdLink)
+			dataProductIdLink = *dataProduct.ID
+			fmt.Fprintf(GinkgoWriter, "Saved dataProductIdLink value: %v\n", dataProductIdLink)
+		})
+	})
 
-			contractTermsDocumentAttachmentModel := &dpxv1.ContractTermsDocumentAttachment{
-				ID: core.StringPtr("testString"),
-			}
-
-			contractTermsDocumentModel := &dpxv1.ContractTermsDocument{
-				URL: core.StringPtr("testString"),
-				Type: core.StringPtr("terms_and_conditions"),
-				Name: core.StringPtr("testString"),
-				ID: core.StringPtr("2b0bf220-079c-11ee-be56-0242ac120002"),
-				Attachment: contractTermsDocumentAttachmentModel,
+	Describe(`CreateDataProductDraft - Create a new draft of an existing data product`, func() {
+		BeforeEach(func() {
+			shouldSkipTest()
+		})
+		It(`CreateDataProductDraft(createDataProductDraftOptions *CreateDataProductDraftOptions)`, func() {
+			containerReferenceModel := &dpxv1.ContainerReference{
+				ID:   &containerIdLink,
+				Type: core.StringPtr("catalog"),
 			}
 
 			assetReferenceModel := &dpxv1.AssetReference{
-				ID: core.StringPtr("2b0bf220-079c-11ee-be56-0242ac120002"),
+				ID:        core.StringPtr("2b0bf220-079c-11ee-be56-0242ac120002"),
 				Container: containerReferenceModel,
 			}
 
-			dataProductContractTermsModel := &dpxv1.DataProductContractTerms{
-				ID: core.StringPtr("testString"),
-				Documents: []dpxv1.ContractTermsDocument{*contractTermsDocumentModel},
-				Asset: assetReferenceModel,
+			dataProductIdentityModel := &dpxv1.DataProductIdentity{
+				ID: &dataProductIdLink,
 			}
 
-			createDataProductVersionOptions := &dpxv1.CreateDataProductVersionOptions{
+			// useCaseModel := &dpxv1.UseCase{
+			// 	ID:        core.StringPtr("testString"),
+			// 	Name:      core.StringPtr("testString"),
+			// 	Container: containerReferenceModel,
+			// }
+
+			domainModel := &dpxv1.Domain{
+				ID:        core.StringPtr("918c0bfd-6943-4468-b74f-bc111018e0d1"),
+				Name:      core.StringPtr("Customer Service"),
 				Container: containerReferenceModel,
-				Version: core.StringPtr("testString"),
-				State: core.StringPtr("draft"),
+			}
+
+			// assetPartReferenceModel := &dpxv1.AssetPartReference{
+			// 	ID:        core.StringPtr("2b0bf220-079c-11ee-be56-0242ac120002"),
+			// 	Container: containerReferenceModel,
+			// 	Type:      core.StringPtr("data_asset"),
+			// }
+
+			// deliveryMethodModel := &dpxv1.DeliveryMethod{
+			// 	ID:        core.StringPtr("09cf5fcc-cb9d-4995-a8e4-16517b25229f"),
+			// 	Container: containerReferenceModel,
+			// }
+
+			// dataProductPartModel := &dpxv1.DataProductPart{
+			// 	Asset:           assetPartReferenceModel,
+			// 	Revision:        core.Int64Ptr(int64(1)),
+			// 	UpdatedAt:       CreateMockDateTime("2023-07-01T22:22:34.876Z"),
+			// 	DeliveryMethods: []dpxv1.DeliveryMethod{*deliveryMethodModel},
+			// }
+
+			// contractTermsDocumentAttachmentModel := &dpxv1.ContractTermsDocumentAttachment{
+			// 	ID: core.StringPtr("testString"),
+			// }
+
+			// contractTermsDocumentModel := &dpxv1.ContractTermsDocument{
+			// 	URL:        core.StringPtr("testString"),
+			// 	Type:       core.StringPtr("terms_and_conditions"),
+			// 	Name:       core.StringPtr("testString"),
+			// 	ID:         core.StringPtr("2b0bf220-079c-11ee-be56-0242ac120002"),
+			// 	Attachment: contractTermsDocumentAttachmentModel,
+			// 	UploadURL:  core.StringPtr("testString"),
+			// }
+
+			// dataProductContractTermsModel := &dpxv1.DataProductContractTerms{
+			// 	Asset:     assetReferenceModel,
+			// 	ID:        &contractTermsIdLink,
+			// 	Documents: []dpxv1.ContractTermsDocument{*contractTermsDocumentModel},
+			// }
+
+			createDataProductDraftOptions := &dpxv1.CreateDataProductDraftOptions{
+				DataProductID: &dataProductIdLink,
+				Asset:         assetReferenceModel,
+				Version:       core.StringPtr("1.2.0"),
+				// State:         core.StringPtr("draft"),
 				DataProduct: dataProductIdentityModel,
-				Name: core.StringPtr("My New Data Product"),
+				Name:        core.StringPtr("data_product_test"),
 				Description: core.StringPtr("testString"),
-				Tags: []string{"testString"},
-				UseCases: []dpxv1.UseCase{*useCaseModel},
+				// Tags:          []string{"testString"},
+				// UseCases:      []dpxv1.UseCase{*useCaseModel},
 				Domain: domainModel,
-				Type: []string{"data"},
-				PartsOut: []dpxv1.DataProductPart{*dataProductPartModel},
-				ContractTerms: []dpxv1.DataProductContractTerms{*dataProductContractTermsModel},
+				Types:  []string{"data"},
+				// PartsOut:      []dpxv1.DataProductPart{*dataProductPartModel},
+				// ContractTerms: []dpxv1.DataProductContractTerms{*dataProductContractTermsModel},
+				IsRestricted: core.BoolPtr(true),
 			}
 
-			dataProductVersion, response, err := dpxService.CreateDataProductVersion(createDataProductVersionOptions)
+			dataProductVersion, response, err := dpxService.CreateDataProductDraft(createDataProductDraftOptions)
 			Expect(err).To(BeNil())
 			Expect(response.StatusCode).To(Equal(201))
 			Expect(dataProductVersion).ToNot(BeNil())
 
-			getDataProductVersionByUserIdLink = *dataProductVersion.ID
-			fmt.Fprintf(GinkgoWriter, "Saved getDataProductVersionByUserIdLink value: %v\n", getDataProductVersionByUserIdLink)
-			updateDataProductVersionByUserIdLink = *dataProductVersion.ID
-			fmt.Fprintf(GinkgoWriter, "Saved updateDataProductVersionByUserIdLink value: %v\n", updateDataProductVersionByUserIdLink)
-			deleteDataProductVersionByUserIdLink = *dataProductVersion.ID
-			fmt.Fprintf(GinkgoWriter, "Saved deleteDataProductVersionByUserIdLink value: %v\n", deleteDataProductVersionByUserIdLink)
-			getDataProductByUserIdLink = *dataProductVersion.DataProduct.ID
-			fmt.Fprintf(GinkgoWriter, "Saved getDataProductByUserIdLink value: %v\n", getDataProductByUserIdLink)
-			deliverDataProductVersionByUserIdLink = *dataProductVersion.ID
-			fmt.Fprintf(GinkgoWriter, "Saved deliverDataProductVersionByUserIdLink value: %v\n", deliverDataProductVersionByUserIdLink)
-			completeContractTermsDocumentByVersionIdLink = *dataProductVersion.ID
-			fmt.Fprintf(GinkgoWriter, "Saved completeContractTermsDocumentByVersionIdLink value: %v\n", completeContractTermsDocumentByVersionIdLink)
-			uploadContractTermsDocumentsByVersionIdLink = *dataProductVersion.ID
-			fmt.Fprintf(GinkgoWriter, "Saved uploadContractTermsDocumentsByVersionIdLink value: %v\n", uploadContractTermsDocumentsByVersionIdLink)
-			getContractTermsDocumentByVersionIdLink = *dataProductVersion.ID
-			fmt.Fprintf(GinkgoWriter, "Saved getContractTermsDocumentByVersionIdLink value: %v\n", getContractTermsDocumentByVersionIdLink)
-			deleteContractTermsDocumentByVersionIdLink = *dataProductVersion.ID
-			fmt.Fprintf(GinkgoWriter, "Saved deleteContractTermsDocumentByVersionIdLink value: %v\n", deleteContractTermsDocumentByVersionIdLink)
-			updateContractTermsDocumentByVersionIdLink = *dataProductVersion.ID
-			fmt.Fprintf(GinkgoWriter, "Saved updateContractTermsDocumentByVersionIdLink value: %v\n", updateContractTermsDocumentByVersionIdLink)
+			draftIdLink = *dataProductVersion.ID
+			fmt.Fprintf(GinkgoWriter, "Saved draftIdLink value: %v\n", draftIdLink)
+			contractTermsIdLink = *dataProductVersion.ContractTerms[0].ID
+			fmt.Fprintf(GinkgoWriter, "Saved contractTermsIdLink value: %v\n", contractTermsIdLink)
 		})
 	})
 
-	Describe(`GetDataProductVersion - Retrieve a data product version identified by ID`, func() {
+	Describe(`DeleteDataProductDraft - Delete a data product draft identified by ID`, func() {
 		BeforeEach(func() {
 			shouldSkipTest()
 		})
-		It(`GetDataProductVersion(getDataProductVersionOptions *GetDataProductVersionOptions)`, func() {
-			getDataProductVersionOptions := &dpxv1.GetDataProductVersionOptions{
-				ID: &getDataProductVersionByUserIdLink,
+		It(`DeleteDataProductDraft(deleteDataProductDraftOptions *DeleteDataProductDraftOptions)`, func() {
+			deleteDataProductDraftOptions := &dpxv1.DeleteDataProductDraftOptions{
+				DataProductID: &optionalDataProductIdLink,
+				DraftID:       &draftIdLink,
 			}
 
-			dataProductVersion, response, err := dpxService.GetDataProductVersion(getDataProductVersionOptions)
+			response, err := dpxService.DeleteDataProductDraft(deleteDataProductDraftOptions)
 			Expect(err).To(BeNil())
-			Expect(response.StatusCode).To(Equal(200))
+			Expect(response.StatusCode).To(Equal(204))
+		})
+	})
+
+	Describe(`CreateDataProductDraftAgain	 - Create a new draft of an existing data product`, func() {
+		BeforeEach(func() {
+			shouldSkipTest()
+		})
+		It(`CreateDataProductDraft(createDataProductDraftOptions *CreateDataProductDraftOptions)`, func() {
+			containerReferenceModel := &dpxv1.ContainerReference{
+				ID:   &containerIdLink,
+				Type: core.StringPtr("catalog"),
+			}
+
+			assetReferenceModel := &dpxv1.AssetReference{
+				ID:        core.StringPtr("2b0bf220-079c-11ee-be56-0242ac120002"),
+				Container: containerReferenceModel,
+			}
+
+			dataProductIdentityModel := &dpxv1.DataProductIdentity{
+				ID: &dataProductIdLink,
+			}
+
+			// useCaseModel := &dpxv1.UseCase{
+			// 	ID:        core.StringPtr("testString"),
+			// 	Name:      core.StringPtr("testString"),
+			// 	Container: containerReferenceModel,
+			// }
+
+			domainModel := &dpxv1.Domain{
+				ID:        core.StringPtr("918c0bfd-6943-4468-b74f-bc111018e0d1"),
+				Name:      core.StringPtr("Customer Service"),
+				Container: containerReferenceModel,
+			}
+
+			// assetPartReferenceModel := &dpxv1.AssetPartReference{
+			// 	ID:        core.StringPtr("2b0bf220-079c-11ee-be56-0242ac120002"),
+			// 	Container: containerReferenceModel,
+			// 	Type:      core.StringPtr("data_asset"),
+			// }
+
+			// deliveryMethodModel := &dpxv1.DeliveryMethod{
+			// 	ID:        core.StringPtr("09cf5fcc-cb9d-4995-a8e4-16517b25229f"),
+			// 	Container: containerReferenceModel,
+			// }
+
+			// dataProductPartModel := &dpxv1.DataProductPart{
+			// 	Asset:           assetPartReferenceModel,
+			// 	Revision:        core.Int64Ptr(int64(1)),
+			// 	UpdatedAt:       CreateMockDateTime("2023-07-01T22:22:34.876Z"),
+			// 	DeliveryMethods: []dpxv1.DeliveryMethod{*deliveryMethodModel},
+			// }
+
+			// contractTermsDocumentAttachmentModel := &dpxv1.ContractTermsDocumentAttachment{
+			// 	ID: core.StringPtr("testString"),
+			// }
+
+			// contractTermsDocumentModel := &dpxv1.ContractTermsDocument{
+			// 	URL:        core.StringPtr("testString"),
+			// 	Type:       core.StringPtr("terms_and_conditions"),
+			// 	Name:       core.StringPtr("testString"),
+			// 	ID:         core.StringPtr("2b0bf220-079c-11ee-be56-0242ac120002"),
+			// 	Attachment: contractTermsDocumentAttachmentModel,
+			// 	UploadURL:  core.StringPtr("testString"),
+			// }
+
+			// dataProductContractTermsModel := &dpxv1.DataProductContractTerms{
+			// 	Asset:     assetReferenceModel,
+			// 	ID:        &contractTermsIdLink,
+			// 	Documents: []dpxv1.ContractTermsDocument{*contractTermsDocumentModel},
+			// }
+
+			createDataProductDraftOptions := &dpxv1.CreateDataProductDraftOptions{
+				DataProductID: &dataProductIdLink,
+				Asset:         assetReferenceModel,
+				Version:       core.StringPtr("1.2.0"),
+				// State:         core.StringPtr("draft"),
+				DataProduct: dataProductIdentityModel,
+				Name:        core.StringPtr("data_product_test"),
+				Description: core.StringPtr("testString"),
+				// Tags:          []string{"testString"},
+				// UseCases:      []dpxv1.UseCase{*useCaseModel},
+				Domain: domainModel,
+				Types:  []string{"data"},
+				// PartsOut:      []dpxv1.DataProductPart{*dataProductPartModel},
+				// ContractTerms: []dpxv1.DataProductContractTerms{*dataProductContractTermsModel},
+				IsRestricted: core.BoolPtr(true),
+			}
+
+			dataProductVersion, response, err := dpxService.CreateDataProductDraft(createDataProductDraftOptions)
+			Expect(err).To(BeNil())
+			Expect(response.StatusCode).To(Equal(201))
 			Expect(dataProductVersion).ToNot(BeNil())
 
-			completeContractTermsDocumentByContractIdLink = *dataProductVersion.ContractTerms[4].ID
-			fmt.Fprintf(GinkgoWriter, "Saved completeContractTermsDocumentByContractIdLink value: %v\n", completeContractTermsDocumentByContractIdLink)
-			uploadContractDocumentsByContractIdLink = *dataProductVersion.ContractTerms[4].ID
-			fmt.Fprintf(GinkgoWriter, "Saved uploadContractDocumentsByContractIdLink value: %v\n", uploadContractDocumentsByContractIdLink)
-			getContractTermsDocumentsByContractIdLink = *dataProductVersion.ContractTerms[4].ID
-			fmt.Fprintf(GinkgoWriter, "Saved getContractTermsDocumentsByContractIdLink value: %v\n", getContractTermsDocumentsByContractIdLink)
-			deleteContractTermsDocumentByContractIdLink = *dataProductVersion.ContractTerms[4].ID
-			fmt.Fprintf(GinkgoWriter, "Saved deleteContractTermsDocumentByContractIdLink value: %v\n", deleteContractTermsDocumentByContractIdLink)
-			updateContractTermsDocumentByContractIdLink = *dataProductVersion.ContractTerms[4].ID
-			fmt.Fprintf(GinkgoWriter, "Saved updateContractTermsDocumentByContractIdLink value: %v\n", updateContractTermsDocumentByContractIdLink)
+			draftIdLink = *dataProductVersion.ID
+			fmt.Fprintf(GinkgoWriter, "Saved draftIdLink value: %v\n", draftIdLink)
+			contractTermsIdLink = *dataProductVersion.ContractTerms[0].ID
+			fmt.Fprintf(GinkgoWriter, "Saved contractTermsIdLink value: %v\n", contractTermsIdLink)
 		})
 	})
 
-	Describe(`CreateContractTermsDocument - Upload a contract document to the Data Product Version contract terms`, func() {
+	Describe(`CreateDraftContractTermsDocument - Upload a contract document to the data product draft contract terms`, func() {
 		BeforeEach(func() {
 			shouldSkipTest()
 		})
-		It(`CreateContractTermsDocument(createContractTermsDocumentOptions *CreateContractTermsDocumentOptions)`, func() {
-			contractTermsDocumentAttachmentModel := &dpxv1.ContractTermsDocumentAttachment{
-				ID: core.StringPtr("testString"),
+		It(`CreateDraftContractTermsDocument(createDraftContractTermsDocumentOptions *CreateDraftContractTermsDocumentOptions)`, func() {
+			// contractTermsDocumentAttachmentModel := &dpxv1.ContractTermsDocumentAttachment{
+			// 	ID: core.StringPtr("testString"),
+			// }
+
+			createDraftContractTermsDocumentOptions := &dpxv1.CreateDraftContractTermsDocumentOptions{
+				DataProductID:   &optionalDataProductIdLink,
+				DraftID:         &draftIdLink,
+				ContractTermsID: &contractTermsIdLink,
+				Type:            core.StringPtr("terms_and_conditions"),
+				Name:            core.StringPtr("Terms and conditions document"),
+				ID:              core.StringPtr("b38df608-d34b-4d58-8136-ed25e6c6684e"),
+				URL:             core.StringPtr("https://www.google.com"),
+				// Attachment:      contractTermsDocumentAttachmentModel,
+				// UploadURL:       core.StringPtr("testString"),
 			}
 
-			createContractTermsDocumentOptions := &dpxv1.CreateContractTermsDocumentOptions{
-				DataProductVersionID: &uploadContractTermsDocumentsByVersionIdLink,
-				ContractTermsID: &uploadContractDocumentsByContractIdLink,
-				Type: core.StringPtr("terms_and_conditions"),
-				Name: core.StringPtr("Terms and conditions document"),
-				ID: core.StringPtr("testString"),
-				URL: core.StringPtr("testString"),
-				Attachment: contractTermsDocumentAttachmentModel,
-			}
-
-			contractTermsDocument, response, err := dpxService.CreateContractTermsDocument(createContractTermsDocumentOptions)
+			contractTermsDocument, response, err := dpxService.CreateDraftContractTermsDocument(createDraftContractTermsDocumentOptions)
 			Expect(err).To(BeNil())
 			Expect(response.StatusCode).To(Equal(201))
 			Expect(contractTermsDocument).ToNot(BeNil())
 
-			updateContractTermsDocumentLink = *contractTermsDocument.ID
-			fmt.Fprintf(GinkgoWriter, "Saved updateContractTermsDocumentLink value: %v\n", updateContractTermsDocumentLink)
-			deleteContractTermsDocumentLink = *contractTermsDocument.ID
-			fmt.Fprintf(GinkgoWriter, "Saved deleteContractTermsDocumentLink value: %v\n", deleteContractTermsDocumentLink)
-			completeContractTermsDocumentLink = *contractTermsDocument.ID
-			fmt.Fprintf(GinkgoWriter, "Saved completeContractTermsDocumentLink value: %v\n", completeContractTermsDocumentLink)
-			getContractTermsDocumentByIdLink = *contractTermsDocument.ID
-			fmt.Fprintf(GinkgoWriter, "Saved getContractTermsDocumentByIdLink value: %v\n", getContractTermsDocumentByIdLink)
+			documentIdLink = *contractTermsDocument.ID
+			fmt.Fprintf(GinkgoWriter, "Saved documentIdLink value: %v\n", documentIdLink)
 		})
 	})
 
-	Describe(`GetInitializeStatus - Get the status of resources initialization in data product exchange`, func() {
+	Describe(`DeleteDraftContractTermsDocument - Delete a contract document`, func() {
+		BeforeEach(func() {
+			shouldSkipTest()
+		})
+		It(`DeleteDraftContractTermsDocument(deleteDraftContractTermsDocumentOptions *DeleteDraftContractTermsDocumentOptions)`, func() {
+			deleteDraftContractTermsDocumentOptions := &dpxv1.DeleteDraftContractTermsDocumentOptions{
+				DataProductID:   &optionalDataProductIdLink,
+				DraftID:         &draftIdLink,
+				ContractTermsID: &contractTermsIdLink,
+				DocumentID:      &documentIdLink,
+			}
+
+			response, err := dpxService.DeleteDraftContractTermsDocument(deleteDraftContractTermsDocumentOptions)
+			Expect(err).To(BeNil())
+			Expect(response.StatusCode).To(Equal(204))
+		})
+	})
+
+	Describe(`CreateDraftContractTermsDocumentAgain - Upload a contract document to the data product draft contract terms`, func() {
+		BeforeEach(func() {
+			shouldSkipTest()
+		})
+		It(`CreateDraftContractTermsDocument(createDraftContractTermsDocumentOptions *CreateDraftContractTermsDocumentOptions)`, func() {
+			// contractTermsDocumentAttachmentModel := &dpxv1.ContractTermsDocumentAttachment{
+			// 	ID: core.StringPtr("testString"),
+			// }
+
+			createDraftContractTermsDocumentOptions := &dpxv1.CreateDraftContractTermsDocumentOptions{
+				DataProductID:   &optionalDataProductIdLink,
+				DraftID:         &draftIdLink,
+				ContractTermsID: &contractTermsIdLink,
+				Type:            core.StringPtr("terms_and_conditions"),
+				Name:            core.StringPtr("Terms and conditions document"),
+				ID:              core.StringPtr("b38df608-d34b-4d58-8136-ed25e6c6684e"),
+				URL:             core.StringPtr("https://www.google.com"),
+				// Attachment:      contractTermsDocumentAttachmentModel,
+				// UploadURL:       core.StringPtr("testString"),
+			}
+
+			contractTermsDocument, response, err := dpxService.CreateDraftContractTermsDocument(createDraftContractTermsDocumentOptions)
+			Expect(err).To(BeNil())
+			Expect(response.StatusCode).To(Equal(201))
+			Expect(contractTermsDocument).ToNot(BeNil())
+
+			documentIdLink = *contractTermsDocument.ID
+			fmt.Fprintf(GinkgoWriter, "Saved documentIdLink value: %v\n", documentIdLink)
+		})
+	})
+
+	Describe(`UpdateDataProductDraft - Update the data product draft identified by ID`, func() {
+		BeforeEach(func() {
+			shouldSkipTest()
+		})
+		It(`UpdateDataProductDraft(updateDataProductDraftOptions *UpdateDataProductDraftOptions)`, func() {
+			// Define the asset structure
+			asset := map[string]interface{}{
+				"id": "669a570b-31f7-4c84-bfd1-851282ab5b86",
+				"container": map[string]string{
+					"id":   "b6eb50b4-ace4-4dab-b2c4-318bb4c032a6",
+					"type": "catalog",
+				},
+			}
+
+			// Create a list to hold the asset object
+			partsOutList := []map[string]interface{}{{"asset": asset}}
+
+			jsonPatchOperationModel := &dpxv1.JSONPatchOperation{
+				Op:   core.StringPtr("add"),
+				Path: core.StringPtr("/parts_out"),
+				// From:  core.StringPtr("testString"),
+				Value: partsOutList,
+			}
+
+			updateDataProductDraftOptions := &dpxv1.UpdateDataProductDraftOptions{
+				DataProductID:         &optionalDataProductIdLink,
+				DraftID:               &draftIdLink,
+				JSONPatchInstructions: []dpxv1.JSONPatchOperation{*jsonPatchOperationModel},
+			}
+
+			dataProductVersion, response, err := dpxService.UpdateDataProductDraft(updateDataProductDraftOptions)
+			Expect(err).To(BeNil())
+			Expect(response.StatusCode).To(Equal(200))
+			Expect(dataProductVersion).ToNot(BeNil())
+		})
+	})
+
+	Describe(`GetDataProductDraft - Get a draft of an existing data product`, func() {
+		BeforeEach(func() {
+			shouldSkipTest()
+		})
+		It(`GetDataProductDraft(getDataProductDraftOptions *GetDataProductDraftOptions)`, func() {
+			getDataProductDraftOptions := &dpxv1.GetDataProductDraftOptions{
+				DataProductID: &optionalDataProductIdLink,
+				DraftID:       &draftIdLink,
+			}
+
+			dataProductVersion, response, err := dpxService.GetDataProductDraft(getDataProductDraftOptions)
+			Expect(err).To(BeNil())
+			Expect(response.StatusCode).To(Equal(200))
+			Expect(dataProductVersion).ToNot(BeNil())
+		})
+	})
+
+	Describe(`UpdateDraftContractTermsDocument - Update a contract document`, func() {
+		BeforeEach(func() {
+			shouldSkipTest()
+		})
+		It(`UpdateDraftContractTermsDocument(updateDraftContractTermsDocumentOptions *UpdateDraftContractTermsDocumentOptions)`, func() {
+			jsonPatchOperationModel := &dpxv1.JSONPatchOperation{
+				Op:    core.StringPtr("replace"),
+				Path:  core.StringPtr("/url"),
+				Value: "https://google.com",
+			}
+
+			updateDraftContractTermsDocumentOptions := &dpxv1.UpdateDraftContractTermsDocumentOptions{
+				DataProductID:         &optionalDataProductIdLink,
+				DraftID:               &draftIdLink,
+				ContractTermsID:       &contractTermsIdLink,
+				DocumentID:            &documentIdLink,
+				JSONPatchInstructions: []dpxv1.JSONPatchOperation{*jsonPatchOperationModel},
+			}
+
+			contractTermsDocument, response, err := dpxService.UpdateDraftContractTermsDocument(updateDraftContractTermsDocumentOptions)
+			Expect(err).To(BeNil())
+			Expect(response.StatusCode).To(Equal(200))
+			Expect(contractTermsDocument).ToNot(BeNil())
+		})
+	})
+
+	Describe(`GetInitializeStatus - Get resource initialization status`, func() {
 		BeforeEach(func() {
 			shouldSkipTest()
 		})
 		It(`GetInitializeStatus(getInitializeStatusOptions *GetInitializeStatusOptions)`, func() {
 			getInitializeStatusOptions := &dpxv1.GetInitializeStatusOptions{
-				ContainerID: &getStatusByCatalogIdLink,
+				ContainerID: &containerIdLink,
 			}
 
 			initializeResource, response, err := dpxService.GetInitializeStatus(getInitializeStatusOptions)
@@ -334,19 +611,55 @@ var _ = Describe(`DpxV1 Integration Tests`, func() {
 		})
 	})
 
-	Describe(`GetDataProduct - Retrieve a data product identified by id`, func() {
+	Describe(`GetDraftContractTermsDocument - Get a contract document`, func() {
 		BeforeEach(func() {
 			shouldSkipTest()
 		})
-		It(`GetDataProduct(getDataProductOptions *GetDataProductOptions)`, func() {
-			getDataProductOptions := &dpxv1.GetDataProductOptions{
-				ID: &getDataProductByUserIdLink,
+		It(`GetDraftContractTermsDocument(getDraftContractTermsDocumentOptions *GetDraftContractTermsDocumentOptions)`, func() {
+			getDraftContractTermsDocumentOptions := &dpxv1.GetDraftContractTermsDocumentOptions{
+				DataProductID:   &optionalDataProductIdLink,
+				DraftID:         &draftIdLink,
+				ContractTermsID: &contractTermsIdLink,
+				DocumentID:      &documentIdLink,
 			}
 
-			dataProduct, response, err := dpxService.GetDataProduct(getDataProductOptions)
+			contractTermsDocument, response, err := dpxService.GetDraftContractTermsDocument(getDraftContractTermsDocumentOptions)
 			Expect(err).To(BeNil())
 			Expect(response.StatusCode).To(Equal(200))
-			Expect(dataProduct).ToNot(BeNil())
+			Expect(contractTermsDocument).ToNot(BeNil())
+		})
+	})
+
+	Describe(`PublishDataProductDraft - Publish a draft of an existing data product`, func() {
+		BeforeEach(func() {
+			shouldSkipTest()
+		})
+		It(`PublishDataProductDraft(publishDataProductDraftOptions *PublishDataProductDraftOptions)`, func() {
+			publishDataProductDraftOptions := &dpxv1.PublishDataProductDraftOptions{
+				DataProductID: &optionalDataProductIdLink,
+				DraftID:       &draftIdLink,
+			}
+
+			dataProductVersion, response, err := dpxService.PublishDataProductDraft(publishDataProductDraftOptions)
+			Expect(err).To(BeNil())
+			Expect(response.StatusCode).To(Equal(200))
+			Expect(dataProductVersion).ToNot(BeNil())
+
+			releaseIdLink = *dataProductVersion.ID
+			fmt.Fprintf(GinkgoWriter, "Saved releaseIdLink value: %v\n", releaseIdLink)
+		})
+	})
+
+	Describe(`ManageApiKeys - Rotate credentials for a Data Product Exchange instance`, func() {
+		BeforeEach(func() {
+			shouldSkipTest()
+		})
+		It(`ManageApiKeys(manageApiKeysOptions *ManageApiKeysOptions)`, func() {
+			manageApiKeysOptions := &dpxv1.ManageApiKeysOptions{}
+
+			response, err := dpxService.ManageApiKeys(manageApiKeysOptions)
+			Expect(err).To(BeNil())
+			Expect(response.StatusCode).To(Equal(204))
 		})
 	})
 
@@ -354,24 +667,23 @@ var _ = Describe(`DpxV1 Integration Tests`, func() {
 		BeforeEach(func() {
 			shouldSkipTest()
 		})
-		It(`ListDataProducts(listDataProductsOptions *ListDataProductsOptions) with pagination`, func(){
+		It(`ListDataProducts(listDataProductsOptions *ListDataProductsOptions) with pagination`, func() {
 			listDataProductsOptions := &dpxv1.ListDataProductsOptions{
 				Limit: core.Int64Ptr(int64(10)),
-				Start: core.StringPtr("testString"),
 			}
 
 			listDataProductsOptions.Start = nil
 			listDataProductsOptions.Limit = core.Int64Ptr(1)
 
-			var allResults []dpxv1.DataProduct
+			var allResults []dpxv1.DataProductSummary
 			for {
-				dataProductCollection, response, err := dpxService.ListDataProducts(listDataProductsOptions)
+				dataProductSummaryCollection, response, err := dpxService.ListDataProducts(listDataProductsOptions)
 				Expect(err).To(BeNil())
 				Expect(response.StatusCode).To(Equal(200))
-				Expect(dataProductCollection).ToNot(BeNil())
-				allResults = append(allResults, dataProductCollection.DataProducts...)
+				Expect(dataProductSummaryCollection).ToNot(BeNil())
+				allResults = append(allResults, dataProductSummaryCollection.DataProducts...)
 
-				listDataProductsOptions.Start, err = dataProductCollection.GetNextStart()
+				listDataProductsOptions.Start, err = dataProductSummaryCollection.GetNextStart()
 				Expect(err).To(BeNil())
 
 				if listDataProductsOptions.Start == nil {
@@ -380,7 +692,7 @@ var _ = Describe(`DpxV1 Integration Tests`, func() {
 			}
 			fmt.Fprintf(GinkgoWriter, "Retrieved a total of %d item(s) with pagination.\n", len(allResults))
 		})
-		It(`ListDataProducts(listDataProductsOptions *ListDataProductsOptions) using DataProductsPager`, func(){
+		It(`ListDataProducts(listDataProductsOptions *ListDataProductsOptions) using DataProductsPager`, func() {
 			listDataProductsOptions := &dpxv1.ListDataProductsOptions{
 				Limit: core.Int64Ptr(int64(10)),
 			}
@@ -390,7 +702,7 @@ var _ = Describe(`DpxV1 Integration Tests`, func() {
 			Expect(err).To(BeNil())
 			Expect(pager).ToNot(BeNil())
 
-			var allResults []dpxv1.DataProduct
+			var allResults []dpxv1.DataProductSummary
 			for pager.HasNext() {
 				nextPage, err := pager.GetNext()
 				Expect(err).To(BeNil())
@@ -412,51 +724,79 @@ var _ = Describe(`DpxV1 Integration Tests`, func() {
 		})
 	})
 
-	Describe(`ListDataProductVersions - Retrieve a list of data product versions`, func() {
+	Describe(`GetDataProduct - Retrieve a data product identified by id`, func() {
 		BeforeEach(func() {
 			shouldSkipTest()
 		})
-		It(`ListDataProductVersions(listDataProductVersionsOptions *ListDataProductVersionsOptions) with pagination`, func(){
-			listDataProductVersionsOptions := &dpxv1.ListDataProductVersionsOptions{
-				AssetContainerID: &getListOfDataProductByCatalogIdLink,
-				DataProduct: core.StringPtr("testString"),
-				State: core.StringPtr("draft"),
-				Version: core.StringPtr("testString"),
-				Limit: core.Int64Ptr(int64(10)),
-				Start: core.StringPtr("testString"),
+		It(`GetDataProduct(getDataProductOptions *GetDataProductOptions)`, func() {
+			getDataProductOptions := &dpxv1.GetDataProductOptions{
+				DataProductID: &dataProductIdLink,
 			}
 
-			listDataProductVersionsOptions.Start = nil
-			listDataProductVersionsOptions.Limit = core.Int64Ptr(1)
+			dataProduct, response, err := dpxService.GetDataProduct(getDataProductOptions)
+			Expect(err).To(BeNil())
+			Expect(response.StatusCode).To(Equal(200))
+			Expect(dataProduct).ToNot(BeNil())
+		})
+	})
+
+	Describe(`CompleteDraftContractTermsDocument - Complete a contract document upload operation`, func() {
+		BeforeEach(func() {
+			shouldSkipTest()
+		})
+		It(`CompleteDraftContractTermsDocument(completeDraftContractTermsDocumentOptions *CompleteDraftContractTermsDocumentOptions)`, func() {
+			completeDraftContractTermsDocumentOptions := &dpxv1.CompleteDraftContractTermsDocumentOptions{
+				DataProductID:   &optionalDataProductIdLink,
+				DraftID:         &draftIdLink,
+				ContractTermsID: &contractTermsIdLink,
+				DocumentID:      &documentIdLink,
+			}
+
+			contractTermsDocument, response, err := dpxService.CompleteDraftContractTermsDocument(completeDraftContractTermsDocumentOptions)
+			Expect(err).To(BeNil())
+			Expect(response.StatusCode).To(Equal(200))
+			Expect(contractTermsDocument).ToNot(BeNil())
+		})
+	})
+
+	Describe(`ListDataProductDrafts - Retrieve a list of data product drafts`, func() {
+		BeforeEach(func() {
+			shouldSkipTest()
+		})
+		It(`ListDataProductDrafts(listDataProductDraftsOptions *ListDataProductDraftsOptions) with pagination`, func() {
+			listDataProductDraftsOptions := &dpxv1.ListDataProductDraftsOptions{
+				DataProductID: &optionalDataProductIdLink,
+				Limit:         core.Int64Ptr(int64(10)),
+			}
+
+			listDataProductDraftsOptions.Start = nil
+			listDataProductDraftsOptions.Limit = core.Int64Ptr(1)
 
 			var allResults []dpxv1.DataProductVersionSummary
 			for {
-				dataProductVersionCollection, response, err := dpxService.ListDataProductVersions(listDataProductVersionsOptions)
+				dataProductDraftCollection, response, err := dpxService.ListDataProductDrafts(listDataProductDraftsOptions)
 				Expect(err).To(BeNil())
 				Expect(response.StatusCode).To(Equal(200))
-				Expect(dataProductVersionCollection).ToNot(BeNil())
-				allResults = append(allResults, dataProductVersionCollection.DataProductVersions...)
+				Expect(dataProductDraftCollection).ToNot(BeNil())
+				allResults = append(allResults, dataProductDraftCollection.Drafts...)
 
-				listDataProductVersionsOptions.Start, err = dataProductVersionCollection.GetNextStart()
+				listDataProductDraftsOptions.Start, err = dataProductDraftCollection.GetNextStart()
 				Expect(err).To(BeNil())
 
-				if listDataProductVersionsOptions.Start == nil {
+				if listDataProductDraftsOptions.Start == nil {
 					break
 				}
 			}
 			fmt.Fprintf(GinkgoWriter, "Retrieved a total of %d item(s) with pagination.\n", len(allResults))
 		})
-		It(`ListDataProductVersions(listDataProductVersionsOptions *ListDataProductVersionsOptions) using DataProductVersionsPager`, func(){
-			listDataProductVersionsOptions := &dpxv1.ListDataProductVersionsOptions{
-				AssetContainerID: &getListOfDataProductByCatalogIdLink,
-				DataProduct: core.StringPtr("testString"),
-				State: core.StringPtr("draft"),
-				Version: core.StringPtr("testString"),
-				Limit: core.Int64Ptr(int64(10)),
+		It(`ListDataProductDrafts(listDataProductDraftsOptions *ListDataProductDraftsOptions) using DataProductDraftsPager`, func() {
+			listDataProductDraftsOptions := &dpxv1.ListDataProductDraftsOptions{
+				DataProductID: &optionalDataProductIdLink,
+				Limit:         core.Int64Ptr(int64(10)),
 			}
 
 			// Test GetNext().
-			pager, err := dpxService.NewDataProductVersionsPager(listDataProductVersionsOptions)
+			pager, err := dpxService.NewDataProductDraftsPager(listDataProductDraftsOptions)
 			Expect(err).To(BeNil())
 			Expect(pager).ToNot(BeNil())
 
@@ -469,7 +809,7 @@ var _ = Describe(`DpxV1 Integration Tests`, func() {
 			}
 
 			// Test GetAll().
-			pager, err = dpxService.NewDataProductVersionsPager(listDataProductVersionsOptions)
+			pager, err = dpxService.NewDataProductDraftsPager(listDataProductDraftsOptions)
 			Expect(err).To(BeNil())
 			Expect(pager).ToNot(BeNil())
 
@@ -478,127 +818,157 @@ var _ = Describe(`DpxV1 Integration Tests`, func() {
 			Expect(allItems).ToNot(BeNil())
 
 			Expect(len(allItems)).To(Equal(len(allResults)))
-			fmt.Fprintf(GinkgoWriter, "ListDataProductVersions() returned a total of %d item(s) using DataProductVersionsPager.\n", len(allResults))
+			fmt.Fprintf(GinkgoWriter, "ListDataProductDrafts() returned a total of %d item(s) using DataProductDraftsPager.\n", len(allResults))
 		})
 	})
 
-	Describe(`UpdateDataProductVersion - Update the data product version identified by ID`, func() {
+	Describe(`GetDataProductRelease - Get a release of an existing data product`, func() {
 		BeforeEach(func() {
 			shouldSkipTest()
 		})
-		It(`UpdateDataProductVersion(updateDataProductVersionOptions *UpdateDataProductVersionOptions)`, func() {
-			jsonPatchOperationModel := &dpxv1.JSONPatchOperation{
-				Op: core.StringPtr("add"),
-				Path: core.StringPtr("testString"),
-				From: core.StringPtr("testString"),
-				Value: core.StringPtr("testString"),
+		It(`GetDataProductRelease(getDataProductReleaseOptions *GetDataProductReleaseOptions)`, func() {
+			getDataProductReleaseOptions := &dpxv1.GetDataProductReleaseOptions{
+				DataProductID: &optionalDataProductIdLink,
+				ReleaseID:     &releaseIdLink,
 			}
 
-			updateDataProductVersionOptions := &dpxv1.UpdateDataProductVersionOptions{
-				ID: &updateDataProductVersionByUserIdLink,
-				JSONPatchInstructions: []dpxv1.JSONPatchOperation{*jsonPatchOperationModel},
-			}
-
-			dataProductVersion, response, err := dpxService.UpdateDataProductVersion(updateDataProductVersionOptions)
+			dataProductVersion, response, err := dpxService.GetDataProductRelease(getDataProductReleaseOptions)
 			Expect(err).To(BeNil())
 			Expect(response.StatusCode).To(Equal(200))
 			Expect(dataProductVersion).ToNot(BeNil())
 		})
 	})
 
-	Describe(`CompleteContractTermsDocument - Complete a contract document upload`, func() {
+	Describe(`UpdateDataProductRelease - Update the data product release identified by ID`, func() {
 		BeforeEach(func() {
 			shouldSkipTest()
 		})
-		It(`CompleteContractTermsDocument(completeContractTermsDocumentOptions *CompleteContractTermsDocumentOptions)`, func() {
-			completeContractTermsDocumentOptions := &dpxv1.CompleteContractTermsDocumentOptions{
-				DataProductVersionID: &completeContractTermsDocumentByVersionIdLink,
-				ContractTermsID: &completeContractTermsDocumentByContractIdLink,
-				DocumentID: &completeContractTermsDocumentLink,
-			}
-
-			contractTermsDocument, response, err := dpxService.CompleteContractTermsDocument(completeContractTermsDocumentOptions)
-			Expect(err).To(BeNil())
-			Expect(response.StatusCode).To(Equal(200))
-			Expect(contractTermsDocument).ToNot(BeNil())
-		})
-	})
-
-	Describe(`GetContractTermsDocument - Get a contract document`, func() {
-		BeforeEach(func() {
-			shouldSkipTest()
-		})
-		It(`GetContractTermsDocument(getContractTermsDocumentOptions *GetContractTermsDocumentOptions)`, func() {
-			getContractTermsDocumentOptions := &dpxv1.GetContractTermsDocumentOptions{
-				DataProductVersionID: &getContractTermsDocumentByVersionIdLink,
-				ContractTermsID: &getContractTermsDocumentsByContractIdLink,
-				DocumentID: &getContractTermsDocumentByIdLink,
-			}
-
-			contractTermsDocument, response, err := dpxService.GetContractTermsDocument(getContractTermsDocumentOptions)
-			Expect(err).To(BeNil())
-			Expect(response.StatusCode).To(Equal(200))
-			Expect(contractTermsDocument).ToNot(BeNil())
-		})
-	})
-
-	Describe(`UpdateContractTermsDocument - Update a contract document`, func() {
-		BeforeEach(func() {
-			shouldSkipTest()
-		})
-		It(`UpdateContractTermsDocument(updateContractTermsDocumentOptions *UpdateContractTermsDocumentOptions)`, func() {
+		It(`UpdateDataProductRelease(updateDataProductReleaseOptions *UpdateDataProductReleaseOptions)`, func() {
 			jsonPatchOperationModel := &dpxv1.JSONPatchOperation{
-				Op: core.StringPtr("add"),
-				Path: core.StringPtr("testString"),
-				From: core.StringPtr("testString"),
-				Value: core.StringPtr("testString"),
+				Op:    core.StringPtr("replace"),
+				Path:  core.StringPtr("/description"),
+				Value: "New Description",
 			}
 
-			updateContractTermsDocumentOptions := &dpxv1.UpdateContractTermsDocumentOptions{
-				DataProductVersionID: &updateContractTermsDocumentByVersionIdLink,
-				ContractTermsID: &updateContractTermsDocumentByContractIdLink,
-				DocumentID: &updateContractTermsDocumentLink,
+			updateDataProductReleaseOptions := &dpxv1.UpdateDataProductReleaseOptions{
+				DataProductID:         &optionalDataProductIdLink,
+				ReleaseID:             &releaseIdLink,
 				JSONPatchInstructions: []dpxv1.JSONPatchOperation{*jsonPatchOperationModel},
 			}
 
-			contractTermsDocument, response, err := dpxService.UpdateContractTermsDocument(updateContractTermsDocumentOptions)
+			dataProductVersion, response, err := dpxService.UpdateDataProductRelease(updateDataProductReleaseOptions)
+			Expect(err).To(BeNil())
+			Expect(response.StatusCode).To(Equal(200))
+			Expect(dataProductVersion).ToNot(BeNil())
+		})
+	})
+
+	Describe(`GetReleaseContractTermsDocument - Get a contract document`, func() {
+		BeforeEach(func() {
+			shouldSkipTest()
+		})
+		It(`GetReleaseContractTermsDocument(getReleaseContractTermsDocumentOptions *GetReleaseContractTermsDocumentOptions)`, func() {
+			getReleaseContractTermsDocumentOptions := &dpxv1.GetReleaseContractTermsDocumentOptions{
+				DataProductID:   &optionalDataProductIdLink,
+				ReleaseID:       &releaseIdLink,
+				ContractTermsID: &contractTermsIdLink,
+				DocumentID:      &documentIdLink,
+			}
+
+			contractTermsDocument, response, err := dpxService.GetReleaseContractTermsDocument(getReleaseContractTermsDocumentOptions)
 			Expect(err).To(BeNil())
 			Expect(response.StatusCode).To(Equal(200))
 			Expect(contractTermsDocument).ToNot(BeNil())
 		})
 	})
 
-	Describe(`DeleteContractTermsDocument - Delete a contract document`, func() {
+	Describe(`ListDataProductReleases - Retrieve a list of data product releases`, func() {
 		BeforeEach(func() {
 			shouldSkipTest()
 		})
-		It(`DeleteContractTermsDocument(deleteContractTermsDocumentOptions *DeleteContractTermsDocumentOptions)`, func() {
-			deleteContractTermsDocumentOptions := &dpxv1.DeleteContractTermsDocumentOptions{
-				DataProductVersionID: &deleteContractTermsDocumentByVersionIdLink,
-				ContractTermsID: &deleteContractTermsDocumentByContractIdLink,
-				DocumentID: &deleteContractTermsDocumentLink,
+		It(`ListDataProductReleases(listDataProductReleasesOptions *ListDataProductReleasesOptions) with pagination`, func() {
+			listDataProductReleasesOptions := &dpxv1.ListDataProductReleasesOptions{
+				DataProductID: &optionalDataProductIdLink,
+				// AssetContainerID: core.StringPtr("testString"),
+				State: []string{"available"},
+				// Version:          core.StringPtr("testString"),
+				Limit: core.Int64Ptr(int64(10)),
+				// Start:            core.StringPtr("testString"),
 			}
 
-			response, err := dpxService.DeleteContractTermsDocument(deleteContractTermsDocumentOptions)
+			listDataProductReleasesOptions.Start = nil
+			listDataProductReleasesOptions.Limit = core.Int64Ptr(1)
+
+			var allResults []dpxv1.DataProductVersionSummary
+			for {
+				dataProductReleaseCollection, response, err := dpxService.ListDataProductReleases(listDataProductReleasesOptions)
+				Expect(err).To(BeNil())
+				Expect(response.StatusCode).To(Equal(200))
+				Expect(dataProductReleaseCollection).ToNot(BeNil())
+				allResults = append(allResults, dataProductReleaseCollection.Releases...)
+
+				listDataProductReleasesOptions.Start, err = dataProductReleaseCollection.GetNextStart()
+				Expect(err).To(BeNil())
+
+				if listDataProductReleasesOptions.Start == nil {
+					break
+				}
+			}
+			fmt.Fprintf(GinkgoWriter, "Retrieved a total of %d item(s) with pagination.\n", len(allResults))
+		})
+		It(`ListDataProductReleases(listDataProductReleasesOptions *ListDataProductReleasesOptions) using DataProductReleasesPager`, func() {
+			listDataProductReleasesOptions := &dpxv1.ListDataProductReleasesOptions{
+				DataProductID: &optionalDataProductIdLink,
+				// AssetContainerID: core.StringPtr("testString"),
+				State: []string{"available"},
+				// Version:          core.StringPtr("testString"),
+				Limit: core.Int64Ptr(int64(10)),
+			}
+
+			// Test GetNext().
+			pager, err := dpxService.NewDataProductReleasesPager(listDataProductReleasesOptions)
 			Expect(err).To(BeNil())
-			Expect(response.StatusCode).To(Equal(204))
+			Expect(pager).ToNot(BeNil())
+
+			var allResults []dpxv1.DataProductVersionSummary
+			for pager.HasNext() {
+				nextPage, err := pager.GetNext()
+				Expect(err).To(BeNil())
+				Expect(nextPage).ToNot(BeNil())
+				allResults = append(allResults, nextPage...)
+			}
+
+			// Test GetAll().
+			pager, err = dpxService.NewDataProductReleasesPager(listDataProductReleasesOptions)
+			Expect(err).To(BeNil())
+			Expect(pager).ToNot(BeNil())
+
+			allItems, err := pager.GetAll()
+			Expect(err).To(BeNil())
+			Expect(allItems).ToNot(BeNil())
+
+			Expect(len(allItems)).To(Equal(len(allResults)))
+			fmt.Fprintf(GinkgoWriter, "ListDataProductReleases() returned a total of %d item(s) using DataProductReleasesPager.\n", len(allResults))
 		})
 	})
 
-	Describe(`DeleteDataProductVersion - Delete a data product version identified by ID`, func() {
+	Describe(`RetireDataProductRelease - Retire a release of an existing data product`, func() {
 		BeforeEach(func() {
 			shouldSkipTest()
 		})
-		It(`DeleteDataProductVersion(deleteDataProductVersionOptions *DeleteDataProductVersionOptions)`, func() {
-			deleteDataProductVersionOptions := &dpxv1.DeleteDataProductVersionOptions{
-				ID: &deleteDataProductVersionByUserIdLink,
+		It(`RetireDataProductRelease(retireDataProductReleaseOptions *RetireDataProductReleaseOptions)`, func() {
+			retireDataProductReleaseOptions := &dpxv1.RetireDataProductReleaseOptions{
+				DataProductID: &optionalDataProductIdLink,
+				ReleaseID:     &releaseIdLink,
 			}
 
-			response, err := dpxService.DeleteDataProductVersion(deleteDataProductVersionOptions)
+			dataProductVersion, response, err := dpxService.RetireDataProductRelease(retireDataProductReleaseOptions)
 			Expect(err).To(BeNil())
-			Expect(response.StatusCode).To(Equal(204))
+			Expect(response.StatusCode).To(Equal(200))
+			Expect(dataProductVersion).ToNot(BeNil())
 		})
 	})
+
 })
 
 //
