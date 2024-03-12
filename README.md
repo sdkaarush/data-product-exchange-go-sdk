@@ -67,7 +67,7 @@ associated with the DPX service..
 ### `go get` command  
 Alternatively, you can use the `go get` command to download and install the appropriate packages needed by your application:
 ```
-go get -u github.com/IBM/data-product-exchange-go-sdk/dataproductexchangeapiservicev1
+go get -u github.com/IBM/data-product-exchange-go-sdk/dpxv1
 ```
 
 ## Using the SDK
