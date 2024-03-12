@@ -42,6 +42,9 @@ type DpxV1 struct {
 	Service *core.BaseService
 }
 
+// DefaultServiceURL is the default URL to make service requests to.
+const DefaultServiceURL = "https://api.dataplatform.dev.cloud.ibm.com"
+
 // DefaultServiceName is the default key used to find external configuration information.
 const DefaultServiceName = "dpx"
 
@@ -84,6 +87,7 @@ func NewDpxV1UsingExternalConfig(options *DpxV1Options) (dpx *DpxV1, err error) 
 // NewDpxV1 : constructs an instance of DpxV1 with passed in options.
 func NewDpxV1(options *DpxV1Options) (service *DpxV1, err error) {
 	serviceOptions := &core.ServiceOptions{
+		URL:           DefaultServiceURL,
 		Authenticator: options.Authenticator,
 	}
 

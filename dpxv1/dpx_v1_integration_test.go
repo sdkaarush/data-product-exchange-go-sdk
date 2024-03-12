@@ -106,8 +106,8 @@ var _ = Describe(`DpxV1 Integration Tests`, func() {
 		})
 		It(`Initialize(initializeOptions *InitializeOptions)`, func() {
 			// containerReferenceModel := &dpxv1.ContainerReference{
-			// 	ID:   &containerIdLink,
-			// 	Type: core.StringPtr("catalog"),
+			//  ID:   &containerIdLink,
+			//  Type: core.StringPtr("catalog"),
 			// }
 
 			initializeOptions := &dpxv1.InitializeOptions{
@@ -131,7 +131,7 @@ var _ = Describe(`DpxV1 Integration Tests`, func() {
 		})
 		It(`CreateDataProduct(createDataProductOptions *CreateDataProductOptions)`, func() {
 			// dataProductIdentityModel := &dpxv1.DataProductIdentity{
-			// 	ID: core.StringPtr("b38df608-d34b-4d58-8136-ed25e6c6684e"),
+			//  ID: core.StringPtr("b38df608-d34b-4d58-8136-ed25e6c6684e"),
 			// }
 
 			containerReferenceModel := &dpxv1.ContainerReference{
@@ -145,52 +145,52 @@ var _ = Describe(`DpxV1 Integration Tests`, func() {
 			}
 
 			// useCaseModel := &dpxv1.UseCase{
-			// 	ID:        core.StringPtr("testString"),
-			// 	Name:      core.StringPtr("testString"),
-			// 	Container: containerReferenceModel,
+			//  ID:        core.StringPtr("testString"),
+			//  Name:      core.StringPtr("testString"),
+			//  Container: containerReferenceModel,
 			// }
 
 			// domainModel := &dpxv1.Domain{
-			// 	ID:        core.StringPtr("testString"),
-			// 	Name:      core.StringPtr("testString"),
-			// 	Container: containerReferenceModel,
+			//  ID:        core.StringPtr("testString"),
+			//  Name:      core.StringPtr("testString"),
+			//  Container: containerReferenceModel,
 			// }
 
 			// assetPartReferenceModel := &dpxv1.AssetPartReference{
-			// 	ID:        core.StringPtr("2b0bf220-079c-11ee-be56-0242ac120002"),
-			// 	Container: containerReferenceModel,
-			// 	Type:      core.StringPtr("data_asset"),
+			//  ID:        core.StringPtr("2b0bf220-079c-11ee-be56-0242ac120002"),
+			//  Container: containerReferenceModel,
+			//  Type:      core.StringPtr("data_asset"),
 			// }
 
 			// deliveryMethodModel := &dpxv1.DeliveryMethod{
-			// 	ID:        core.StringPtr("09cf5fcc-cb9d-4995-a8e4-16517b25229f"),
-			// 	Container: containerReferenceModel,
+			//  ID:        core.StringPtr("09cf5fcc-cb9d-4995-a8e4-16517b25229f"),
+			//  Container: containerReferenceModel,
 			// }
 
 			// dataProductPartModel := &dpxv1.DataProductPart{
-			// 	Asset:           assetPartReferenceModel,
-			// 	Revision:        core.Int64Ptr(int64(1)),
-			// 	UpdatedAt:       CreateMockDateTime("2023-07-01T22:22:34.876Z"),
-			// 	DeliveryMethods: []dpxv1.DeliveryMethod{*deliveryMethodModel},
+			//  Asset:           assetPartReferenceModel,
+			//  Revision:        core.Int64Ptr(int64(1)),
+			//  UpdatedAt:       CreateMockDateTime("2023-07-01T22:22:34.876Z"),
+			//  DeliveryMethods: []dpxv1.DeliveryMethod{*deliveryMethodModel},
 			// }
 
 			// contractTermsDocumentAttachmentModel := &dpxv1.ContractTermsDocumentAttachment{
-			// 	ID: core.StringPtr("testString"),
+			//  ID: core.StringPtr("testString"),
 			// }
 
 			// contractTermsDocumentModel := &dpxv1.ContractTermsDocument{
-			// 	URL:        core.StringPtr("testString"),
-			// 	Type:       core.StringPtr("terms_and_conditions"),
-			// 	Name:       core.StringPtr("testString"),
-			// 	ID:         core.StringPtr("2b0bf220-079c-11ee-be56-0242ac120002"),
-			// 	Attachment: contractTermsDocumentAttachmentModel,
-			// 	UploadURL:  core.StringPtr("testString"),
+			//  URL:        core.StringPtr("testString"),
+			//  Type:       core.StringPtr("terms_and_conditions"),
+			//  Name:       core.StringPtr("testString"),
+			//  ID:         core.StringPtr("2b0bf220-079c-11ee-be56-0242ac120002"),
+			//  Attachment: contractTermsDocumentAttachmentModel,
+			//  UploadURL:  core.StringPtr("testString"),
 			// }
 
 			// dataProductContractTermsModel := &dpxv1.DataProductContractTerms{
-			// 	Asset:     assetReferenceModel,
-			// 	ID:        &contractTermsIdLink,
-			// 	Documents: []dpxv1.ContractTermsDocument{*contractTermsDocumentModel},
+			//  Asset:     assetReferenceModel,
+			//  ID:        &contractTermsIdLink,
+			//  Documents: []dpxv1.ContractTermsDocument{*contractTermsDocumentModel},
 			// }
 
 			dataProductVersionPrototypeModel := &dpxv1.DataProductVersionPrototype{
@@ -245,9 +245,9 @@ var _ = Describe(`DpxV1 Integration Tests`, func() {
 			}
 
 			// useCaseModel := &dpxv1.UseCase{
-			// 	ID:        core.StringPtr("testString"),
-			// 	Name:      core.StringPtr("testString"),
-			// 	Container: containerReferenceModel,
+			//  ID:        core.StringPtr("testString"),
+			//  Name:      core.StringPtr("testString"),
+			//  Container: containerReferenceModel,
 			// }
 
 			domainModel := &dpxv1.Domain{
@@ -257,40 +257,40 @@ var _ = Describe(`DpxV1 Integration Tests`, func() {
 			}
 
 			// assetPartReferenceModel := &dpxv1.AssetPartReference{
-			// 	ID:        core.StringPtr("2b0bf220-079c-11ee-be56-0242ac120002"),
-			// 	Container: containerReferenceModel,
-			// 	Type:      core.StringPtr("data_asset"),
+			//  ID:        core.StringPtr("2b0bf220-079c-11ee-be56-0242ac120002"),
+			//  Container: containerReferenceModel,
+			//  Type:      core.StringPtr("data_asset"),
 			// }
 
 			// deliveryMethodModel := &dpxv1.DeliveryMethod{
-			// 	ID:        core.StringPtr("09cf5fcc-cb9d-4995-a8e4-16517b25229f"),
-			// 	Container: containerReferenceModel,
+			//  ID:        core.StringPtr("09cf5fcc-cb9d-4995-a8e4-16517b25229f"),
+			//  Container: containerReferenceModel,
 			// }
 
 			// dataProductPartModel := &dpxv1.DataProductPart{
-			// 	Asset:           assetPartReferenceModel,
-			// 	Revision:        core.Int64Ptr(int64(1)),
-			// 	UpdatedAt:       CreateMockDateTime("2023-07-01T22:22:34.876Z"),
-			// 	DeliveryMethods: []dpxv1.DeliveryMethod{*deliveryMethodModel},
+			//  Asset:           assetPartReferenceModel,
+			//  Revision:        core.Int64Ptr(int64(1)),
+			//  UpdatedAt:       CreateMockDateTime("2023-07-01T22:22:34.876Z"),
+			//  DeliveryMethods: []dpxv1.DeliveryMethod{*deliveryMethodModel},
 			// }
 
 			// contractTermsDocumentAttachmentModel := &dpxv1.ContractTermsDocumentAttachment{
-			// 	ID: core.StringPtr("testString"),
+			//  ID: core.StringPtr("testString"),
 			// }
 
 			// contractTermsDocumentModel := &dpxv1.ContractTermsDocument{
-			// 	URL:        core.StringPtr("testString"),
-			// 	Type:       core.StringPtr("terms_and_conditions"),
-			// 	Name:       core.StringPtr("testString"),
-			// 	ID:         core.StringPtr("2b0bf220-079c-11ee-be56-0242ac120002"),
-			// 	Attachment: contractTermsDocumentAttachmentModel,
-			// 	UploadURL:  core.StringPtr("testString"),
+			//  URL:        core.StringPtr("testString"),
+			//  Type:       core.StringPtr("terms_and_conditions"),
+			//  Name:       core.StringPtr("testString"),
+			//  ID:         core.StringPtr("2b0bf220-079c-11ee-be56-0242ac120002"),
+			//  Attachment: contractTermsDocumentAttachmentModel,
+			//  UploadURL:  core.StringPtr("testString"),
 			// }
 
 			// dataProductContractTermsModel := &dpxv1.DataProductContractTerms{
-			// 	Asset:     assetReferenceModel,
-			// 	ID:        &contractTermsIdLink,
-			// 	Documents: []dpxv1.ContractTermsDocument{*contractTermsDocumentModel},
+			//  Asset:     assetReferenceModel,
+			//  ID:        &contractTermsIdLink,
+			//  Documents: []dpxv1.ContractTermsDocument{*contractTermsDocumentModel},
 			// }
 
 			createDataProductDraftOptions := &dpxv1.CreateDataProductDraftOptions{
@@ -338,7 +338,7 @@ var _ = Describe(`DpxV1 Integration Tests`, func() {
 		})
 	})
 
-	Describe(`CreateDataProductDraftAgain	 - Create a new draft of an existing data product`, func() {
+	Describe(`CreateDataProductDraftAgain    - Create a new draft of an existing data product`, func() {
 		BeforeEach(func() {
 			shouldSkipTest()
 		})
@@ -358,9 +358,9 @@ var _ = Describe(`DpxV1 Integration Tests`, func() {
 			}
 
 			// useCaseModel := &dpxv1.UseCase{
-			// 	ID:        core.StringPtr("testString"),
-			// 	Name:      core.StringPtr("testString"),
-			// 	Container: containerReferenceModel,
+			//  ID:        core.StringPtr("testString"),
+			//  Name:      core.StringPtr("testString"),
+			//  Container: containerReferenceModel,
 			// }
 
 			domainModel := &dpxv1.Domain{
@@ -370,40 +370,40 @@ var _ = Describe(`DpxV1 Integration Tests`, func() {
 			}
 
 			// assetPartReferenceModel := &dpxv1.AssetPartReference{
-			// 	ID:        core.StringPtr("2b0bf220-079c-11ee-be56-0242ac120002"),
-			// 	Container: containerReferenceModel,
-			// 	Type:      core.StringPtr("data_asset"),
+			//  ID:        core.StringPtr("2b0bf220-079c-11ee-be56-0242ac120002"),
+			//  Container: containerReferenceModel,
+			//  Type:      core.StringPtr("data_asset"),
 			// }
 
 			// deliveryMethodModel := &dpxv1.DeliveryMethod{
-			// 	ID:        core.StringPtr("09cf5fcc-cb9d-4995-a8e4-16517b25229f"),
-			// 	Container: containerReferenceModel,
+			//  ID:        core.StringPtr("09cf5fcc-cb9d-4995-a8e4-16517b25229f"),
+			//  Container: containerReferenceModel,
 			// }
 
 			// dataProductPartModel := &dpxv1.DataProductPart{
-			// 	Asset:           assetPartReferenceModel,
-			// 	Revision:        core.Int64Ptr(int64(1)),
-			// 	UpdatedAt:       CreateMockDateTime("2023-07-01T22:22:34.876Z"),
-			// 	DeliveryMethods: []dpxv1.DeliveryMethod{*deliveryMethodModel},
+			//  Asset:           assetPartReferenceModel,
+			//  Revision:        core.Int64Ptr(int64(1)),
+			//  UpdatedAt:       CreateMockDateTime("2023-07-01T22:22:34.876Z"),
+			//  DeliveryMethods: []dpxv1.DeliveryMethod{*deliveryMethodModel},
 			// }
 
 			// contractTermsDocumentAttachmentModel := &dpxv1.ContractTermsDocumentAttachment{
-			// 	ID: core.StringPtr("testString"),
+			//  ID: core.StringPtr("testString"),
 			// }
 
 			// contractTermsDocumentModel := &dpxv1.ContractTermsDocument{
-			// 	URL:        core.StringPtr("testString"),
-			// 	Type:       core.StringPtr("terms_and_conditions"),
-			// 	Name:       core.StringPtr("testString"),
-			// 	ID:         core.StringPtr("2b0bf220-079c-11ee-be56-0242ac120002"),
-			// 	Attachment: contractTermsDocumentAttachmentModel,
-			// 	UploadURL:  core.StringPtr("testString"),
+			//  URL:        core.StringPtr("testString"),
+			//  Type:       core.StringPtr("terms_and_conditions"),
+			//  Name:       core.StringPtr("testString"),
+			//  ID:         core.StringPtr("2b0bf220-079c-11ee-be56-0242ac120002"),
+			//  Attachment: contractTermsDocumentAttachmentModel,
+			//  UploadURL:  core.StringPtr("testString"),
 			// }
 
 			// dataProductContractTermsModel := &dpxv1.DataProductContractTerms{
-			// 	Asset:     assetReferenceModel,
-			// 	ID:        &contractTermsIdLink,
-			// 	Documents: []dpxv1.ContractTermsDocument{*contractTermsDocumentModel},
+			//  Asset:     assetReferenceModel,
+			//  ID:        &contractTermsIdLink,
+			//  Documents: []dpxv1.ContractTermsDocument{*contractTermsDocumentModel},
 			// }
 
 			createDataProductDraftOptions := &dpxv1.CreateDataProductDraftOptions{
@@ -441,7 +441,7 @@ var _ = Describe(`DpxV1 Integration Tests`, func() {
 		})
 		It(`CreateDraftContractTermsDocument(createDraftContractTermsDocumentOptions *CreateDraftContractTermsDocumentOptions)`, func() {
 			// contractTermsDocumentAttachmentModel := &dpxv1.ContractTermsDocumentAttachment{
-			// 	ID: core.StringPtr("testString"),
+			//  ID: core.StringPtr("testString"),
 			// }
 
 			createDraftContractTermsDocumentOptions := &dpxv1.CreateDraftContractTermsDocumentOptions{
@@ -490,7 +490,7 @@ var _ = Describe(`DpxV1 Integration Tests`, func() {
 		})
 		It(`CreateDraftContractTermsDocument(createDraftContractTermsDocumentOptions *CreateDraftContractTermsDocumentOptions)`, func() {
 			// contractTermsDocumentAttachmentModel := &dpxv1.ContractTermsDocumentAttachment{
-			// 	ID: core.StringPtr("testString"),
+			//  ID: core.StringPtr("testString"),
 			// }
 
 			createDraftContractTermsDocumentOptions := &dpxv1.CreateDraftContractTermsDocumentOptions{
@@ -740,24 +740,24 @@ var _ = Describe(`DpxV1 Integration Tests`, func() {
 		})
 	})
 
-	Describe(`CompleteDraftContractTermsDocument - Complete a contract document upload operation`, func() {
-		BeforeEach(func() {
-			shouldSkipTest()
-		})
-		It(`CompleteDraftContractTermsDocument(completeDraftContractTermsDocumentOptions *CompleteDraftContractTermsDocumentOptions)`, func() {
-			completeDraftContractTermsDocumentOptions := &dpxv1.CompleteDraftContractTermsDocumentOptions{
-				DataProductID:   &optionalDataProductIdLink,
-				DraftID:         &draftIdLink,
-				ContractTermsID: &contractTermsIdLink,
-				DocumentID:      &documentIdLink,
-			}
+	//  Describe(`CompleteDraftContractTermsDocument - Complete a contract document upload operation`, func() {
+	//      BeforeEach(func() {
+	//          shouldSkipTest()
+	//      })
+	//      It(`CompleteDraftContractTermsDocument(completeDraftContractTermsDocumentOptions *CompleteDraftContractTermsDocumentOptions)`, func() {
+	//          completeDraftContractTermsDocumentOptions := &dpxv1.CompleteDraftContractTermsDocumentOptions{
+	//              DataProductID:   &optionalDataProductIdLink,
+	//              DraftID:         &draftIdLink,
+	//              ContractTermsID: &contractTermsIdLink,
+	//              DocumentID:      &documentIdLink,
+	//          }
 
-			contractTermsDocument, response, err := dpxService.CompleteDraftContractTermsDocument(completeDraftContractTermsDocumentOptions)
-			Expect(err).To(BeNil())
-			Expect(response.StatusCode).To(Equal(200))
-			Expect(contractTermsDocument).ToNot(BeNil())
-		})
-	})
+	//          contractTermsDocument, response, err := dpxService.CompleteDraftContractTermsDocument(completeDraftContractTermsDocumentOptions)
+	//          Expect(err).To(BeNil())
+	//          Expect(response.StatusCode).To(Equal(200))
+	//          Expect(contractTermsDocument).ToNot(BeNil())
+	//      })
+	//  })
 
 	Describe(`ListDataProductDrafts - Retrieve a list of data product drafts`, func() {
 		BeforeEach(func() {

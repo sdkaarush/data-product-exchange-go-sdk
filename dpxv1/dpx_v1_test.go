@@ -172,7 +172,7 @@ var _ = Describe(`DpxV1`, func() {
 					// Verify the contents of the request
 					Expect(req.URL.EscapedPath()).To(Equal(getInitializeStatusPath))
 					Expect(req.Method).To(Equal("GET"))
-					Expect(req.URL.Query()["container.id"]).To(Equal([]string{"testString"}))
+					Expect(req.URL.Query()["container.id"]).To(Equal([]string{"d29c42eb-7100-4b7a-8257-c196dbcca1cd"}))
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
 					fmt.Fprint(res, `} this is not valid json {`)
@@ -188,7 +188,7 @@ var _ = Describe(`DpxV1`, func() {
 
 				// Construct an instance of the GetInitializeStatusOptions model
 				getInitializeStatusOptionsModel := new(dpxv1.GetInitializeStatusOptions)
-				getInitializeStatusOptionsModel.ContainerID = core.StringPtr("testString")
+				getInitializeStatusOptionsModel.ContainerID = core.StringPtr("d29c42eb-7100-4b7a-8257-c196dbcca1cd")
 				getInitializeStatusOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 				// Expect response parsing to fail since we are receiving a text/plain response
 				result, response, operationErr := dpxService.GetInitializeStatus(getInitializeStatusOptionsModel)
@@ -219,7 +219,7 @@ var _ = Describe(`DpxV1`, func() {
 					Expect(req.URL.EscapedPath()).To(Equal(getInitializeStatusPath))
 					Expect(req.Method).To(Equal("GET"))
 
-					Expect(req.URL.Query()["container.id"]).To(Equal([]string{"testString"}))
+					Expect(req.URL.Query()["container.id"]).To(Equal([]string{"d29c42eb-7100-4b7a-8257-c196dbcca1cd"}))
 					// Sleep a short time to support a timeout test
 					time.Sleep(100 * time.Millisecond)
 
@@ -240,7 +240,7 @@ var _ = Describe(`DpxV1`, func() {
 
 				// Construct an instance of the GetInitializeStatusOptions model
 				getInitializeStatusOptionsModel := new(dpxv1.GetInitializeStatusOptions)
-				getInitializeStatusOptionsModel.ContainerID = core.StringPtr("testString")
+				getInitializeStatusOptionsModel.ContainerID = core.StringPtr("d29c42eb-7100-4b7a-8257-c196dbcca1cd")
 				getInitializeStatusOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation with a Context to test a timeout error
@@ -277,7 +277,7 @@ var _ = Describe(`DpxV1`, func() {
 					Expect(req.URL.EscapedPath()).To(Equal(getInitializeStatusPath))
 					Expect(req.Method).To(Equal("GET"))
 
-					Expect(req.URL.Query()["container.id"]).To(Equal([]string{"testString"}))
+					Expect(req.URL.Query()["container.id"]).To(Equal([]string{"d29c42eb-7100-4b7a-8257-c196dbcca1cd"}))
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
@@ -300,7 +300,7 @@ var _ = Describe(`DpxV1`, func() {
 
 				// Construct an instance of the GetInitializeStatusOptions model
 				getInitializeStatusOptionsModel := new(dpxv1.GetInitializeStatusOptions)
-				getInitializeStatusOptionsModel.ContainerID = core.StringPtr("testString")
+				getInitializeStatusOptionsModel.ContainerID = core.StringPtr("d29c42eb-7100-4b7a-8257-c196dbcca1cd")
 				getInitializeStatusOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation with valid options model (positive test)
@@ -320,7 +320,7 @@ var _ = Describe(`DpxV1`, func() {
 
 				// Construct an instance of the GetInitializeStatusOptions model
 				getInitializeStatusOptionsModel := new(dpxv1.GetInitializeStatusOptions)
-				getInitializeStatusOptionsModel.ContainerID = core.StringPtr("testString")
+				getInitializeStatusOptionsModel.ContainerID = core.StringPtr("d29c42eb-7100-4b7a-8257-c196dbcca1cd")
 				getInitializeStatusOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 				// Invoke operation with empty URL (negative test)
 				err := dpxService.SetServiceURL("")
@@ -354,7 +354,7 @@ var _ = Describe(`DpxV1`, func() {
 
 				// Construct an instance of the GetInitializeStatusOptions model
 				getInitializeStatusOptionsModel := new(dpxv1.GetInitializeStatusOptions)
-				getInitializeStatusOptionsModel.ContainerID = core.StringPtr("testString")
+				getInitializeStatusOptionsModel.ContainerID = core.StringPtr("d29c42eb-7100-4b7a-8257-c196dbcca1cd")
 				getInitializeStatusOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation
@@ -6441,9 +6441,9 @@ var _ = Describe(`DpxV1`, func() {
 				draftID := "2b0bf220-079c-11ee-be56-0242ac120002@d29c42eb-7100-4b7a-8257-c196dbcca1cd"
 				contractTermsID := "598183cd-b910-4e8d-9a97-97097afda3c1@e4fe2f87-0e56-46dd-b3b8-e9af32309e82"
 				createDraftContractTermsDocumentOptionsType := "terms_and_conditions"
+				url := "teststring"
 				createDraftContractTermsDocumentOptionsName := "Terms and conditions document"
 				createDraftContractTermsDocumentOptionsID := "b38df608-d34b-4d58-8136-ed25e6c6684e"
-				url := "teststring"
 				createDraftContractTermsDocumentOptionsModel := dpxService.NewCreateDraftContractTermsDocumentOptions(dataProductID, draftID, contractTermsID, createDraftContractTermsDocumentOptionsType, createDraftContractTermsDocumentOptionsName, createDraftContractTermsDocumentOptionsID, url)
 				createDraftContractTermsDocumentOptionsModel.SetDataProductID("b38df608-d34b-4d58-8136-ed25e6c6684e")
 				createDraftContractTermsDocumentOptionsModel.SetDraftID("2b0bf220-079c-11ee-be56-0242ac120002@d29c42eb-7100-4b7a-8257-c196dbcca1cd")
@@ -6787,10 +6787,10 @@ var _ = Describe(`DpxV1`, func() {
 			It(`Invoke NewGetInitializeStatusOptions successfully`, func() {
 				// Construct an instance of the GetInitializeStatusOptions model
 				getInitializeStatusOptionsModel := dpxService.NewGetInitializeStatusOptions()
-				getInitializeStatusOptionsModel.SetContainerID("testString")
+				getInitializeStatusOptionsModel.SetContainerID("d29c42eb-7100-4b7a-8257-c196dbcca1cd")
 				getInitializeStatusOptionsModel.SetHeaders(map[string]string{"foo": "bar"})
 				Expect(getInitializeStatusOptionsModel).ToNot(BeNil())
-				Expect(getInitializeStatusOptionsModel.ContainerID).To(Equal(core.StringPtr("testString")))
+				Expect(getInitializeStatusOptionsModel.ContainerID).To(Equal(core.StringPtr("d29c42eb-7100-4b7a-8257-c196dbcca1cd")))
 				Expect(getInitializeStatusOptionsModel.Headers).To(Equal(map[string]string{"foo": "bar"}))
 			})
 			It(`Invoke NewGetReleaseContractTermsDocumentOptions successfully`, func() {
