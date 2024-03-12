@@ -1,3 +1,10 @@
+## [0.0.5](https://github.com/IBM/data-product-exchange-go-sdk/compare/v0.0.4...v0.0.5) (2024-03-12)
+
+
+### Bug Fixes
+
+* add contract_term apis ([#7](https://github.com/IBM/data-product-exchange-go-sdk/issues/7)) ([210b677](https://github.com/IBM/data-product-exchange-go-sdk/commit/210b677a7df22d8c5e460164348d5ae53823c2cf))
+
 ## [0.0.4](https://github.com/IBM/data-product-exchange-go-sdk/compare/v0.0.3...v0.0.4) (2023-11-30)
 
 
